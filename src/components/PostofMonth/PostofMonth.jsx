@@ -16,7 +16,7 @@ const PostofMonth = () => {
     <section className="postofmonth container">
       <div className="pom__wrapper">
         <h3 className="title">BÀI VIẾT CỦA THÁNG</h3>
-        <div className="pom__content border">
+        <div className="pom__content border box-shadow ">
           <div className="grid">
             <div className="row">
               <div className="col l-3">

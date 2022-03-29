@@ -7,7 +7,7 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const moving = window.pageYOffset
-      if(moving > 100) {
+      if(moving > 350) {
         setVisible(false);
       }else {
         setVisible(true);
@@ -42,12 +42,12 @@ const Header = () => {
                 <div className="">
                   <Link to="/">
                     <div className="header__icon-top-wrapper">
-                      <i class="header__icon bx bx-envelope"></i>
+                      <i class="header__icon header__icon-top  bx bx-envelope"></i>
                     </div>
                   </Link>
                 </div>
-                <div className="">
-                  <i class=" header__icon bx bx-bell"></i>
+                <div className="header__icon-top-wrapper">
+                  <i class=" header__icon header__icon-top  bx bx-bell"></i>
                 </div>
                 <li>
                   <img alt="" />

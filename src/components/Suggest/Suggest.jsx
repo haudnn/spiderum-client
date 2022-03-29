@@ -119,11 +119,12 @@ const Suggest = () => {
                       <div className="grid">
                         <div className="row">
                           <div className="col l-4 c-12 ">
-                            <div className="suggest__content-img">
+                            <div >
                               <Link to="/">
                                 <img
                                   src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"
                                   alt=""
+                                  className="thumbnail"
                                 />
                               </Link>
                             </div>
@@ -166,7 +167,7 @@ const Suggest = () => {
                                   </h3>
                                 </Link>
                                 <div className="suggest__content-details-desc">
-                                  <p className="suggest__content-details-desc-text">
+                                  <p className="text-intro">
                                     Cách đây hai tháng, mình vẫn nghĩ xây dựng
                                     thói quen đơn giản chỉ là lặp đi lặp lại một
                                     việc nhiều lần đến khi có thể tự động làm mà
@@ -175,7 +176,7 @@ const Suggest = () => {
                               </div>
                               <div className="suggest__content-details-post">
                                 <div className="suggest__content-details-post-user">
-                                  <div className="suggest__content-details-post-avt">
+                                  <div className="post-avt">
                                     <Link to="/">
                                       <img
                                         src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
@@ -185,7 +186,7 @@ const Suggest = () => {
                                   </div>
                                   <div>
                                     <Link to="/">
-                                      <p className="suggest__content-details-post-name">
+                                      <p className="post-username">
                                         một quả bơ
                                       </p>
                                     </Link>
