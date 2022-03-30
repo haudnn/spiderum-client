@@ -63,7 +63,7 @@ const Suggest = () => {
                   </div>
                   <div className="suggest__content-details-post">
                     <div className="suggest__content-details-post-user">
-                      <div className="suggest__content-details-post-avt">
+                      <div className="post-avt">
                         <Link to="/">
                           <img
                             src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
@@ -288,7 +288,7 @@ const Suggest = () => {
                               </div>
                               <div className="suggest__content-details-post">
                                 <div className="suggest__content-details-post-user">
-                                  <div className="suggest__content-details-post-avt">
+                                  <div className="post-avt">
                                     <Link to="/">
                                       <img
                                         src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
@@ -298,7 +298,7 @@ const Suggest = () => {
                                   </div>
                                   <div>
                                     <Link to="/">
-                                      <p className="suggest__content-details-post-name">
+                                      <p className="post-username">
                                         một quả bơ
                                       </p>
                                     </Link>
@@ -400,7 +400,7 @@ const Suggest = () => {
                               </div>
                               <div className="suggest__content-details-post">
                                 <div className="suggest__content-details-post-user">
-                                  <div className="suggest__content-details-post-avt">
+                                  <div className="post-avt">
                                     <Link to="/">
                                       <img
                                         src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
@@ -410,7 +410,7 @@ const Suggest = () => {
                                   </div>
                                   <div>
                                     <Link to="/">
-                                      <p className="suggest__content-details-post-name">
+                                      <p className="post-username">
                                         một quả bơ
                                       </p>
                                     </Link>

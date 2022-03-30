@@ -231,7 +231,7 @@ const Header = () => {
             </div>
             <div className="header__member">
               <Link to="/" className="header__title">
-                THÀNH VIÊN NỔI BẬT{" "}
+                THÀNH VIÊN NỔI BẬT
               </Link>
             </div>
             <div className="header__menu-category">
