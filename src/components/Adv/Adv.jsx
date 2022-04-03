@@ -25,6 +25,25 @@ const Adv = () => {
                   <img
                     src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
                     alt=""
+                  />
+                </Link>
+              </div>
+              <div className="adv__widget-user">
+                <p className="post-title">
+                Bao lâu rồi bạn không sáng tác?
+                </p>
+                <Link to="/">
+                  <span className="username">Hex </span>
+                </Link>
+                <span className="time-read"> - 18 tháng 8 2019</span>
+              </div>
+            </div>
+            <div className="adv__widget-content-details">
+              <div className="adv__widget-avt">
+                <Link to="/">
+                  <img
+                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
+                    alt=""
                     className=""
                   />
                 </Link>
@@ -39,7 +58,67 @@ const Adv = () => {
                 <span className="time-read"> - 18 tháng 8 2019</span>
               </div>
             </div>
-          </div>
+            <div className="adv__widget-content-details">
+              <div className="adv__widget-avt">
+                <Link to="/">
+                  <img
+                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
+                    alt=""
+                    className=""
+                  />
+                </Link>
+              </div>
+              <div className="adv__widget-user">
+                <p className="post-title">
+                Bao lâu rồi bạn không sáng tác?
+                </p>
+                <Link to="/">
+                  <span className="username">Hex </span>
+                </Link>
+                <span className="time-read"> - 18 tháng 8 2019</span>
+              </div>
+            </div>
+            <div className="adv__widget-content-details">
+              <div className="adv__widget-avt">
+                <Link to="/">
+                  <img
+                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
+                    alt=""
+                    className=""
+                  />
+                </Link>
+              </div>
+              <div className="adv__widget-user">
+                <p className="post-title">
+                Bao lâu rồi bạn không sáng tác?
+                </p>
+                <Link to="/">
+                  <span className="username">Hex </span>
+                </Link>
+                <span className="time-read"> - 18 tháng 8 2019</span>
+              </div>
+            </div>
+            <div className="adv__widget-content-details">
+              <div className="adv__widget-avt">
+                <Link to="/">
+                  <img
+                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
+                    alt=""
+                    className=""
+                  />
+                </Link>
+              </div>
+              <div className="adv__widget-user">
+                <p className="post-title">
+                Bao lâu rồi bạn không sáng tác?
+                </p>
+                <Link to="/">
+                  <span className="username">Hex </span>
+                </Link>
+                <span className="time-read"> - 18 tháng 8 2019</span>
+              </div>
+            </div>
+          </div>       
         </div>
         <div className="adv__contact box-shadow ">
           <p className="adv__contact-heading">LIÊN KẾT</p>

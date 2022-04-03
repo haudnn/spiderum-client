@@ -1,24 +1,20 @@
-import Header from './pages/Header/Header'
-import { BrowserRouter} from 'react-router-dom';
-import './assets/boxicons-2.1.1/boxicons-2.1.1/css/boxicons.min.css';
-import Suggest from './components/Suggest/Suggest';
 import './App.scss';
-import PostofMonth from './components/PostofMonth/PostofMonth';
-import Filter from './components/Filter/Filter';
+import './assets/boxicons-2.1.1/boxicons-2.1.1/css/boxicons.min.css';
+import { BrowserRouter } from "react-router-dom";
+import Header from './pages/Header/Header'
 import Footer from './pages/Footer/Footer'
+import Gototop from './pages/Gototop/Gototop';
+import RoutesConfig from './config/RouterConfig';
 function App() {
   return (
-    <BrowserRouter>
     <div className='App'>
+      <BrowserRouter>
         <Header/>
-        <section className="main">
-          <Suggest/>
-          <PostofMonth/>
-          <Filter/>
-        </section>
-      <Footer/>
-    </div>
+        <RoutesConfig/>
+        <Gototop/>
+        <Footer/>
     </BrowserRouter>
+    </div>
   );
 }
 

@@ -59,6 +59,7 @@
     &__contact{
         margin-top: 20px;
         padding: 20px;
+        padding-bottom: 50px;
         border: 1px solid $boder-color ;
          &-heading{
              font-size: 15px;
@@ -70,7 +71,7 @@
              &-list{
                  display: flex;
                  flex-direction: column;
-                 gap: 10px 0;
+                 gap: 20px 0;
              }
              &-link{
                  display: flex;
