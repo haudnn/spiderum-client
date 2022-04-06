@@ -30,6 +30,7 @@
         text-align: center;
         font-size: 16px;
         border-radius: 3px;
+        cursor: pointer;
     }
 
     &__menu {
@@ -110,18 +111,22 @@
 
         }
     }
+
     &__member {
         width: calc(100% - ($width-15 + $width-70));
     }
+
     &__menu {
         &-category {
             width: calc(100% - 16rem);
+
             &-wrapper {
                 display: flex;
                 gap: 0 20px;
                 align-items: center;
             }
-            &-icon{
+
+            &-icon {
                 position: sticky;
                 top: 0;
                 z-index: 2;
@@ -130,24 +135,26 @@
                 justify-content: center;
                 flex-shrink: 0;
                 width: 3.5rem;
-                height: 56px;
                 font-size: .75rem;
-                &.right{
+
+                &.right {
                     right: 0;
-                    background: linear-gradient(270deg,#fff 25%,hsla(0,0%,100%,.9) 60%,hsla(0,0%,100%,0));
+                    background: linear-gradient(270deg, #fff 25%, hsla(0, 0%, 100%, .9) 60%, hsla(0, 0%, 100%, 0));
                 }
             }
         }
+
         &-navbar {
-            // overflow-x: scroll;
+            overflow-x: hidden;
             -ms-overflow-style: none;
             scrollbar-width: auto;
             width: 100%;
         }
+
         &-list {
             display: flex;
             align-items: center;
-            width: fit-content; 
+            width: fit-content;
             transition: all 200ms ease-in-out 0s;
             gap: 0 20px;
         }
@@ -369,11 +376,52 @@
             align-items: center;
             gap: 0 10px;
             border-radius: 7px;
-
             &:hover {
                 background-color: $hover-color;
             }
         }
+    }
 
+    &__post {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        transition: all .25s linear;
+        transform: translate(0px, 0px);
+        transition: transform 0.2s linear 0;
+        &-section {
+            width: $max-width;
+            margin: 0 auto;
+            height: 3rem;
+            padding: 0 10px;
+            border-radius: 5px;
+        }
+        &-container{
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100%;
+            width: 100%;
+            max-width: $max-width;
+            margin-top: 20px;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        &-info {
+            display: flex;
+            align-items: center;
+            gap: 0 20px;
+        }
     }
 }

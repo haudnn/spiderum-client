@@ -1,6 +1,7 @@
 import React from "react";
 import "./catedetails.scss";
 import { Link } from "react-router-dom";
+import Filter from "../Filter/Filter";
 const CateDetails = (props) => {
   return (
     <div className="main">
@@ -219,6 +220,9 @@ const CateDetails = (props) => {
                       </div>
                     </div>
                   </div>
+                  <div className="category__content-filter">
+                   
+                  </div>
                 </div>
               </div>
               <div className="col l-4">
@@ -324,30 +328,6 @@ const CateDetails = (props) => {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="adv__about">
-                    <ul className="adv__about-list">
-                      <li className="adv__about-item">
-                        <Link to="/" className="adv__about-link">
-                          <span className="adv__about-text">Về Speirum</span>
-                        </Link>
-                      </li>
-                      <li className="adv__about-item">
-                        <Link to="/" className="adv__about-link">
-                          <span className="adv__about-text">
-                            Điều khoản sử dụng
-                          </span>
-                        </Link>
-                      </li>
-                      <li className="adv__about-item">
-                        <Link to="/" className="adv__about-link">
-                          <span className="adv__about-text">Fangpage</span>
-                        </Link>
-                      </li>
-                    </ul>
-                    <span className="adv__about-text">
-                      © 2021 Công ty Cổ phần Felizz
-                    </span>
                   </div>
                 </div>
               </div>

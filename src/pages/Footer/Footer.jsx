@@ -1,9 +1,10 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link , useLocation} from 'react-router-dom'
 import './footer.scss'
 const Footer = () => {
-  return (
-    <footer className='footer'>
+    const location = useLocation();
+    return location.pathname !== "/post" ? (
+        <footer className='footer'>
         <div className="footer__container">
             <div className="footer__about">
                 <div className="footer__about-logo">
@@ -30,8 +31,9 @@ const Footer = () => {
                 </div>
             </div>
         </div>
-    </footer>
-  )
+        </footer> 
+    ) : ""
+
 }
 
 export default Footer

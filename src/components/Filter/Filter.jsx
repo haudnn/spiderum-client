@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./filter.scss";
+import Adv from '../Adv/Adv'
 import { Link } from "react-router-dom";
-import Adv from "../Adv/Adv";
-const Filter = () => {
+const Filter = ({props}) => {
   const [flilterActive, setFilterActive] = useState(0);
   const [tabActive, setTabActive] = useState(0);
   const [pageCurrent, setPageCurrent] = useState(1);
@@ -33,7 +33,7 @@ const Filter = () => {
   const fitterList = [
     {
       displayName: "THỊNH HÀNH",
-      patch: "/",
+      path: "/",
       icon: (
         <svg
           fill=" #718096"
@@ -53,7 +53,7 @@ const Filter = () => {
     },
     {
       displayName: "MỚI",
-      patch: "/",
+      path: "/",
       icon: (
         <svg
           fill=" #718096"
@@ -73,7 +73,7 @@ const Filter = () => {
     },
     {
       displayName: "SÔI NỔI",
-      patch: "/",
+      path: "/",
       icon: (
         <svg
           fill=" #718096"
@@ -93,7 +93,7 @@ const Filter = () => {
     },
     {
       displayName: "TOP ",
-      patch: "/",
+      path: "/",
       icon: (
         <svg
           fill=" #718096"
@@ -218,7 +218,7 @@ const Filter = () => {
                   {fitterList.map((e, i) => (
                     <Link
                       key={i}
-                      to={e.patch}
+                      to={e.path}
                       className={`filter__sort-item ${
                         flilterActive === i ? "active" : ""
                       }`}
@@ -857,7 +857,7 @@ const Filter = () => {
                 </ul>
               </div>
             </div>
-            <Adv></Adv>
+            <Adv/>
           </div>
         </div>
         <div className="listtab" ref={tabRef}>

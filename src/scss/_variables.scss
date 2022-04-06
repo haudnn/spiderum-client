@@ -1,4 +1,5 @@
 $blue: #3398d4;
+$blue-2: rgba(51,152,212,1);
 $white : #fff;
 $black:#000;
 $gray: #969696;
@@ -241,4 +242,20 @@ $font-no: 'Noto Sans', sans-serif;
 }
 .mtb-20{
     margin: 20px 0 ;
+}
+[contenteditable] {
+    outline: 0px solid transparent;
+  }
+  textarea:focus { 
+    outline: 0px solid transparent;              
+
+}
+select:focus { 
+    outline: 0px solid transparent;              
+}
+.hidden{
+    visibility: hidden;
+}
+.mt-80{
+    margin-top: 80px;
 }
