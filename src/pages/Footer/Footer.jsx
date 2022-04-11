@@ -3,7 +3,7 @@ import {Link , useLocation} from 'react-router-dom'
 import './footer.scss'
 const Footer = () => {
     const location = useLocation();
-    return location.pathname !== "/post" ? (
+    return location.pathname !== "/post/create" && location.pathname !== '/login'  && location.pathname !== '/register' ?(
         <footer className='footer'>
         <div className="footer__container">
             <div className="footer__about">

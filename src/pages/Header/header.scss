@@ -1,5 +1,4 @@
 @use "../../scss/"as *;
-
 .header {
     position: fixed;
     top: 0;
@@ -10,12 +9,10 @@
     padding: 15px 0;
     border-bottom: 1px solid rgba(226, 232, 240, 1);
     box-shadow: 0 10px 15px -3px rgba(47, 181, 250, .05), 0 4px 6px -2px rgba(47, 181, 250, .025);
-
     &__container {
         max-width: $max-width;
         margin: 0 auto;
     }
-
     &__top {
         display: flex;
         justify-content: space-between;
@@ -397,6 +394,7 @@
         transition: all .25s linear;
         transform: translate(0px, 0px);
         transition: transform 0.2s linear 0;
+        background-color: $white;
         &-section {
             width: $max-width;
             margin: 0 auto;

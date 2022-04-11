@@ -1,24 +1,42 @@
 import React, { useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { createReactEditorJS } from "react-editor-js";
 import { EDITOR_JS_TOOLS } from "./tools.js";
+import { useLocation, Link } from "react-router-dom";
+import { createPost } from "../../redux/actions";
+import FileBase64 from "react-file-base64";
 import "./post.scss";
 const Post = () => {
   const ReactEditorJS = createReactEditorJS();
   const instanceRef = useRef(null);
+  const refEdit = useRef();
   const [visible, setVisible] = useState(false);
+  const [slug, setSlug] = useState('');
+  const location = useLocation()
+  const [data, setData] = useState({
+    title:'', 
+    content:'',
+    attachment: ''
+  });
   const handleVisibleModal = () => setVisible(!visible)
+  let toolSlug = require('vietnamese-slug');
+  const changeToSlug = () => {
+    setSlug(toolSlug(refEdit.current.textContent+'-'+location.key))
+  }
   return (
     <div className="mt-80">
       <div className="post">
         <div className="post__container">
           <div
-            contenteditable="true"
+            suppressContentEditableWarning
             placeholder="Tiêu đề bài viết......."
             className="post__title"
+            ref={refEdit}
+            onKeyUp={changeToSlug}
           ></div>
           <div
             className=" post__content ce-paragraph cdx-block undefined"
-            contenteditable="true"
+            suppressContentEditableWarning
           >
             <ReactEditorJS
               instanceRef={(instance) => (instanceRef.current = instance)}
@@ -122,7 +140,9 @@ const Post = () => {
            </div>
            <div className="modal__button">
              <button className="modal__button-content back" onClick={handleVisibleModal} >Quay lại</button>
-             <button className="modal__button-content create">Tạo</button>
+             <Link to={`/post/${slug}`}>
+              <button className="modal__button-content create">Tạo</button>
+             </Link>
            </div>
          </div>
        </div>

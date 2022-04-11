@@ -20,6 +20,7 @@
         color: #34495e;
         -webkit-user-modify: read-write;
         overflow-wrap: break-word;
+        outline: 0px solid transparent;    
 
         &:empty::before {
             content: attr(placeholder);

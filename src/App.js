@@ -13,7 +13,7 @@ function App() {
         <RoutesConfig/>
         <Gototop/>
         <Footer/>
-    </BrowserRouter>
+      </BrowserRouter>
     </div>
 
   );
