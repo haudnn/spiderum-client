@@ -15,11 +15,11 @@ const Home = () => {
     <main className='main'>
         <Suggest/>
         <PostofMonth/>
-        {
+        {/* {
           posts.map((post, i) => (
             <p>{post.title}</p>
           ))
-        }
+        } */}
         <Filter/>
     </main>
   )

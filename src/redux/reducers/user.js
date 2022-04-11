@@ -3,11 +3,11 @@ import { currentUser, getType } from "../actions";
 
 export default function userReducers(state = INIT_STATE.user,action){
     switch(action.type) {
-        case getType(currentUser):
-            return {
-                user: action.payload
-            }
+        case getType(currentUser.currentUserSuccess):
+        return { 
+            user: action.payload
+        }
         default:
-            return state;
+        return state;
     } 
 }

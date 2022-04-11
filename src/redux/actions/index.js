@@ -22,6 +22,11 @@ export const deletePost = createActions({
     deletePostSuccess: (payload) => payload,
     deletePostFailure: (err) => err,
  })
-export const currentUser = createAction('CURRENT_USER')
+ export const currentUser = createActions({
+    currentUserRequest: (payload) => payload,
+    currentUserSuccess: (payload) => payload,
+    currentUserFailure: (err) => err,
+ })
+// export const currentUser = createAction('CURRENT_USER')
 export const showModal = createAction('SHOW_CREATE_POST_MODAL')
 export const hideModal = createAction('HIDE_CREATE_POST_MODAL')

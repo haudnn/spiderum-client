@@ -1,10 +1,8 @@
 import React, { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { createReactEditorJS } from "react-editor-js";
 import { EDITOR_JS_TOOLS } from "./tools.js";
 import { useLocation, Link } from "react-router-dom";
-import { createPost } from "../../redux/actions";
-import FileBase64 from "react-file-base64";
+// import FileBase64 from "react-file-base64";
 import "./post.scss";
 const Post = () => {
   const ReactEditorJS = createReactEditorJS();
@@ -13,11 +11,11 @@ const Post = () => {
   const [visible, setVisible] = useState(false);
   const [slug, setSlug] = useState('');
   const location = useLocation()
-  const [data, setData] = useState({
-    title:'', 
-    content:'',
-    attachment: ''
-  });
+  // const [data, setData] = useState({
+  //   title:'', 
+  //   content:'',
+  //   attachment: ''
+  // });
   const handleVisibleModal = () => setVisible(!visible)
   let toolSlug = require('vietnamese-slug');
   const changeToSlug = () => {
