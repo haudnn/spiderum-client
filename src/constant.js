@@ -3,7 +3,11 @@ export const INIT_STATE = {
         isLoading : false,
         data : [],
     },
-    user : {
-        user : null,
+    auth : {
+        isLoggedIn: false,
+        currentUser: null,
+        err:null,
+        token:null,
+
     },
 }

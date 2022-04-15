@@ -20,8 +20,7 @@
     }
 
     &__button {
-        width: 87px;
-        height: 40px;
+        padding: 0.5rem 1rem;
         background-color: $blue;
         color: $white;
         text-align: center;
@@ -29,7 +28,6 @@
         border-radius: 3px;
         cursor: pointer;
     }
-
     &__menu {
         display: flex;
         align-items: center;

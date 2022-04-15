@@ -3,5 +3,7 @@
     width: 400px;
     margin: 0 auto;
     height: 100%;
-    transform: translateY(50%);
+    &__container{
+        transform: translateY(50%);
+    }
 }

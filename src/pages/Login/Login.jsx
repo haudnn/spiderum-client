@@ -1,33 +1,34 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import "./login.scss";
 import { Link, useNavigate }from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
-import {  currentUserState$} from '../../redux/selectors'
+import {  userState$ } from '../../redux/selectors'
 const Login = () => {
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  const [data, setData] = useState({userName: "",password: ""});
   const [errMessage, setErrMessage] = useState(null);
+  const loginSuccess = useSelector( userState$)
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector(currentUserState$)
   const onSubmit = useCallback((e) => {
+  try{
     e.preventDefault();
-    dispatch(actions.currentUser.currentUserRequest(data))
-  },[data,dispatch])
-  // console.log({ token , userName })
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-  //   await dispatch(actions.currentUser.currentUserRequest(data))
-  //   const token = await  user.user.data.token
-  //   console.log(token)
-  // }
-  // const { token , userName } = user.data
-  // localStorage.setItem("token", token)
-  // console.log({ token , userName })
-  console.log(user.user.data.token)
+    dispatch(actions.login.loginRequest(data))
+  }
+  catch(err){ 
+    dispatch(actions.login.loginFailure())
+  }
+},[dispatch, data])
+
+useEffect(()=>{
+  if(loginSuccess.isLoggedIn === false){
+    setErrMessage(loginSuccess.err)
+  }
+  else if(loginSuccess.isLoggedIn === true) {
+    localStorage.setItem("token",loginSuccess.token)
+    navigate('/')
+  }
+},[loginSuccess,navigate])
   return (
     <div className="login">
       <div className="login__container">
@@ -37,15 +38,15 @@ const Login = () => {
             alt=""
           />
         </Link>
-        {/* <p>Error : Sai tên đăng nhập hoặc password </p> */}
-        <form action="" method="POST" className="login__form" onSubmit={onSubmit} >
+        <p>{errMessage}</p>
+        <form action="" method="POST" className="login__form" >
           <input
             type="text"
             placeholder="Tên đăng nhập hoặc email"
-            name="email"
+            name="userName"
             className="login__form-input"
-            value={data.email}
-            onChange={(e) => setData({ ...data, email: e.target.value })}
+            value={data.userName}
+            onChange={(e) => setData({ ...data, userName: e.target.value })}
           />
           <input
             type="password"
@@ -55,7 +56,7 @@ const Login = () => {
             value={data.password}
             onChange={(e) => setData({ ...data, password: e.target.value })}
           />
-          <button className="login__form-button" type="submit">
+          <button className="login__form-button" type="submit" onClick={onSubmit}>
             Đăng nhập
           </button>
         </form>

@@ -1,2 +1,2 @@
 export const postsState$ = (state) => state.posts.data
-export const currentUserState$ = (state) => state.user
+export const userState$ = (state) => state.auth
