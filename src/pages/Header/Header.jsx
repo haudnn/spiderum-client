@@ -7,8 +7,7 @@ import * as actions from '../../redux/actions'
 const Header = () => {
   const currentUser = useSelector(userState$)
   const dispatch = useDispatch();
-  const [user, setUser] = useState('');
-  const [check, setCheck] = useState(false)
+  const [user, setUser] = useState({});
   const [visible, setVisible] = useState(true);
   const [headerPost, setHeaderPost] = useState(true);
   const [showCategory, setShowCategory] = useState(false);
@@ -21,16 +20,6 @@ const Header = () => {
   useEffect(()=>{
     checkCurrentUser()
   },[checkCurrentUser])
-  useEffect(()=>{
-    if(currentUser.currentUser){
-      setCheck(true)
-      setUser(currentUser.currentUser.userName)
-    }
-    else{
-      setCheck(false)
-    }
-  },[currentUser])
-
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
@@ -76,7 +65,11 @@ const Header = () => {
   const handleLogout = useCallback((e) => {
     dispatch(actions.logout())
 },[dispatch])
-
+useEffect(()=> {
+  if(currentUser.currentUser && currentUser.check ){
+    localStorage.removeItem("token")
+  }
+},[currentUser])
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [
@@ -239,7 +232,7 @@ const Header = () => {
             </div>
             <div>
               {
-                  check  ? (
+                  currentUser.currentUser ? (
                     <ul className="header__menu-top">
                     <li >
                       <div className="header__icon-top-wrapper">
@@ -350,7 +343,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="header__dropdown-info">
-                                <p className="header__dropdown-name">{user}</p>
+                                <p className="header__dropdown-name"></p>
                                 <span className="header__dropdown-phone">
                                   @0362821110
                                 </span>
@@ -772,7 +765,7 @@ const Header = () => {
                         />
                       </div>
                       <div className="header__dropdown-info">
-                        <p className="header__dropdown-name">fat_tuna</p>
+                        <p className="header__dropdown-name"></p>
                         <span className="header__dropdown-phone">
                           @0362821110
                         </span>

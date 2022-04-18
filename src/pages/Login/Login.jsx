@@ -19,16 +19,21 @@ const Login = () => {
     dispatch(actions.login.loginFailure())
   }
 },[dispatch, data])
-
 useEffect(()=>{
-  if(loginSuccess.isLoggedIn === false){
+  if(!loginSuccess.isLoggedIn){
     setErrMessage(loginSuccess.err)
   }
-  else if(loginSuccess.isLoggedIn === true) {
+},[loginSuccess])
+useEffect(()=> {
+  if(loginSuccess.token){
     localStorage.setItem("token",loginSuccess.token)
     navigate('/')
   }
+  else{
+    localStorage.setItem("token",'')
+  }
 },[loginSuccess,navigate])
+console.log(loginSuccess)
   return (
     <div className="login">
       <div className="login__container">

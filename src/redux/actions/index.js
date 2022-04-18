@@ -2,11 +2,18 @@ import { createActions, createAction } from 'redux-actions'
 export const getType = (reduxAction) => { 
     return reduxAction().type 
 }
-export const getPosts = createActions({
-    getPostsRequest: undefined, 
-    getPostsSuccess: (payload) => payload,
-    getPostsFailure: (err) => err,
+export const getAllPosts = createActions({
+    getAllPostsRequest: undefined, 
+    getAllPostsSuccess: (payload) => payload,
+    getAllPostsFailure: (err) => err,
 })
+
+export const getPost = createActions({
+    getPostRequest: undefined, 
+    getPostSuccess: (payload) => payload,
+    getPostFailure: (err) => err,
+})
+
 export const checkCurrentUser = createActions({
     checkCurrentUserRequest: undefined, 
     checkCurrentUserSuccess: (payload) => payload,
@@ -38,6 +45,5 @@ export const deletePost = createActions({
     registerFailure: (err) => err,
  })
 export const logout = createAction('LOG_OUT')
-// export const checkCurrentUser = createAction('CHECK_CURRENT_USER')
 export const showModal = createAction('SHOW_CREATE_POST_MODAL')
 export const hideModal = createAction('HIDE_CREATE_POST_MODAL')

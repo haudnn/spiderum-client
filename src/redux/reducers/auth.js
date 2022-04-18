@@ -8,9 +8,10 @@ export default function userReducers(state = INIT_STATE.auth,action){
             }
         case getType(login.loginSuccess):
             return { 
+                token:action.payload.data.token,
                 isLoggedIn :true,
                 currentUser: action.payload,
-                token:action.payload.data.token
+                check:false
             }
         case getType(login.loginFailure):
             return { 
@@ -32,25 +33,27 @@ export default function userReducers(state = INIT_STATE.auth,action){
                 isLoggedIn :false,
                 err:action.payload
             }
- 
         case getType(checkCurrentUser.checkCurrentUserRequest):
             return{
+                ...state,
                 currentUser: action.payload,
             }
         case getType(checkCurrentUser.checkCurrentUserSuccess):
             return{
+                ...state,
                 currentUser: action.payload, 
-            }
+            }   
         case getType(checkCurrentUser.checkCurrentUserFailure):
             return{
+                ...state,
                 currentUser: action.payload, 
             }
         case getType(logout):
             return { 
-                isLoggedIn :false,
+                isLoggedIn: true,
                 currentUser: null,
                 err:null,
-                token:null,
+                check:true,
             }
         default:
             return state;

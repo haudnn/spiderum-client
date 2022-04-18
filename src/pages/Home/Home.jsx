@@ -4,12 +4,12 @@ import PostofMonth from '../../components/PostofMonth/PostofMonth';
 import Filter from '../../components/Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
-import { postsState$  } from '../../redux/selectors'
+import { allPostsState$   } from '../../redux/selectors'
 const Home = () => {
   const dispatch = useDispatch();
-  const posts = useSelector(postsState$)
+  const posts = useSelector(allPostsState$ )
   useEffect(() => {
-    dispatch(actions.getPosts.getPostsRequest())
+    dispatch(actions.getAllPosts.getAllPostsRequest())
   }, [dispatch]);
   return (
     <main className='main'>
