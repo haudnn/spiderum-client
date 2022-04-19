@@ -1,6 +1,8 @@
 import { takeLatest, call, put} from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as api from '../../api'
+
+// POSTS SAGA
 function* getAllPostsSaga(action) {
   try {
     const posts = yield call(api.getAllPosts);
@@ -33,6 +35,8 @@ function* updatePostSaga(action) {
     yield put(action.updatePost.updatePostFailure(err));
   }
 }
+
+// AUTH SAGA
 function* loginSaga(action) {
   try {
     const currentuser = yield call(api.login, action.payload);
@@ -60,13 +64,27 @@ function* checkCurrentUserSaga(action) {
     console.log(err.response.data.message)
   }
 }
+
+// CATEGORISE SAGA 
+function* getAllCategoriesSaga(action) {
+  try {
+    const categories = yield call(api.getAllCategories);
+    yield put(actions.getAllCategories.getAllCategoriesSuccess(categories.data))
+  }catch(err){ 
+      yield put(action.getAllCategories.getAllCategoriesFailure(err))
+  }
+}
 function* mySaga(){
+  // POSTS
   yield takeLatest(actions.getAllPosts.getAllPostsRequest, getAllPostsSaga);
   yield takeLatest(actions.getPost.getPostRequest, getPostSaga);
   yield takeLatest(actions.createPost.createPostRequest, createPostSaga);
   yield takeLatest(actions.updatePost.updatePostRequest, updatePostSaga);
+  // AUTH
   yield takeLatest(actions.login.loginRequest, loginSaga);
   yield takeLatest(actions.register.registerRequest, registerSaga);
   yield takeLatest(actions.checkCurrentUser.checkCurrentUserRequest, checkCurrentUserSaga);
+  // CATEGORIES
+  yield takeLatest(actions.getAllCategories.getAllCategoriesRequest, getAllCategoriesSaga);
 }
 export default mySaga;

@@ -1,20 +1,26 @@
-export const INIT_STATE = { 
-    allPosts : {
-        isLoading : false,
-        data : [],
-        err:null,
-        post:null,
+export const INIT_STATE = {
+    allPosts: {
+        isLoading: false,
+        data: [],
+        err: null,
+        post: null,
     },
-    auth : {
+    categories: {
+        isLoading: false,
+        data: [],
+        err: null,
+    },
+    auth: {
         isLoggedIn: false,
         currentUser: null,
-        err:null,
-        token:false,
-        check:false
+        err: null,
+        token: false,
+        check: false
     },
     post: {
-        post:null,
-        isLoading : false,
-        err:null,
-    }
+        post: null,
+        isLoading: false,
+        err: null,
+    },
+
 }

@@ -2,6 +2,7 @@ import { createActions, createAction } from 'redux-actions'
 export const getType = (reduxAction) => { 
     return reduxAction().type 
 }
+// POSTS
 export const getAllPosts = createActions({
     getAllPostsRequest: undefined, 
     getAllPostsSuccess: (payload) => payload,
@@ -14,11 +15,12 @@ export const getPost = createActions({
     getPostFailure: (err) => err,
 })
 
-export const checkCurrentUser = createActions({
-    checkCurrentUserRequest: undefined, 
-    checkCurrentUserSuccess: (payload) => payload,
-    checkCurrentUserFailure: (err) => err,
-})
+export const deletePost = createActions({
+    deletePostRequest: (payload) => payload,
+    deletePostSuccess: (payload) => payload,
+    deletePostFailure: (err) => err,
+ })
+
 export const createPost = createActions({
     createPostRequest: (payload) => payload,
     createPostSuccess: (payload) => payload,
@@ -29,11 +31,8 @@ export const updatePost = createActions({
    updatePostSuccess: (payload) => payload,
    updatePostFailure: (err) => err,
 })
-export const deletePost = createActions({
-    deletePostRequest: (payload) => payload,
-    deletePostSuccess: (payload) => payload,
-    deletePostFailure: (err) => err,
- })
+
+// AUTH
  export const login = createActions({
     loginRequest: (payload) => payload,
     loginSuccess: (payload) => payload,
@@ -44,6 +43,18 @@ export const deletePost = createActions({
     registerSuccess: (payload) => payload,
     registerFailure: (err) => err,
  })
+export const checkCurrentUser = createActions({
+    checkCurrentUserRequest: undefined, 
+    checkCurrentUserSuccess: (payload) => payload,
+    checkCurrentUserFailure: (err) => err,
+})
+// CATEGORISE
+export const getAllCategories = createActions({
+    getAllCategoriesRequest: undefined, 
+    getAllCategoriesSuccess: (payload) => payload,
+    getAllCategoriesFailure: (err) => err,
+})
+
 export const logout = createAction('LOG_OUT')
 export const showModal = createAction('SHOW_CREATE_POST_MODAL')
 export const hideModal = createAction('HIDE_CREATE_POST_MODAL')

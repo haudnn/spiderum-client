@@ -11,6 +11,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(actions.getAllPosts.getAllPostsRequest())
   }, [dispatch]);
+  console.log(posts)
   return (
     <main className='main'>
         <Suggest/>

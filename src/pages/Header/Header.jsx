@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { userState$ } from '../../redux/selectors'
+import { userState$,categoriesState$ } from '../../redux/selectors'
 import { useDispatch , useSelector} from 'react-redux'
 import "./header.scss";
 import * as actions from '../../redux/actions'
 const Header = () => {
   const currentUser = useSelector(userState$)
+  const categorise =  useSelector(categoriesState$)
   const dispatch = useDispatch();
-  const [user, setUser] = useState({});
   const [visible, setVisible] = useState(true);
   const [headerPost, setHeaderPost] = useState(true);
   const [showCategory, setShowCategory] = useState(false);
   const [showNotify, setShowNotify] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const location = useLocation();
+  const getCategories = useCallback(()=>{
+    dispatch(actions.getAllCategories.getAllCategoriesRequest())
+  },[dispatch])
+  useEffect(()=>{
+    getCategories()
+  },[getCategories])
   const checkCurrentUser = useCallback(()=>{
     dispatch(actions.checkCurrentUser.checkCurrentUserRequest())
   },[dispatch])
@@ -150,72 +156,7 @@ useEffect(()=> {
       path: "/",
     },
   ];
-  const navbarCateMenu = [
-    {
-      displayName: "TẤT CẢ",
-      path: "/",
-    },
-    {
-      displayName: "QUAN ĐIỂM TRANH LUẬN",
-      path: "/category/quan-diem-tranh-luan/",
-    },
-    {
-      displayName: "TRUYỀN CẢM HỨNG",
-      path: "/",
-    },
-    {
-      displayName: "KHOA HỌC - CÔNG NGHỆ",
-      path: "/",
-    },
-    {
-      displayName: "Science2vn",
-      path: "/",
-    },
-    {
-      displayName: "Thể thao",
-      path: "/",
-    },
-    {
-      displayName: "Game",
-      path: "/",
-    },
-    {
-      displayName: "Sáng tác",
-      path: "/",
-    },
-    {
-      displayName: "Comics",
-      path: "/",
-    },
-    {
-      displayName: "Phim",
-      path: "/",
-    },
-    {
-      displayName: "Sách",
-      path: "/",
-    },
-    {
-      displayName: "Du lịch - Ẩm thực",
-      path: "/",
-    },
-    {
-      displayName: "Kỹ năng",
-      path: "/",
-    },
-    {
-      displayName: "Âm nhạc",
-      path: "/",
-    },
-    {
-      displayName: "English Zone",
-      path: "/",
-    },
-    {
-      displayName: "Chuyện trò - Tâm sự",
-      path: "/",
-    },
-  ];
+
   return location.pathname !== '/login'  && location.pathname !== '/register' ? (
     location.pathname !== "/post/create" ? (
       <header className={`header ${visible ? "" : "header-height"}`}>
@@ -638,13 +579,15 @@ useEffect(()=> {
                 </div>
                 <div className="header__menu-navbar">
                   <ul className="header__menu-list">
-                    {navbarCateMenu.map((e, i) => (
-                      <li className="header__menu-item">
-                        <Link to={e.path} className="header__menu-link">
-                          {e.displayName}
-                        </Link>
-                      </li>
-                    ))}
+                    {  
+                      categorise.data.map((e, i) => (
+                        <li key={i._id} className="header__menu-item">
+                          <Link to={e.slug} className="header__menu-link">
+                            {e.name}
+                          </Link>
+                        </li>
+                      )) 
+                    }                                                                         
                   </ul>
                 </div>
                 <div className="header__menu-category-icon right">

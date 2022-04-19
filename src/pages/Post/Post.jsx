@@ -135,56 +135,24 @@ useEffect(()=>{
                     <p className="modal__title">Chọn danh mục</p>
                     <div className="modal__category-container">
                       <select id="selected-id" className="modal__category-select">
-                        <option className="modal__category-option">
-                          -- Chọn danh mục --
-                        </option>
-                        <option className="modal__category-option">
-                          Quan điểm - Tranh luận
-                        </option>
-                        <option className="modal__category-option">
-                          Truyền cảm hứng
-                        </option>
-                        <option className="modal__category-option">
-                          Khoa học - Công nghệ
-                        </option>
-                        <option className="modal__category-option">
-                          Science2vn
-                        </option>
-                        <option className="modal__category-option">
-                          {" "}
-                          Thể thao{" "}
-                        </option>
-                        <option className="modal__category-option"> Game </option>
-                        <option className="modal__category-option">
-                          Sự kiện Spiderum
-                        </option>
-                        <option className="modal__category-option">
-                          Otakulture
-                        </option>
-                        <option className="modal__category-option">
-                          {" "}
-                          Sáng tác{" "}
-                        </option>
-                        <option className="modal__category-option"> Comics </option>
-                        <option className="modal__category-option"> Phim </option>
-                        <option className="modal__category-option"> Sách </option>
-                        <option className="modal__category-option">
-                          Du lịch - Ẩm thực
-                        </option>
-                        <option className="modal__category-option">
-                          {" "}
-                          Kỹ năng{" "}
-                        </option>
-                        <option className="modal__category-option">
-                          {" "}
-                          Âm nhạc{" "}
-                        </option>
-                        <option className="modal__category-option">
-                          English Zone
-                        </option>
-                        <option className="modal__category-option">
-                          Chuyện trò - Tâm sự
-                        </option>
+                        <option className="modal__category-option">-- Chọn danh mục --</option>
+                        <option className="modal__category-option">Quan điểm - Tranh luận</option>
+                        <option className="modal__category-option">Truyền cảm hứng</option>
+                        <option className="modal__category-option">Khoa học - Công nghệ</option>
+                        <option className="modal__category-option">Science2vn</option>
+                        <option className="modal__category-option">Thể thao</option>
+                        <option className="modal__category-option">Game</option>
+                        <option className="modal__category-option">Sự kiện Spiderum</option>
+                        <option className="modal__category-option">Otakulture</option>
+                        <option className="modal__category-option">Sáng tác</option>
+                        <option className="modal__category-option">Comics</option>
+                        <option className="modal__category-option">Phim</option>
+                        <option className="modal__category-option">Sách</option>
+                        <option className="modal__category-option">Du lịch - Ẩm thực</option>
+                        <option className="modal__category-option">Kỹ năng</option>
+                        <option className="modal__category-option">Âm nhạc</option>
+                        <option className="modal__category-option">English Zone </option>
+                        <option className="modal__category-option">Chuyện trò - Tâm sự</option>
                       </select>
                       <div className="modal__category-icon">
                         <i className="modal__category-icon-down bx bxs-chevron-down"></i>

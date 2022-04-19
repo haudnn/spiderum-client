@@ -50,7 +50,11 @@ const Config = () => {
           },
         },
         initData: null,
-        data: {},
+        data: {
+          "withBorder" : false,
+          "withBackground" : false,
+          "stretched" : true
+        },
       },
       raw: Raw,
       header: Header,

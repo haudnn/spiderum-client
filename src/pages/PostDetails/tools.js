@@ -25,6 +25,9 @@ export const Config = {
           class: ImageTool,
           initData: null,
           data: {},
+          withBorder:false,
+          withBackground:false
+
         },
         raw: Raw,
         header: Header,
