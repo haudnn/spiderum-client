@@ -17,7 +17,7 @@ const Home = () => {
         <Suggest/>
         <PostofMonth/>
         {/* {
-          posts.map((post, i) => (
+          posts.data.map((post, i) => (
             <p>{post.title}</p>
           ))
         } */}

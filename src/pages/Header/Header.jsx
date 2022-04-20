@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 import { userState$,categoriesState$ } from '../../redux/selectors'
 import { useDispatch , useSelector} from 'react-redux'
 import "./header.scss";
@@ -29,6 +29,7 @@ const Header = () => {
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
+
   useEffect(() => {
     const handleScroll = () => {
       const moving = window.pageYOffset;
@@ -582,7 +583,7 @@ useEffect(()=> {
                     {  
                       categorise.data.map((e, i) => (
                         <li key={i._id} className="header__menu-item">
-                          <Link to={e.slug} className="header__menu-link">
+                          <Link to={`/category/${e.slug}`} className="header__menu-link">
                             {e.name}
                           </Link>
                         </li>

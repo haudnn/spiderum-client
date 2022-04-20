@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./suggest.scss";
+import PostItem from "../PostItem/PostItem";
 const Suggest = () => {
   return (
     <section className="suggest container">
