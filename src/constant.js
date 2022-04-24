@@ -15,12 +15,16 @@ export const INIT_STATE = {
         currentUser: null,
         err: null,
         token: false,
-        check: false
+        categoryUser: false
     },
     post: {
         post: null,
         isLoading: false,
         err: null,
     },
-
+    categoryUser:{
+        isLoading: false,
+        err: null,
+        data: [],
+    }
 }

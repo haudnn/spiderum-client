@@ -48,6 +48,17 @@ export const checkCurrentUser = createActions({
     checkCurrentUserSuccess: (payload) => payload,
     checkCurrentUserFailure: (err) => err,
 })
+export const createCategoryUser = createActions({
+    createCategoryUserRequest: (payload) => payload,
+    createCategoryUserSuccess: (payload) => payload,
+    createCategoryUserFailure: (err) => err,
+ })
+ export const deleteCategoryUser = createActions({
+    deleteCategoryUserRequest: (payload) => payload,
+    deleteCategoryUserSuccess: (payload) => payload,
+    deleteCategoryUserFailure: (err) => err,
+ })
+
 // CATEGORISE
 export const getAllCategories = createActions({
     getAllCategoriesRequest: undefined, 

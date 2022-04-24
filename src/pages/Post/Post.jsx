@@ -62,14 +62,14 @@ const Post = () => {
                         <span className='time-read'>52 phút trước</span>
                     </div>
                 </div>
-                <div className='flex-align-gap-10'>
+                {/* <div className='flex-align-gap-10'>
                     <Link to='/'>
                         <span className='button-data edit'>Sửa</span>
                     </Link>
                     <Link to='/'>
                         <span className='button-data delete'>Xóa</span>
                     </Link>
-                </div>
+                </div> */}
             </div>
         </div>
         <div className="post__details-content">

@@ -64,6 +64,22 @@ function* checkCurrentUserSaga(action) {
     console.log(err.response.data.message)
   }
 }
+function* createCategoryUserSaga(action) {
+  try {
+    const createCategoryUser = yield call(api.createCategoryUser, action.payload);
+    yield put(actions.createCategoryUser.createCategoryUserSuccess(createCategoryUser.data));
+  } catch (err) {
+    yield put(action.createCategoryUser.createCategoryUserFailure(err));
+  }
+}
+function* deleteCategoryUserSaga(action) {
+  try {
+    const deleteCategoryUser = yield call(api.deleteCategoryUser, action.payload);
+    yield put(actions.deleteCategoryUser.deleteCategoryUserSuccess(deleteCategoryUser.data));
+  } catch (err) {
+    yield put(action.deleteCategoryUser.deleteCategoryUserFailure(err));
+  }
+}
 
 // CATEGORISE SAGA 
 function* getAllCategoriesSaga(action) {
@@ -84,6 +100,8 @@ function* mySaga(){
   yield takeLatest(actions.login.loginRequest, loginSaga);
   yield takeLatest(actions.register.registerRequest, registerSaga);
   yield takeLatest(actions.checkCurrentUser.checkCurrentUserRequest, checkCurrentUserSaga);
+  yield takeLatest(actions.createCategoryUser.createCategoryUserRequest, createCategoryUserSaga);
+  yield takeLatest(actions.deleteCategoryUser.deleteCategoryUserRequest, deleteCategoryUserSaga);
   // CATEGORIES
   yield takeLatest(actions.getAllCategories.getAllCategoriesRequest, getAllCategoriesSaga);
 }

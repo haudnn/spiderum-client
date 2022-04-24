@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constant";
-import {getType, login, logout, register, checkCurrentUser } from "../actions";
+import {getType, login, logout, register, checkCurrentUser, createCategoryUser } from "../actions";
 export default function userReducers(state = INIT_STATE.auth,action){
     switch(action.type) {
         case getType(login.loginRequest):
@@ -11,7 +11,6 @@ export default function userReducers(state = INIT_STATE.auth,action){
                 token:action.payload.data.token,
                 isLoggedIn :true,
                 currentUser: action.payload,
-                check:false
             }
         case getType(login.loginFailure):
             return { 
@@ -48,12 +47,25 @@ export default function userReducers(state = INIT_STATE.auth,action){
                 ...state,
                 currentUser: action.payload, 
             }
+            case getType(createCategoryUser.createCategoryUserRequest):
+            return {
+                ...state,
+            }
+        case getType(createCategoryUser.createCategoryUserSuccess):
+            return {
+                ...state,
+                categoryUser: true
+            }
+        case getType(createCategoryUser.createCategoryUserFailure):
+            return {
+                ...state,
+                err:action.payload
+            }
         case getType(logout):
             return { 
                 isLoggedIn: true,
                 currentUser: null,
                 err:null,
-                check:true,
             }
         default:
             return state;

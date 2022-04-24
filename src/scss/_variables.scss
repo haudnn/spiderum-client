@@ -123,6 +123,7 @@ $font-no: 'Noto Sans', sans-serif;
     -webkit-box-orient: vertical;
     font-weight: normal;
     font-size: 1rem;
+    overflow-wrap: break-word;
 }
 .avt {
     width: 40px;
@@ -203,7 +204,7 @@ $font-no: 'Noto Sans', sans-serif;
     gap: 0 20px;
 }
 .title-post-sm{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     font-family: "Montserrat", sans-serif;
     margin: 15px 0;

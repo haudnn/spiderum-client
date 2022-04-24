@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation} from "react-router-dom";
-import { userState$,categoriesState$ } from '../../redux/selectors'
-import { useDispatch , useSelector} from 'react-redux'
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { userState$, categoriesState$ } from "../../redux/selectors";
+import { useDispatch, useSelector } from "react-redux";
 import "./header.scss";
-import * as actions from '../../redux/actions'
+import * as actions from "../../redux/actions";
 const Header = () => {
-  const currentUser = useSelector(userState$)
-  const categorise =  useSelector(categoriesState$)
+  const currentUser = useSelector(userState$);
+  const categorise = useSelector(categoriesState$);
+  const listRef = useRef();
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(true);
   const [headerPost, setHeaderPost] = useState(true);
@@ -14,18 +15,47 @@ const Header = () => {
   const [showNotify, setShowNotify] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const location = useLocation();
-  const getCategories = useCallback(()=>{
-    dispatch(actions.getAllCategories.getAllCategoriesRequest())
-  },[dispatch])
-  useEffect(()=>{
-    getCategories()
-  },[getCategories])
-  const checkCurrentUser = useCallback(()=>{
-    dispatch(actions.checkCurrentUser.checkCurrentUserRequest())
-  },[dispatch])
-  useEffect(()=>{
-    checkCurrentUser()
-  },[checkCurrentUser])
+  useEffect(() => {
+    if (listRef.current) {
+      const slider = listRef.current;
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      slider.addEventListener("mousedown", (e) => {
+        isDown = true;
+        slider.classList.add("active");
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener("mouseleave", () => {
+        isDown = false;
+        slider.classList.remove("active");
+      });
+      slider.addEventListener("mouseup", () => {
+        isDown = false;
+        slider.classList.remove("active");
+      });
+      slider.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+  }, []);
+  const getCategories = useCallback(() => {
+    dispatch(actions.getAllCategories.getAllCategoriesRequest());
+  }, [dispatch]);
+  useEffect(() => {
+    getCategories();
+  }, [getCategories]);
+  const checkCurrentUser = useCallback(() => {
+    dispatch(actions.checkCurrentUser.checkCurrentUserRequest());
+  }, [dispatch]);
+  useEffect(() => {
+    checkCurrentUser();
+  }, [checkCurrentUser]);
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
@@ -39,7 +69,7 @@ const Header = () => {
         setVisible(true);
       }
     };
-      window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -53,7 +83,7 @@ const Header = () => {
         setHeaderPost(true);
       }
     };
-      window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -64,19 +94,22 @@ const Header = () => {
       setShowNotify(false);
       setShowDropDown(false);
     };
-      document.body.addEventListener("click", handleClickWindow, true);
+    document.body.addEventListener("click", handleClickWindow, true);
     return () => {
       document.body.removeEventListener("click", handleClickWindow, true);
     };
   }, []);
-  const handleLogout = useCallback((e) => {
-    dispatch(actions.logout())
-},[dispatch])
-useEffect(()=> {
-  if(currentUser.currentUser && currentUser.check ){
-    localStorage.removeItem("token")
-  }
-},[currentUser])
+  const handleLogout = useCallback(
+    (e) => {
+      dispatch(actions.logout());
+    },
+    [dispatch]
+  );
+  useEffect(() => {
+    if (currentUser.currentUser && currentUser.check) {
+      localStorage.removeItem("token");
+    }
+  }, [currentUser]);
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [
@@ -157,31 +190,30 @@ useEffect(()=> {
       path: "/",
     },
   ];
-
-  return location.pathname !== '/login'  && location.pathname !== '/register' ? (
-    location.pathname !== "/post/create" ? (
-      <header className={`header ${visible ? "" : "header-height"}`}>
-        <div className={`header__container ${cls} `}>
-          <div className="header__top">
-            <div>
-              <Link to="/">
-                <img
-                  src="https://spiderum.com/assets/icons/wideLogo.png"
-                  alt=""
-                  width="180px"
-                />
-              </Link>
-            </div>
-            <div>
-              {
-                  currentUser.currentUser ? (
-                    <ul className="header__menu-top">
-                    <li >
+  return location.pathname !== "/category" ? (
+    location.pathname !== "/login" && location.pathname !== "/register" ? (
+      location.pathname !== "/post/create" ? (
+        <header className={`header ${visible ? "" : "header-height"}`}>
+          <div className={`header__container ${cls} `}>
+            <div className="header__top">
+              <div>
+                <Link to="/">
+                  <img
+                    src="https://spiderum.com/assets/icons/wideLogo.png"
+                    alt=""
+                    width="180px"
+                  />
+                </Link>
+              </div>
+              <div>
+                {currentUser.currentUser ? (
+                  <ul className="header__menu-top">
+                    <li>
                       <div className="header__icon-top-wrapper">
                         <i class="header__icon header__icon-top bx bx-search-alt-2"></i>
                       </div>
                     </li>
-                    <li >
+                    <li>
                       <Link to="/">
                         <div className="header__icon-top-wrapper">
                           <i class="header__icon header__icon-top  bx bx-envelope"></i>
@@ -212,12 +244,14 @@ useEffect(()=> {
                                       <span className="header__notify-strong">
                                         <b>Husky </b>
                                       </span>
-                                      <span>cũng đã bình luận vào bài viết </span>
+                                      <span>
+                                        cũng đã bình luận vào bài viết{" "}
+                                      </span>
                                       <q class="header__notify-strong header__notify-content">
                                         <b className="">
-                                          Turning Red – Phim tuyên giáo về trò chơi
-                                          mới của chủ nghĩa Đa văn hóa hay danh tính
-                                          người nhập cư Canada
+                                          Turning Red – Phim tuyên giáo về trò
+                                          chơi mới của chủ nghĩa Đa văn hóa hay
+                                          danh tính người nhập cư Canada
                                         </b>
                                       </q>
                                     </div>
@@ -241,12 +275,14 @@ useEffect(()=> {
                                       <span className="header__notify-strong">
                                         <b>Husky </b>
                                       </span>
-                                      <span>cũng đã bình luận vào bài viết </span>
+                                      <span>
+                                        cũng đã bình luận vào bài viết{" "}
+                                      </span>
                                       <q class="header__notify-strong header__notify-content">
                                         <b className="">
-                                          Turning Red – Phim tuyên giáo về trò chơi
-                                          mới của chủ nghĩa Đa văn hóa hay danh tính
-                                          người nhập cư Canada
+                                          Turning Red – Phim tuyên giáo về trò
+                                          chơi mới của chủ nghĩa Đa văn hóa hay
+                                          danh tính người nhập cư Canada
                                         </b>
                                       </q>
                                     </div>
@@ -277,7 +313,10 @@ useEffect(()=> {
                       {showDropDown && (
                         <div className="header__dropdown">
                           <header className="p-10 border-bottom">
-                            <Link to="/" className="header__dropdown-header p-10  ">
+                            <Link
+                              to="/"
+                              className="header__dropdown-header p-10  "
+                            >
                               <div div className="header__dropdown-img">
                                 <img
                                   src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/8918f260d01b11eb8ffbcba3c0ad0183.jpg"
@@ -296,7 +335,10 @@ useEffect(()=> {
                             <div className="p-7 border-bottom">
                               <ul className="header__dropdown-list ">
                                 {headerDropDown.map((e, i) => (
-                                  <li key={i} className="header__dropdown-item p-13">
+                                  <li
+                                    key={i}
+                                    className="header__dropdown-item p-13"
+                                  >
                                     <Link
                                       to={e.path}
                                       className="header__dropdown-link"
@@ -314,7 +356,10 @@ useEffect(()=> {
                             </div>
                             <div className="header__dropdown-config border-bottom">
                               <div className="p-10">
-                                <Link to="/" className="header__dropdown-link p-10">
+                                <Link
+                                  to="/"
+                                  className="header__dropdown-link p-10"
+                                >
                                   <i className="header__dropdown-icon">
                                     <svg
                                       _ngcontent-serverApp-c41=""
@@ -340,7 +385,10 @@ useEffect(()=> {
                             </div>
                             <div className="header__dropdown-logout">
                               <div className="p-10">
-                                <Link to="/" className="header__dropdown-link p-10 ">
+                                <Link
+                                  to="/"
+                                  className="header__dropdown-link p-10 "
+                                >
                                   <i className="header__dropdown-icon">
                                     <svg
                                       _ngcontent-serverApp-c41=""
@@ -368,7 +416,12 @@ useEffect(()=> {
                                       ></path>
                                     </svg>
                                   </i>
-                                  <p className="header__dropdown-text" onClick={handleLogout} >Đăng xuất</p>
+                                  <p
+                                    className="header__dropdown-text"
+                                    onClick={handleLogout}
+                                  >
+                                    Đăng xuất
+                                  </p>
                                 </Link>
                               </div>
                             </div>
@@ -376,429 +429,299 @@ useEffect(()=> {
                         </div>
                       )}
                     </li>
-                    <li >
+                    <li>
                       <Link to="post/create">
                         <button className="header__button">Viết bài</button>
                       </Link>
                     </li>
                   </ul>
-                  ) : (
-                    <ul className="header__menu-top">
-                      <li>
-                        <div className="header__icon-top-wrapper">
-                          <i class="header__icon header__icon-top bx bx-search-alt-2"></i>
-                        </div>
-                      </li>
-                      <li>
-                        <Link to="/login">
-                          <button className="header__button">Đăng nhập</button>
+                ) : (
+                  <ul className="header__menu-top">
+                    <li>
+                      <div className="header__icon-top-wrapper">
+                        <i class="header__icon header__icon-top bx bx-search-alt-2"></i>
+                      </div>
+                    </li>
+                    <li>
+                      <Link to="/login">
+                        <button className="header__button">Đăng nhập</button>
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
+            <div className="header__menu">
+              <div className="header__cate" onClick={handleShow}>
+                <span className="header__title no-wrap">ĐANG THEO DÕI</span>
+                <i className="header__icon bx bx-chevron-down"></i>
+                {showCategory && (
+                  <div className="header__cate-menu">
+                      { currentUser.currentUser.category ? currentUser.currentUser.category.map((e, i) => (
+                      <div className="header__cate-list">
+                        <Link  to={`/category/${e.slug}`}>
+                          <div className="header__cate-link">
+                            <img
+                              className="header__cate-img"
+                              src={e.attachment}
+                              alt=""
+                            />
+                            <span className="header__cate-text">{e.name}</span>
+                            <i className="header__cate-icon bx bx-x"></i>
+                          </div>
                         </Link>
-                      </li>
-                    </ul>
-                  )
-              }                            
-            </div>
-          </div>
-          <div className="header__menu">
-            <div className="header__cate" onClick={handleShow}>
-              <span className="header__title no-wrap">ĐANG THEO DÕI</span>
-              <i className="header__icon bx bx-chevron-down"></i>
-              {showCategory && (
-                <div className="header__cate-menu">
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">
-                          CHUYỆN TRÒ - TÂM SỰ
-                        </span>
-                        <i className="header__cate-icon bx bx-x"></i>
                       </div>
-                    </Link>
+                      )) : (
+                        <Link to="/category">
+                          <div className="header__cate-link">
+                            <span className="header__cate-text">DANH SÁCH THEO DÕI RỖNG</span>
+                          </div>
+                        </Link>
+                      )}
                   </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">
-                          DU LỊCH - ẨM THỰC
-                        </span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
+                      
+                )}
+              </div>
+              <div className="header__member">
+                <Link to="/" className="header__title no-wrap">
+                  THÀNH VIÊN NỔI BẬT
+                </Link>
+              </div>
+              <div className="header__menu-category">
+                <div className="header__menu-category-wrapper">
+                  <div className="header__menu-category-icon left">
+                    <i className=" header__icon bx bx-chevron-left"></i>
                   </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">KỸ NĂNG</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">SÁCH</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">PHIM</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">KỸ NĂNG</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">SÁNG TÁC</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">THỂ THAO</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">GAME</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">ENGLISH ZONE</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">KỸ NĂNG</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="header__cate-list">
-                    <Link to="/">
-                      <div className="header__cate-link">
-                        <img
-                          className="header__cate-img"
-                          src="https://spiderum.com/assets/images/categories/conversation-min.jpg"
-                          alt=""
-                        />
-                        <span className="header__cate-text">TRUYỀN CẢM HỨNG</span>
-                        <i className="header__cate-icon bx bx-x"></i>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="header__member">
-              <Link to="/" className="header__title no-wrap">
-                THÀNH VIÊN NỔI BẬT
-              </Link>
-            </div>
-            <div className="header__menu-category">
-              <div className="header__menu-category-wrapper">
-                <div className="header__menu-category-icon left">
-                  <i className=" header__icon bx bx-chevron-left"></i>
-                </div>
-                <div className="header__menu-navbar">
-                  <ul className="header__menu-list">
-                    {  
-                      categorise.data.map((e, i) => (
+                  <div className="header__menu-navbar">
+                    <ul className="header__menu-list" ref={listRef}>
+                      {categorise.data.map((e, i) => (
                         <li key={i._id} className="header__menu-item">
-                          <Link to={`/category/${e.slug}`} className="header__menu-link">
+                          <Link
+                            to={`/category/${e.slug}`}
+                            className="header__menu-link"
+                          >
                             {e.name}
                           </Link>
                         </li>
-                      )) 
-                    }                                                                         
-                  </ul>
-                </div>
-                <div className="header__menu-category-icon right">
-                  <i className="header__icon bx bx-chevron-right"></i>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="header__menu-category-icon right">
+                    <i className="header__icon bx bx-chevron-right"></i>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
-    ) : (
-      <header className={`header__post`}>
-        <div className={`header__post-section ${cls2} `}>
-          <div className="header__post-container">
-            <div className="header__post-logo">
-              <Link to="/">
-                <img
-                  src="https://spiderum.com/assets/icons/wideLogo.png"
-                  alt=""
-                  width="180px"
-                />
-              </Link>
-            </div>
-            <div className="header__post-info">
-              <div
-                className="header__icon-top-wrapper "
-                onClick={handleShowNotify}
-              >
-                <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
-                {showNotify && (
-                  <div className="header__notify">
-                    <header className="header__notify-header">
-                      <h3>Thông báo</h3>
-                    </header>
-                    <div className="header__notify-wrapper">
-                      <ul className="header__notify-list">
-                        <li className="header__notify-item">
-                          <Link to="/" className="header__notify-link">
-                            <div className="header__notify-menu">
-                              <img
-                                src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                alt=""
-                                className="header__notify-img"
-                              />
-                              <div className="header__notify-info">
-                                <span className="header__notify-strong">
-                                  <b>Husky </b>
-                                </span>
-                                <span>cũng đã bình luận vào bài viết </span>
-                                <q class="header__notify-strong header__notify-content">
-                                  <b className="">
-                                    Turning Red – Phim tuyên giáo về trò chơi mới
-                                    của chủ nghĩa Đa văn hóa hay danh tính người
-                                    nhập cư Canada
-                                  </b>
-                                </q>
+        </header>
+      ) : (
+        <header className={`header__post`}>
+          <div className={`header__post-section ${cls2} `}>
+            <div className="header__post-container">
+              <div className="header__post-logo">
+                <Link to="/">
+                  <img
+                    src="https://spiderum.com/assets/icons/wideLogo.png"
+                    alt=""
+                    width="180px"
+                  />
+                </Link>
+              </div>
+              <div className="header__post-info">
+                <div
+                  className="header__icon-top-wrapper "
+                  onClick={handleShowNotify}
+                >
+                  <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
+                  {showNotify && (
+                    <div className="header__notify">
+                      <header className="header__notify-header">
+                        <h3>Thông báo</h3>
+                      </header>
+                      <div className="header__notify-wrapper">
+                        <ul className="header__notify-list">
+                          <li className="header__notify-item">
+                            <Link to="/" className="header__notify-link">
+                              <div className="header__notify-menu">
+                                <img
+                                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
+                                  alt=""
+                                  className="header__notify-img"
+                                />
+                                <div className="header__notify-info">
+                                  <span className="header__notify-strong">
+                                    <b>Husky </b>
+                                  </span>
+                                  <span>cũng đã bình luận vào bài viết </span>
+                                  <q class="header__notify-strong header__notify-content">
+                                    <b className="">
+                                      Turning Red – Phim tuyên giáo về trò chơi
+                                      mới của chủ nghĩa Đa văn hóa hay danh tính
+                                      người nhập cư Canada
+                                    </b>
+                                  </q>
+                                </div>
+                                <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
                               </div>
-                              <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                            </div>
-                            <div className="header__notify-time">
-                              <i class="bx bxs-conversation"></i>
-                              <span className="time">16 tháng 3</span>
-                            </div>
-                          </Link>
-                        </li>
-                        <li className="header__notify-item">
-                          <Link to="/" className="header__notify-link">
-                            <div className="header__notify-menu">
-                              <img
-                                src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                alt=""
-                                className="header__notify-img"
-                              />
-                              <div className="header__notify-info">
-                                <span className="header__notify-strong">
-                                  <b>Husky </b>
-                                </span>
-                                <span>cũng đã bình luận vào bài viết </span>
-                                <q class="header__notify-strong header__notify-content">
-                                  <b className="">
-                                    Turning Red – Phim tuyên giáo về trò chơi mới
-                                    của chủ nghĩa Đa văn hóa hay danh tính người
-                                    nhập cư Canada
-                                  </b>
-                                </q>
+                              <div className="header__notify-time">
+                                <i class="bx bxs-conversation"></i>
+                                <span className="time">16 tháng 3</span>
                               </div>
-                              <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                            </div>
-                            <div className="header__notify-time">
-                              <i class="bx bxs-conversation"></i>
-                              <span className="time">16 tháng 3</span>
-                            </div>
-                          </Link>
-                        </li>
-                      </ul>
+                            </Link>
+                          </li>
+                          <li className="header__notify-item">
+                            <Link to="/" className="header__notify-link">
+                              <div className="header__notify-menu">
+                                <img
+                                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
+                                  alt=""
+                                  className="header__notify-img"
+                                />
+                                <div className="header__notify-info">
+                                  <span className="header__notify-strong">
+                                    <b>Husky </b>
+                                  </span>
+                                  <span>cũng đã bình luận vào bài viết </span>
+                                  <q class="header__notify-strong header__notify-content">
+                                    <b className="">
+                                      Turning Red – Phim tuyên giáo về trò chơi
+                                      mới của chủ nghĩa Đa văn hóa hay danh tính
+                                      người nhập cư Canada
+                                    </b>
+                                  </q>
+                                </div>
+                                <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
+                              </div>
+                              <div className="header__notify-time">
+                                <i class="bx bxs-conversation"></i>
+                                <span className="time">16 tháng 3</span>
+                              </div>
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                      <footer className="header__notify-footer">
+                        <p>Hiển thị thêm</p>
+                      </footer>
                     </div>
-                    <footer className="header__notify-footer">
-                      <p>Hiển thị thêm</p>
-                    </footer>
+                  )}
+                </div>
+                <div className="header__avt" onClick={handleShowDropDown}>
+                  <img
+                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/aec845906a1911ec8130097cb62284e8.png"
+                    alt=""
+                    className="post-avt"
+                  />
+                </div>
+                {showDropDown && (
+                  <div className="header__dropdown">
+                    <header className="p-10 border-bottom">
+                      <Link to="/" className="header__dropdown-header p-10  ">
+                        <div div className="header__dropdown-img">
+                          <img
+                            src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/8918f260d01b11eb8ffbcba3c0ad0183.jpg"
+                            alt=""
+                          />
+                        </div>
+                        <div className="header__dropdown-info">
+                          <p className="header__dropdown-name"></p>
+                          <span className="header__dropdown-phone">
+                            @0362821110
+                          </span>
+                        </div>
+                      </Link>
+                    </header>
+                    <div className="header__dropdown-content">
+                      <div className="p-7 border-bottom">
+                        <ul className="header__dropdown-list ">
+                          {headerDropDown.map((e, i) => (
+                            <li key={i} className="header__dropdown-item p-13">
+                              <Link
+                                to={e.path}
+                                className="header__dropdown-link"
+                              >
+                                <i className="header__dropdown-icon">
+                                  {e.icon}
+                                </i>
+                                <p className="header__dropdown-text">
+                                  {e.displayName}
+                                </p>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="header__dropdown-config border-bottom">
+                        <div className="p-10">
+                          <Link to="/" className="header__dropdown-link p-10">
+                            <i className="header__dropdown-icon">
+                              <svg
+                                _ngcontent-serverApp-c41=""
+                                id="Layer_1"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                data-name="Layer 1"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  _ngcontent-serverApp-c41=""
+                                  d="M15.7218 5.84C15.1018 5.83 14.4918 5.56 14.0718 5.03C13.4918 4.28 13.4718 3.26 13.9418 2.49C12.8418 1.22 11.4318 0.38 9.91181 0C9.78181 0.29 9.5918 0.56 9.3318 0.77C8.4218 1.53 7.08181 1.38 6.34181 0.439999C6.23181 0.299999 6.1518 0.15 6.0818 0C4.9818 0.28 3.92181 0.79 2.98181 1.57C2.67181 1.83 2.3918 2.11 2.1318 2.4C2.7718 3.34 2.61181 4.64 1.73181 5.36C1.31181 5.71 0.791801 5.86 0.281801 5.83C-0.108199 7.32 -0.0981935 8.9 0.341807 10.39C0.981807 10.37 1.62181 10.64 2.05181 11.19C2.63181 11.93 2.6618 12.93 2.2118 13.7C3.2818 14.86 4.62181 15.63 6.05181 16C6.18181 15.67 6.3818 15.38 6.6718 15.14C7.5818 14.38 8.92181 14.53 9.66181 15.48C9.78181 15.64 9.88181 15.82 9.95181 16C11.0418 15.72 12.0918 15.21 13.0218 14.44C13.3318 14.18 13.6018 13.9 13.8618 13.61C13.3818 12.7 13.5818 11.53 14.4018 10.86C14.7718 10.55 15.2218 10.4 15.6618 10.39C16.0918 8.91 16.1218 7.33 15.7218 5.84ZM8.0018 11.53C6.0518 11.53 4.4718 9.95 4.4718 8C4.4718 6.05 6.0518 4.47 8.0018 4.47C9.9518 4.47 11.5318 6.05 11.5318 8C11.5318 9.95 9.9518 11.53 8.0018 11.53Z"
+                                  class="cls-1"
+                                ></path>
+                              </svg>
+                            </i>
+                            <p className="header__dropdown-text">
+                              Tùy chỉnh tài khoản
+                            </p>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="header__dropdown-logout">
+                        <div className="p-10">
+                          <Link to="/" className="header__dropdown-link p-10 ">
+                            <i className="header__dropdown-icon">
+                              <svg
+                                _ngcontent-serverApp-c41=""
+                                id="Layer_1"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                data-name="Layer 1"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  _ngcontent-serverApp-c41=""
+                                  d="M14.4399 8.8501H5.88989C5.33989 8.8501 4.88989 8.4001 4.88989 7.8501C4.88989 7.3001 5.33989 6.8501 5.88989 6.8501H14.4399C14.9899 6.8501 15.4399 7.3001 15.4399 7.8501C15.4399 8.4001 14.9999 8.8501 14.4399 8.8501Z"
+                                  class="cls-1"
+                                ></path>
+                                <path
+                                  _ngcontent-serverApp-c41=""
+                                  d="M10.5299 13.1C10.2799 13.1 10.0299 13.01 9.83992 12.82C9.43992 12.44 9.42992 11.8 9.80992 11.4L13.1399 7.91996L9.82992 4.60996C9.43992 4.21996 9.43992 3.57996 9.82992 3.18996C10.2199 2.79996 10.8599 2.79996 11.2499 3.18996L15.0699 7.00996C15.5599 7.48996 15.5699 8.29996 15.0899 8.79996L11.2699 12.79C11.0599 12.99 10.7999 13.1 10.5299 13.1ZM13.6399 8.41996C13.6399 8.41996 13.6399 8.42996 13.6399 8.41996V8.41996Z"
+                                  class="cls-1"
+                                ></path>
+                                <path
+                                  _ngcontent-serverApp-c41=""
+                                  d="M5.79 16H1C0.45 16 0 15.55 0 15V1C0 0.45 0.45 0 1 0H5.79C6.34 0 6.79 0.45 6.79 1C6.79 1.55 6.34 2 5.79 2H2V13.99H5.78C6.33 13.99 6.78 14.44 6.78 14.99C6.79 15.55 6.34 16 5.79 16Z"
+                                  class="cls-1"
+                                ></path>
+                              </svg>
+                            </i>
+                            <p className="header__dropdown-text">Đăng xuất</p>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
-              <div className="header__avt" onClick={handleShowDropDown}>
-                <img
-                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/aec845906a1911ec8130097cb62284e8.png"
-                  alt=""
-                  className="post-avt"
-                />
-              </div>
-              {showDropDown && (
-                <div className="header__dropdown">
-                  <header className="p-10 border-bottom">
-                    <Link to="/" className="header__dropdown-header p-10  ">
-                      <div div className="header__dropdown-img">
-                        <img
-                          src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/8918f260d01b11eb8ffbcba3c0ad0183.jpg"
-                          alt=""
-                        />
-                      </div>
-                      <div className="header__dropdown-info">
-                        <p className="header__dropdown-name"></p>
-                        <span className="header__dropdown-phone">
-                          @0362821110
-                        </span>
-                      </div>
-                    </Link>
-                  </header>
-                  <div className="header__dropdown-content">
-                    <div className="p-7 border-bottom">
-                      <ul className="header__dropdown-list ">
-                        {headerDropDown.map((e, i) => (
-                          <li key={i} className="header__dropdown-item p-13">
-                            <Link to={e.path} className="header__dropdown-link">
-                              <i className="header__dropdown-icon">{e.icon}</i>
-                              <p className="header__dropdown-text">
-                                {e.displayName}
-                              </p>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="header__dropdown-config border-bottom">
-                      <div className="p-10">
-                        <Link to="/" className="header__dropdown-link p-10">
-                          <i className="header__dropdown-icon">
-                            <svg
-                              _ngcontent-serverApp-c41=""
-                              id="Layer_1"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              data-name="Layer 1"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                _ngcontent-serverApp-c41=""
-                                d="M15.7218 5.84C15.1018 5.83 14.4918 5.56 14.0718 5.03C13.4918 4.28 13.4718 3.26 13.9418 2.49C12.8418 1.22 11.4318 0.38 9.91181 0C9.78181 0.29 9.5918 0.56 9.3318 0.77C8.4218 1.53 7.08181 1.38 6.34181 0.439999C6.23181 0.299999 6.1518 0.15 6.0818 0C4.9818 0.28 3.92181 0.79 2.98181 1.57C2.67181 1.83 2.3918 2.11 2.1318 2.4C2.7718 3.34 2.61181 4.64 1.73181 5.36C1.31181 5.71 0.791801 5.86 0.281801 5.83C-0.108199 7.32 -0.0981935 8.9 0.341807 10.39C0.981807 10.37 1.62181 10.64 2.05181 11.19C2.63181 11.93 2.6618 12.93 2.2118 13.7C3.2818 14.86 4.62181 15.63 6.05181 16C6.18181 15.67 6.3818 15.38 6.6718 15.14C7.5818 14.38 8.92181 14.53 9.66181 15.48C9.78181 15.64 9.88181 15.82 9.95181 16C11.0418 15.72 12.0918 15.21 13.0218 14.44C13.3318 14.18 13.6018 13.9 13.8618 13.61C13.3818 12.7 13.5818 11.53 14.4018 10.86C14.7718 10.55 15.2218 10.4 15.6618 10.39C16.0918 8.91 16.1218 7.33 15.7218 5.84ZM8.0018 11.53C6.0518 11.53 4.4718 9.95 4.4718 8C4.4718 6.05 6.0518 4.47 8.0018 4.47C9.9518 4.47 11.5318 6.05 11.5318 8C11.5318 9.95 9.9518 11.53 8.0018 11.53Z"
-                                class="cls-1"
-                              ></path>
-                            </svg>
-                          </i>
-                          <p className="header__dropdown-text">
-                            Tùy chỉnh tài khoản
-                          </p>
-                        </Link>
-                      </div>
-                    </div>
-                    <div className="header__dropdown-logout">
-                      <div className="p-10">
-                        <Link to="/" className="header__dropdown-link p-10 ">
-                          <i className="header__dropdown-icon">
-                            <svg
-                              _ngcontent-serverApp-c41=""
-                              id="Layer_1"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              data-name="Layer 1"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                _ngcontent-serverApp-c41=""
-                                d="M14.4399 8.8501H5.88989C5.33989 8.8501 4.88989 8.4001 4.88989 7.8501C4.88989 7.3001 5.33989 6.8501 5.88989 6.8501H14.4399C14.9899 6.8501 15.4399 7.3001 15.4399 7.8501C15.4399 8.4001 14.9999 8.8501 14.4399 8.8501Z"
-                                class="cls-1"
-                              ></path>
-                              <path
-                                _ngcontent-serverApp-c41=""
-                                d="M10.5299 13.1C10.2799 13.1 10.0299 13.01 9.83992 12.82C9.43992 12.44 9.42992 11.8 9.80992 11.4L13.1399 7.91996L9.82992 4.60996C9.43992 4.21996 9.43992 3.57996 9.82992 3.18996C10.2199 2.79996 10.8599 2.79996 11.2499 3.18996L15.0699 7.00996C15.5599 7.48996 15.5699 8.29996 15.0899 8.79996L11.2699 12.79C11.0599 12.99 10.7999 13.1 10.5299 13.1ZM13.6399 8.41996C13.6399 8.41996 13.6399 8.42996 13.6399 8.41996V8.41996Z"
-                                class="cls-1"
-                              ></path>
-                              <path
-                                _ngcontent-serverApp-c41=""
-                                d="M5.79 16H1C0.45 16 0 15.55 0 15V1C0 0.45 0.45 0 1 0H5.79C6.34 0 6.79 0.45 6.79 1C6.79 1.55 6.34 2 5.79 2H2V13.99H5.78C6.33 13.99 6.78 14.44 6.78 14.99C6.79 15.55 6.34 16 5.79 16Z"
-                                class="cls-1"
-                              ></path>
-                            </svg>
-                          </i>
-                          <p className="header__dropdown-text">Đăng xuất</p>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      </header>
-    )
-  ) : null
+        </header>
+      )
+    ) : null
+  ) : (
+    ""
+  );
 };
 export default Header;

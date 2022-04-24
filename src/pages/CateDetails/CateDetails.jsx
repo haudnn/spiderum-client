@@ -1,13 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { userState$ } from "../../redux/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../redux/actions";
 import "./catedetails.scss";
 const CateDetails = () => {
+  const currentUser = useSelector(userState$);
+  const dispatch = useDispatch()
   const { slug } = useParams();
   const [postItem, setPostItem] = useState([]);
   const [id, setId] = useState("");
   const [data, setData] = useState({});
+  const [cateUpdate, setCateUpdate] = useState({
+    category : ""
+  });
   const [policy, setPolicy] = useState([]);
+  const [isFollow, setIsFollow] = useState(false);
   const getCategory = useCallback(async () => {
     const res = await axios.get(`/api/v1/category/${slug}`);
     setId(res.data.data.category._id);
@@ -16,15 +25,48 @@ const CateDetails = () => {
   }, [slug]);
   const getPost = useCallback(async () => {
     if (id) {
+      const arr = []
       const resPost = await axios.get(`/api/v1/posts/cate/${id}`);
       setPostItem(resPost.data.data.posts);
+      arr.push(id)
+      setCateUpdate(arr)
     }
   }, [id]);
   useEffect(() => {
     getCategory();
     getPost();
   }, [getCategory, getPost]);
-  console.log(postItem)
+  useEffect(()=>{
+      if(currentUser.currentUser){
+       if(currentUser.currentUser.category){
+         const result = currentUser.currentUser.category.filter((e) => e._id === id)
+         if(result.length === 0) {
+            setIsFollow(false)
+        }
+        else (
+           setIsFollow(true)
+        )
+       }
+      }
+  },[currentUser,id])
+  const onSubmit = useCallback((e) => {
+    try{
+      e.preventDefault();
+      dispatch(actions.createCategoryUser.createCategoryUserRequest(cateUpdate))
+    }
+    catch(err){ 
+      dispatch(actions.createCategoryUser.createCategoryUserFailure())
+    }
+  },[dispatch,cateUpdate])
+  const handleSubmit = useCallback((e) => {
+    try{
+      e.preventDefault();
+      dispatch(actions.deleteCategoryUser.deleteCategoryUserRequest(cateUpdate))
+    }
+    catch(err){ 
+      dispatch(actions.deleteCategoryUser.deleteCategoryUserFailure())
+    }
+  },[dispatch,cateUpdate])
   return (
     <div className="main">
       <section className="category">
@@ -36,14 +78,24 @@ const CateDetails = () => {
           <div className="category__header-container">
             <div className="category__header-info">
               <p className="category__header-title">{data.name}</p>
-              <div className="">
-                <button className="button-page">
-                  <span className="button-icon">
-                    <i class="bx bx-check"></i>
-                  </span>
-                  Đang theo dõi
-                </button>
-              </div>
+              {
+                isFollow ? (
+                  <div>
+                  <button className="button-page" type="submit" onClick={handleSubmit}>
+                    <span className="button-icon">
+                      <i class="bx bx-check"></i>
+                    </span>
+                    Đang theo dõi
+                  </button>
+                </div>
+                ) : (
+                  <div>
+                  <button className="button-page" type="submit" onClick={onSubmit}>
+                    Theo dõi
+                  </button>
+                </div>
+                )
+              }
             </div>
           </div>
         </header>
@@ -153,84 +205,36 @@ const CateDetails = () => {
                   <div className="category__content-trending border box-shadow">
                     <div className="grid">
                       <div className="row">
-                        <div className="col l-4">
-                          <div className="category__content-trending-container">
-                            <div className="category__content-trending-img">
-                              <img
-                                src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/ff900c000f7611eb8cbb3f9e0212799e.jpg"
-                                alt=""
-                              />
-                            </div>
-                            <div>
-                              <Link to="/">
-                                <span className="title-category">
-                                  QUAN ĐIỂM - TRANH LUẬN
-                                </span>
-                              </Link>
-                              <Link to="/">
-                                <p className="title-post-sm">
-                                  Atomic Habits: Bạn đã hiểu đúng về tạo lập
-                                  thói quen?
-                                </p>
-                              </Link>
-                              <Link to="/">
-                                <p className="post-username">một quả bơ</p>
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col l-4">
-                          <div className="category__content-trending-container">
-                            <div className="category__content-trending-img">
-                              <img
-                                src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/ff900c000f7611eb8cbb3f9e0212799e.jpg"
-                                alt=""
-                              />
-                            </div>
-                            <div>
-                              <Link to="/">
-                                <span className="title-category">
-                                  QUAN ĐIỂM - TRANH LUẬN
-                                </span>
-                              </Link>
-                              <Link to="/">
-                                <p className="title-post-sm">
-                                  Atomic Habits: Bạn đã hiểu đúng về tạo lập
-                                  thói quen?
-                                </p>
-                              </Link>
-                              <Link to="/">
-                                <p className="post-username">một quả bơ</p>
-                              </Link>
+                        {
+                          postItem.map((e,i)=>(
+                            <div className="col l-4">
+                            <div className="category__content-trending-container">
+                              <div className="category__content-trending-img">
+                                <img
+                                   src={e.attachment ? e.attachment : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"}
+                                  alt=""
+                                />
+                              </div>
+                              <div>
+                                <Link to="/">
+                                  <span className="title-category">
+                                    {e.category.name}
+                                  </span>
+                                </Link>
+                                <Link to={`/post/${e.slug}`}>
+                                  <p className="title-post-sm">
+                                    {e.title}
+                                  </p>
+                                </Link>
+                                <Link to="/">
+                                  <p className="post-username">{e.author.userName}</p>
+                                </Link>              
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="col l-4">
-                          <div className="category__content-trending-container">
-                            <div className="category__content-trending-img">
-                              <img
-                                src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/ff900c000f7611eb8cbb3f9e0212799e.jpg"
-                                alt=""
-                              />
-                            </div>
-                            <div>
-                              <Link to="/">
-                                <span className="title-category">
-                                  QUAN ĐIỂM - TRANH LUẬN
-                                </span>
-                              </Link>
-                              <Link to="/">
-                                <p className="title-post-sm">
-                                  Atomic Habits: Bạn đã hiểu đúng về tạo lập
-                                  thói quen?
-                                </p>
-                              </Link>
-                              <Link to="/">
-                                <p className="post-username">một quả bơ</p>
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
+                          )                          
+                          )
+                        }                    
                       </div>
                     </div>
                   </div>

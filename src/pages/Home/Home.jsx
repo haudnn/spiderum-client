@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
 import { allPostsState$   } from '../../redux/selectors'
 const Home = () => {
-  const dispatch = useDispatch();
-  const posts = useSelector(allPostsState$ )
-  useEffect(() => {
-    dispatch(actions.getAllPosts.getAllPostsRequest())
-  }, [dispatch]);
-  console.log(posts)
+  // const dispatch = useDispatch();
+  // const posts = useSelector(allPostsState$ )
+  // useEffect(() => {
+  //   dispatch(actions.getAllPosts.getAllPostsRequest())
+  // }, [dispatch]);
+  // console.log(posts)
   return (
     <main className='main'>
         <Suggest/>
