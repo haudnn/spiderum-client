@@ -1,0 +1,168 @@
+@use "../../scss/"as *;
+.settings {
+    margin: 0 215px 30px 60px;
+    &__cover{
+        height: 170px;
+    }
+    &__navbar{
+        display: flex;
+        flex-direction: column;
+        &-text{
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 2;
+            color: rgba(113,128,150);
+            display: inline-block;
+            padding-left: 5px;
+            border-left: 3px solid $blue;
+        }
+    }
+    &__name{
+        text-transform: uppercase;
+        color: #4a5568;
+        margin-bottom: 10px;
+        font-weight: 700;
+        font-size: 13px;
+        display: block;
+    }
+    &__flex{
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+            &-item{
+                width: 50%;
+                padding: 0 15px;
+            }
+            &-item-wfull{
+                width: 100%;
+                padding: 0 15px;
+                
+            }
+    }
+    &__input {
+        display: block;
+        width: 100%;    
+        color: #4a5568;
+        padding: 15px 20px;
+        margin-bottom: 10px;    
+        border-radius: 0.25rem;    
+        appearance: none;
+        border: 1px solid rgba(226, 232, 240);
+    }  
+    &__gender{
+        display: flex;
+        gap: 0 15px;   
+        align-items: center;
+        height: 50%;
+            &-text{
+                margin-left: 5px;
+            }    
+    }
+    &__password{
+        display: block;
+        text-align: center;
+    }
+    &__button{
+        display: block;
+        width: 100%;
+        border-radius: 5rem;
+        padding: 10px;
+        background-color: $blue;
+        color: $white;
+    }
+    &__form{
+        margin-bottom: 30px;
+    }
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0 10px;
+            &.cancle{
+                font-size: 16px;
+                background-color: unset;
+                cursor: pointer;
+                padding: 10px;
+                    &:hover{
+                        background-color: #edf2f7;
+                    }
+            }
+            &.save{ 
+                font-size: 16px;
+                background-color: unset;
+                cursor: pointer;
+                background-color: $blue;
+                color: $white;
+                padding: 10px;
+            }
+    }
+    &__textarea{
+        resize: none;
+        width: 100%;
+        color: #4a5568;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        display: block;
+        border: 1px solid rgba(226, 232, 240);
+        border-radius: 0.25rem;
+        background-color: #edf2f7;
+        height: 8rem;
+    }
+    &__avt {
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+            &-icon{
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,.5);
+                border-radius: 50%;
+                cursor: pointer;
+                    &-upload{
+                        display: block;
+                        height: 40px;
+                        width: 40px;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        margin-left: -20px;
+                        margin-top: -20px;
+                        opacity: .65;
+                        transition: .3s ease;
+                    }           
+           }
+    }
+    &__flex-top{
+        display: flex;
+        gap: 0 30px;
+        margin-bottom: 20px;
+    }
+    &__flex-30{
+        width: 30%;
+    }
+    &__flex-70{
+        width: 70%;
+    }
+    &__avt{
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        display: block;
+            &-img{
+                display: block;
+                opacity: 1;
+                width: 100%;
+                height: 100%;
+            }
+            &-input{
+                display: none;
+                overflow: visible;
+            }
+    }
+    
+}
+.p-30{
+    padding: 0 30px;
+}

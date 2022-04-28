@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import "./login.scss";
-import { Link, useNavigate }from "react-router-dom";
+import { Link, useNavigate, useHistory }from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
 import {  userState$ } from '../../redux/selectors'
@@ -27,13 +27,16 @@ useEffect(()=>{
 useEffect(()=> {
   if(loginSuccess.token){
     localStorage.setItem("token",loginSuccess.token)
-    navigate('/')
   }
   else{
     localStorage.setItem("token",'')
   }
-},[loginSuccess,navigate])
-console.log(loginSuccess)
+},[loginSuccess])
+useEffect(()=> {
+  if(loginSuccess.currentUser){
+    window.location.href = 'http://localhost:3000/';
+  }
+},[navigate, loginSuccess])
   return (
     <div className="login">
       <div className="login__container">

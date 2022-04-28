@@ -1,10 +1,9 @@
 @use "../../scss/"as *;
-
 .post__details {
+    overflow: hidden;
     &-container {
         padding-top: 90px;
     }
-
     &-auth {
         max-width: 700px;
         margin: 0 auto;
@@ -57,4 +56,74 @@
             width: 700px;
         }
     }
+}
+.modal__delete{
+    transition: all .1s ease-in-out;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsla(0,0%,100%,.5);
+    backdrop-filter: blur(15px);
+        &-container{
+            height: 100%;
+            width: 100%;
+            position: relative;
+            max-width: 28rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            justify-content: center;  
+            background-color: transparent;
+        }
+        &__main {
+            border-radius: 5px;
+            padding: 2rem;
+            position: fixed;
+            display: flex;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            flex-direction: column;
+            justify-content: flex-start;
+            height: -webkit-max-content;
+            height: -moz-max-content;
+            height: max-content;
+            width: 700px;
+          
+        }
+        &-header{
+            margin-bottom: 10px;
+        }
+        &-footer{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        &-button{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+            width: max-content;
+            margin-left: 0.5rem;
+            padding: 12px 16px;
+            font-size: 15px;
+            &.delete{
+                background-color: rgba(245,101,101,1);
+                color: $white;
+            }
+            &.cancle{
+                background-color: #4299e1;
+                color: $white;
+            }
+        }
 }

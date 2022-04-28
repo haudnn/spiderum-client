@@ -47,7 +47,7 @@ export default function userReducers(state = INIT_STATE.auth,action){
                 ...state,
                 currentUser: action.payload, 
             }
-            case getType(createCategoryUser.createCategoryUserRequest):
+        case getType(createCategoryUser.createCategoryUserRequest):
             return {
                 ...state,
             }

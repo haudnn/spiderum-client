@@ -47,7 +47,7 @@ const ChooseTopics = () => {
   },[dispatch, data])
   useEffect(() => {
       if(user.categoryUser){
-         navigate('/')
+        window.location.href = 'http://localhost:3000/';
       }
   },[user.categoryUser, navigate])
   return (

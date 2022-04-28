@@ -43,7 +43,6 @@ useEffect(()=>{
 //     prevEditorJSData = data;
 //   },
 // });
-console.log(data.content)
 const handleVisibleModal = useCallback((e) => {
   e.preventDefault();
   editor.save()
@@ -71,7 +70,6 @@ useEffect(()=>{
     navigate(`/post/${posts.post.data.post.slug}`)
    }
 },[posts,navigate])
-console.log(data.content)
    return (
     <div className="mt-80">
       <div className="post">

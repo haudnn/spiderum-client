@@ -5,7 +5,7 @@ const token = localStorage.getItem('token')
 export const getAllPosts = () => axios.get(`/api/v1/posts`)
 export const getPost = ()=> axios.get(`/api/v1/posts/`)
 export const createPost = (payload) => axios.post(`/api/v1/posts`, payload, {headers: {Authorization: `Bearer ${token}`}});
-export const updatePost = (payload) => axios.post(`/api/v1/posts/update`, payload);
+export const updatePost = (payload) => axios.put(`/api/v1/posts/update/`, payload, {headers: {Authorization: `Bearer ${token}`}});
 
 
 // Auth

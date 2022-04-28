@@ -1,8 +1,16 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from "react-router-dom";
 import "./suggest.scss";
-import PostItem from "../PostItem/PostItem";
+// import PostItem from "../PostItem/PostItem";
+// import { allPostsState$ } from "../../redux/selectors";
+// import { useDispatch, useSelector } from "react-redux";
+// import * as actions from "../../redux/actions";
 const Suggest = () => {
+  // const dispatch = useDispatch();
+  // const posts = useSelector(allPostsState$);
+  // useEffect(() => {
+  //   dispatch(actions.getAllPosts.getAllPostsRequest());
+  // }, [dispatch]);
   return (
     <section className="suggest container">
       <div className="suggest__wrapper">

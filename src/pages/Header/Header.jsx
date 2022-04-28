@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, } from "react-router-dom";
 import { userState$, categoriesState$ } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
-import "./header.scss";
 import * as actions from "../../redux/actions";
+import "./header.scss";
 const Header = () => {
-  const currentUser = useSelector(userState$);
-  const categorise = useSelector(categoriesState$);
   const listRef = useRef();
   const dispatch = useDispatch();
+  const currentUser = useSelector(userState$);
+  const categorise = useSelector(categoriesState$);
   const [visible, setVisible] = useState(true);
   const [headerPost, setHeaderPost] = useState(true);
   const [showCategory, setShowCategory] = useState(false);
   const [showNotify, setShowNotify] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const location = useLocation();
+  const path = location.pathname.split("/")[3];
   useEffect(() => {
     if (listRef.current) {
       const slider = listRef.current;
@@ -59,27 +60,13 @@ const Header = () => {
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
-
   useEffect(() => {
     const handleScroll = () => {
-      const moving = window.pageYOffset;
-      if (moving > 350) {
+      if (window.pageYOffset > 350 || window.pageYOffset > 120 ) {
         setVisible(false);
-      } else {
-        setVisible(true);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-  useEffect(() => {
-    const handleScroll = () => {
-      const moving = window.pageYOffset;
-      if (moving > 120) {
         setHeaderPost(false);
       } else {
+        setVisible(true);
         setHeaderPost(true);
       }
     };
@@ -99,17 +86,17 @@ const Header = () => {
       document.body.removeEventListener("click", handleClickWindow, true);
     };
   }, []);
-  const handleLogout = useCallback(
-    (e) => {
+  const handleLogout = useCallback((e) => {
+      e.preventDefault()
       dispatch(actions.logout());
     },
     [dispatch]
   );
-  useEffect(() => {
-    if (currentUser.currentUser && currentUser.check) {
-      localStorage.removeItem("token");
-    }
-  }, [currentUser]);
+  // useEffect(() => { 
+  //   if(!currentUser.currentUser){
+  //     localStorage.removeItem("token")
+  //   }
+  // }, [currentUser.currentUser])
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [
@@ -192,7 +179,7 @@ const Header = () => {
   ];
   return location.pathname !== "/category" ? (
     location.pathname !== "/login" && location.pathname !== "/register" ? (
-      location.pathname !== "/post/create" ? (
+      location.pathname !== "/post/create" && location.pathname !== `/post/update/${path}` ? (
         <header className={`header ${visible ? "" : "header-height"}`}>
           <div className={`header__container ${cls} `}>
             <div className="header__top">
@@ -324,7 +311,7 @@ const Header = () => {
                                 />
                               </div>
                               <div className="header__dropdown-info">
-                                <p className="header__dropdown-name"></p>
+                                <p className="header__dropdown-name">{currentUser.currentUser.userName}</p>
                                 <span className="header__dropdown-phone">
                                   @0362821110
                                 </span>
@@ -357,7 +344,7 @@ const Header = () => {
                             <div className="header__dropdown-config border-bottom">
                               <div className="p-10">
                                 <Link
-                                  to="/"
+                                  to="/user/settings"
                                   className="header__dropdown-link p-10"
                                 >
                                   <i className="header__dropdown-icon">
@@ -457,29 +444,37 @@ const Header = () => {
                 <i className="header__icon bx bx-chevron-down"></i>
                 {showCategory && (
                   <div className="header__cate-menu">
-                      { currentUser.currentUser.category ? currentUser.currentUser.category.map((e, i) => (
-                      <div className="header__cate-list">
-                        <Link  to={`/category/${e.slug}`}>
-                          <div className="header__cate-link">
-                            <img
-                              className="header__cate-img"
-                              src={e.attachment}
-                              alt=""
-                            />
-                            <span className="header__cate-text">{e.name}</span>
-                            <i className="header__cate-icon bx bx-x"></i>
-                          </div>
-                        </Link>
-                      </div>
-                      )) : (
-                        <Link to="/category">
-                          <div className="header__cate-link">
-                            <span className="header__cate-text">DANH SÁCH THEO DÕI RỖNG</span>
-                          </div>
-                        </Link>
-                      )}
-                  </div>
-                      
+                      {
+                        currentUser.currentUser ? (
+                          currentUser.currentUser.category.length !== 0 ? currentUser.currentUser.category.map((e, i) => (
+                            <div className="header__cate-list">
+                              <Link  to={`/category/${e.slug}`}>
+                                <div className="header__cate-link">
+                                  <img
+                                    className="header__cate-img"
+                                    src={e.attachment}
+                                    alt=""
+                                  />
+                                  <span className="header__cate-text">{e.name}</span>
+                                </div>
+                              </Link>
+                            </div>
+                            )) : (
+                              <Link to="/category">
+                                <div className="header__cate-link">
+                                  <span className="header__cate-text">DANH SÁCH THEO DÕI RỖNG</span>
+                                </div>
+                              </Link>
+                            )
+                        ) : (
+                          <Link to="/category">
+                            <div className="header__cate-link">
+                              <span className="header__cate-text">DANH SÁCH THEO DÕI RỖNG</span>
+                            </div>
+                          </Link>
+                        ) 
+                      }
+                  </div>                    
                 )}
               </div>
               <div className="header__member">

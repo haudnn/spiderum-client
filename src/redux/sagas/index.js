@@ -12,11 +12,13 @@ function* getAllPostsSaga(action) {
   }
 }
 function* getPostSaga(action) {
+  const id = action
+  console.log(id)
   try {
     const post = yield call(api.getPost);
     yield put(actions.getPost.getPostSuccess(post.data.data.posts))
   }catch(err){ 
-      yield put(action.getPost.getPostFailure(err))
+      yield put(actions.getPost.getPostFailure(err))
   }
 }
 function* createPostSaga(action) {
@@ -24,7 +26,7 @@ function* createPostSaga(action) {
     const post = yield call(api.createPost, action.payload);
     yield put(actions.createPost.createPostSuccess(post.data));
   } catch (err) {
-    yield put(action.createPost.createPostFailure(err.response.data.message));
+    yield put(actions.createPost.createPostFailure(err.response.data.message));
   }
 }
 function* updatePostSaga(action) {
@@ -32,7 +34,7 @@ function* updatePostSaga(action) {
     const updatedpost = yield call(api.updatePost, action.payload);
     yield put(actions.updatePost.updatePostSuccess(updatedpost.data));
   } catch (err) {
-    yield put(action.updatePost.updatePostFailure(err));
+    yield put(actions.updatePost.updatePostFailure(err));
   }
 }
 
@@ -42,7 +44,8 @@ function* loginSaga(action) {
     const currentuser = yield call(api.login, action.payload);
     yield put(actions.login.loginSuccess(currentuser.data));
   } catch (error) {
-    yield put(action.login.loginFailure(error.response.data.message));
+    yield put(actions.login.loginFailure(error.response.data.message));
+    console.log(error.response.data.message)
   }
 }
 function* registerSaga(action) {
@@ -52,7 +55,7 @@ function* registerSaga(action) {
     const currentuser = yield call(api.login, action.payload);
     yield put(actions.login.loginSuccess(currentuser.data));
   } catch (err) {
-    yield put(action.register.registerFailure(err.response.data.message));
+    yield put(actions.register.registerFailure(err.response.data.message));
   }
 }
 function* checkCurrentUserSaga(action) {
@@ -60,7 +63,7 @@ function* checkCurrentUserSaga(action) {
     const checkCurrentUser = yield call(api.checkCurrentUser, action.payload);
     yield put(actions.checkCurrentUser.checkCurrentUserSuccess(checkCurrentUser.data.data.user));
   } catch (err) {
-    yield put(action.checkCurrentUser.checkCurrentUserFailure(err.response.data.message));
+    yield put(actions.checkCurrentUser.checkCurrentUserFailure(err.response.data.message));
     console.log(err.response.data.message)
   }
 }
@@ -69,7 +72,7 @@ function* createCategoryUserSaga(action) {
     const createCategoryUser = yield call(api.createCategoryUser, action.payload);
     yield put(actions.createCategoryUser.createCategoryUserSuccess(createCategoryUser.data));
   } catch (err) {
-    yield put(action.createCategoryUser.createCategoryUserFailure(err));
+    yield put(actions.createCategoryUser.createCategoryUserFailure(err));
   }
 }
 function* deleteCategoryUserSaga(action) {
@@ -77,7 +80,7 @@ function* deleteCategoryUserSaga(action) {
     const deleteCategoryUser = yield call(api.deleteCategoryUser, action.payload);
     yield put(actions.deleteCategoryUser.deleteCategoryUserSuccess(deleteCategoryUser.data));
   } catch (err) {
-    yield put(action.deleteCategoryUser.deleteCategoryUserFailure(err));
+    yield put(actions.deleteCategoryUser.deleteCategoryUserFailure(err));
   }
 }
 
@@ -87,7 +90,7 @@ function* getAllCategoriesSaga(action) {
     const categories = yield call(api.getAllCategories);
     yield put(actions.getAllCategories.getAllCategoriesSuccess(categories.data))
   }catch(err){ 
-      yield put(action.getAllCategories.getAllCategoriesFailure(err))
+      yield put(actions.getAllCategories.getAllCategoriesFailure(err))
   }
 }
 function* mySaga(){

@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./filter.scss";
-import Adv from '../Adv/Adv'
 import { Link } from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
-const Filter = ({props}) => {
+import Adv from '../Adv/Adv'
+import "./filter.scss";
+import { allPostsState$ } from "../../redux/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../redux/actions";
+const Filter = () => {
+  const dispatch = useDispatch();
+  const posts = useSelector(allPostsState$);
+  useEffect(() => {
+    dispatch(actions.getAllPosts.getAllPostsRequest());
+  }, [dispatch]);
   const [flilterActive, setFilterActive] = useState(0);
   const [tabActive, setTabActive] = useState(0);
   const [pageCurrent, setPageCurrent] = useState(1);
@@ -114,13 +122,13 @@ const Filter = ({props}) => {
     },
   ];
   const listTab = [
-    {
-      displayName: "TRANG CHỦ",
-      path: "/",
-      media: (
-        <img src="https://spiderum.com/assets/icons/singleLogo.png" alt="" />
-      ),
-    },
+    // {
+    //   displayName: "TRANG CHỦ",
+    //   path: "/",
+    //   media: (
+    //     <img src="https://spiderum.com/assets/icons/singleLogo.png" alt="" />
+    //   ),
+    // },
     {
       displayName: "THỊNH HÀNH",
       path: "/",
@@ -251,7 +259,19 @@ const Filter = ({props}) => {
               </div>
               <div className="grid">
                 <div className="row">
-                    <PostItem/>
+                    <div className="col l-12">
+                      <div className="filter__content">
+                        <div className="filter__content-details">
+                          <div className="grid">
+                            {
+                              posts.data.slice(0,10).map((post) => (
+                                <PostItem post={post} key={post._id}/>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
               </div>
               <div className="filter__pagination">
