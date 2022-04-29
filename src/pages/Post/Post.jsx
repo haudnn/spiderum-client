@@ -49,7 +49,6 @@ const Post = () => {
       }
     }
   }, [authPost, currentUser]);
-console.log(currentUser)
   const handleClickDelete = () => setVisiable(!visiable);
   const handleDelete = useCallback(
     async (e) => {

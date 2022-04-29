@@ -92,11 +92,15 @@ const Header = () => {
     },
     [dispatch]
   );
-  // useEffect(() => { 
-  //   if(!currentUser.currentUser){
-  //     localStorage.removeItem("token")
-  //   }
-  // }, [currentUser.currentUser])
+  useEffect(() => { 
+    if(currentUser.currentUser){
+      localStorage.setItem("id",currentUser.currentUser._id)
+    }
+    else{
+      localStorage.removeItem("id")
+    }
+  }, [currentUser.currentUser])
+
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [

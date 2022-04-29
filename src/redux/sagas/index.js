@@ -58,6 +58,15 @@ function* registerSaga(action) {
     yield put(actions.register.registerFailure(err.response.data.message));
   }
 }
+function* userUpdateSaga(action) {
+  try {
+    const user = yield call(api.userUpdate, action.payload);
+    yield put(actions.userUpdate.userUpdateSuccess(user.data));
+  } catch (err) {
+    yield put(actions.userUpdate.userUpdateFailure(err.response.data.message));
+    console.log(err.response.data.message)
+  }
+}
 function* checkCurrentUserSaga(action) {
   try {
     const checkCurrentUser = yield call(api.checkCurrentUser, action.payload);
@@ -102,6 +111,7 @@ function* mySaga(){
   // AUTH
   yield takeLatest(actions.login.loginRequest, loginSaga);
   yield takeLatest(actions.register.registerRequest, registerSaga);
+  yield takeLatest(actions.userUpdate.userUpdateRequest, userUpdateSaga);
   yield takeLatest(actions.checkCurrentUser.checkCurrentUserRequest, checkCurrentUserSaga);
   yield takeLatest(actions.createCategoryUser.createCategoryUserRequest, createCategoryUserSaga);
   yield takeLatest(actions.deleteCategoryUser.deleteCategoryUserRequest, deleteCategoryUserSaga);

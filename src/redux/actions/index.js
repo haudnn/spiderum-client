@@ -43,6 +43,11 @@ export const updatePost = createActions({
     registerSuccess: (payload) => payload,
     registerFailure: (err) => err,
  })
+ export const userUpdate = createActions({
+    userUpdateRequest: (payload) => payload,
+    userUpdateSuccess: (payload) => payload,
+    userUpdateFailure: (err) => err,
+ })
 export const checkCurrentUser = createActions({
     checkCurrentUserRequest: undefined, 
     checkCurrentUserSuccess: (payload) => payload,

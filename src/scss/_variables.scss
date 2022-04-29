@@ -306,3 +306,26 @@ select:focus {
     line-height: 1.5rem;
     cursor: pointer;
 }
+
+@keyframes un-img-animation{
+    from{
+        transform: scale(1.1, 1.1);
+    }
+    to{
+        transform: scale(1, 1);
+    }
+}
+@keyframes img-animation{
+    from{
+        transform: scale(1, 1);
+    }
+    to{
+        transform: scale(1.1, 1.1);
+    }
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+  }
