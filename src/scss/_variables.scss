@@ -329,3 +329,59 @@ select {
     text-indent: 1px;
     text-overflow: '';
   }
+.toast-mess-container{
+    position: fixed;
+    top:200px;
+    right:20px;
+    display: flex;
+    align-items: center;
+    gap : 0 20px;
+    animation: show_slide 1s ease forwards;
+    text-align: center;
+}
+.alert-toast-message {
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 3pt;
+    padding: 15px;
+        &.success{
+            color: #fff;
+            background-color: #198754;
+            border-color: #198754;
+        }
+        &.err{
+            color: #fff;
+            background-color: #bb2d3b;
+            border-color: #b02a37;
+        }
+}
+@keyframes show_slide {
+	0% {
+		transform: translateX(100%);
+	}
+	40% {
+		transform: translateX(-10%);
+	}
+	80% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-10px);
+	}
+}
+
+@keyframes hide_slide {
+	0% {
+		transform: translateX(-10px);
+	}
+	40% {
+		transform: translateX(0%);
+	}
+	80% {
+		transform: translateX(-10%);
+	}
+	100% {
+		transform: translateX(140%);
+	}
+}

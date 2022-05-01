@@ -26,5 +26,10 @@ export const INIT_STATE = {
         isLoading: false,
         err: null,
         data: [],
+    },
+    password:{
+        isLoading:false,
+        data:null,
+        err:null
     }
 }

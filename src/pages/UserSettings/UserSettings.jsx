@@ -1,19 +1,89 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
 import "./usersettings.scss";
-import { userState$ } from "../../redux/selectors";
+import { userState$, passwordState$ } from "../../redux/selectors";
 const UserSettings = () => {
+  const toast = useRef(null)
   const dispatch = useDispatch();
   const currentUser = useSelector(userState$);
+  const userPassword = useSelector(passwordState$);
   const [preview, setPreview] = useState();
   const [selectedFile, setSelectedFile] = useState();
   const [previewCover, setPreviewCover] = useState();
   const [selectedFileCover, setSelectedFileCover] = useState();
-  const [isChecked, setIsChecked] = useState("male");
+  // const [isChecked, setIsChecked] = useState("male");
   const [text, setText] = useState("");
   const [dataUser, setDataUser] = useState({});
+  const [disable, setDisable] = useState(true);
+  const [disableSave, setDisableSave] = useState(true);
+  const [isSuccess, setIsSuccess] = useState(null);
+  const [isErr, setIsErr] = useState(null);
+  
+  const [dataPassword, setDataPassword] = useState({
+    oldPassword:'',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState({
+    password: '',
+    confirmPassword: '',
+    oldPassword:'',
+  })
+
+  const onInputChange = e => {
+    const { name, value } = e.target;
+    setDataPassword(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    validateInput(e);
+  }
+useEffect(() => {
+  if(dataPassword.password !== '' && dataPassword.confirmPassword !== '' &&  dataPassword.oldPassword !== ''){
+    if(error.password === '' && error.confirmPassword === '' &&  error.oldPassword === ''){
+      setDisable(false)
+    }
+    else{
+      setDisable(true)
+    }
+  }
+},[error,dataPassword])
+
+ const validateInput = e => {
+  let { name, value } = e.target;
+  setError(prev => {
+    const stateObj = { ...prev, [name]: "" };
+    switch (name) {
+      case "oldPassword":
+        if (value.length < 9 ) {
+          stateObj[name] = "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
+        }
+        break;
+      case "password":
+        if(dataPassword.confirmPassword && value !== dataPassword.confirmPassword){
+          stateObj["confirmPassword"] = "Mật khẩu nhập lại không chính xác.";
+        }
+        else if(dataPassword.oldPassword && value === dataPassword.oldPassword){
+          stateObj[name] = "Mật khẩu mới không được giống mật khẩu cũ";
+        }
+        else if(value.length < 9 ) {
+          stateObj[name] = "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
+        }
+        break;
+      case "confirmPassword":
+        if (dataPassword.password && value !== dataPassword.password) {
+          stateObj[name] = "Mật khẩu nhập lại không chính xác";
+        }
+        break;
+      default:
+        break;
+    }
+    return stateObj;
+  });
+}
   useEffect(() => {
     if (currentUser.currentUser) {
       setDataUser(currentUser.currentUser);
@@ -47,7 +117,6 @@ const UserSettings = () => {
     },
     [dataUser]
   );
-
   useEffect(() => {
     if (!selectedFileCover) {
       setPreviewCover(undefined);
@@ -82,13 +151,38 @@ const UserSettings = () => {
   const handelChangeData = (e) => {
     setDataUser({ ...dataUser, intro: e.target.value });
   };
-  const setGender = (e) => {
-    console.log(e.target.value);
-    setDataUser({ ...dataUser, gender: e.target.value });
-  };
+  // const setGender = () => {
+  //   setDataUser({ ...dataUser, gender: isChecked });
+  // };
   const onSubmit = useCallback((e) => {
     e.preventDefault();
   }, []);
+  const onSubmitPassword = useCallback((e) => {
+    setIsErr(null)
+    setIsSuccess(null)
+    try{
+      e.preventDefault();
+      dispatch(actions.userUpdatePassword.userUpdatePasswordRequest({
+        oldPassword: dataPassword.oldPassword,
+        password:dataPassword.password
+      }))
+    }
+    catch (err) {
+      dispatch(actions.userUpdatePassword.userUpdatePasswordFailure)
+    }
+  },[dispatch,dataPassword]) 
+  useEffect(() => {
+    if(userPassword.isLoading){
+      setIsErr(null)
+      setIsSuccess(userPassword.data.data)
+    }
+    if(!userPassword.isLoading){
+      setIsSuccess(null)
+      setIsErr(userPassword.err)
+    }
+  },[userPassword])
+  console.log(dataPassword)
+  console.log(userPassword)
   const onSave = useCallback(
     (e) => {
       try {
@@ -100,10 +194,23 @@ const UserSettings = () => {
     },
     [dataUser, dispatch]
   );
+  useEffect(() => {
+    const timer = setTimeout(()=>{
+      toast.current.style.animation = 'hide_slide 1s ease forwards';
+    },4000);
+    return () => clearTimeout(timer);
+  },[isErr,isSuccess])
   return (
     <div className="container">
       <div className="mt-190">
         <div className="settings">
+          {
+            isErr  || isSuccess  ? (
+              <div class="toast-mess-container">
+                <button ref={toast} class={`alert-toast-message ${isErr ? "err" : "success"}`}>{isErr ? isErr : isSuccess}</button>     
+              </div>
+            ) : ""
+          }
           <div className="grid">
             <div className="row">
               <div className="l-4">
@@ -350,21 +457,20 @@ const UserSettings = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="settings__flex-item">
+                        {/* <div className="settings__flex-item">
                           <label className="settings__name">GIỚI TÍNH</label>
                           <div className="settings__gender">
-                            <div
-                              onClick={() => {
+                            <div  onClick={() => {
                                 setIsChecked("male");
-                              }}
-                            >
+                              }}>
                               <input
                                 type="radio"
                                 id="male"
                                 value="male"
                                 name="gender"
-                                checked={isChecked === "male"}
-                                onChange={setGender}
+                                // checked={dataUser.gender}
+                                checked={ dataUser.gender ? dataUser.gender :  true}
+                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
                               />
                               <label
                                 for="male"
@@ -373,18 +479,16 @@ const UserSettings = () => {
                                 Nam
                               </label>
                             </div>
-                            <div
-                              onClick={() => {
+                            <div  onClick={() => {
                                 setIsChecked("female");
-                              }}
-                            >
+                              }} >
                               <input
                                 type="radio"
                                 id="female"
                                 value="female"
                                 name="gender"
-                                checked={isChecked === "female"}
-                                onChange={setGender}
+                                checked={ dataUser.gender ? dataUser.gender :  ""}
+                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
                               />
                               <label
                                 for="female"
@@ -394,17 +498,17 @@ const UserSettings = () => {
                               </label>
                             </div>
                             <div
-                              onClick={() => {
-                                setIsChecked("other");
-                              }}
+                             onClick={() => {
+                              setIsChecked("other");
+                            }} 
                             >
                               <input
                                 type="radio"
                                 id="other"
                                 value="other"
                                 name="gender"
-                                checked={isChecked === "other"}
-                                onChange={setGender}
+                                checked={ dataUser.gender ? dataUser.gender :  ""}
+                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
                               />
                               <label
                                 for="other"
@@ -414,20 +518,25 @@ const UserSettings = () => {
                               </label>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                       <div className="settings__form">
                         <p className="settings__password">Đổi mật khẩu</p>
-                        <div className="settings__flex">
+                        <form className="settings__flex" onSubmit={onSubmit}>
                           <div className="settings__flex-item-wfull">
                             <label className="settings__name" htmlFor="">
                               Mật khẩu cũ
                             </label>
                             <input
                               type="password"
-                              className="settings__input"
+                              name="oldPassword"
+                              className={`settings__input ${error.oldPassword ? "wrong"  : "" }`}
                               placeholder="****************************************"
+                              value={dataPassword.oldPassword}
+                              onChange={onInputChange}
+                              onBlur={validateInput}
                             />
+                            {error.oldPassword && <p className='settings__mes'>{error.oldPassword}</p>}
                           </div>
                           <div className="settings__flex-item-wfull">
                             <label className="settings__name" htmlFor="">
@@ -435,15 +544,14 @@ const UserSettings = () => {
                             </label>
                             <input
                               type="password"
-                              className="settings__input"
+                              name="password"
+                              className={`settings__input ${error.password ? "wrong"  : "" }`}
                               placeholder="****************************************"
-                              onChange={(e) =>
-                                setDataUser({
-                                  ...dataUser,
-                                  password: e.target.value,
-                                })
-                              }
+                              value={dataPassword.password}
+                              onChange={onInputChange}
+                              onBlur={validateInput}
                             />
+                             {error.password && <p className='settings__mes'>{error.password}</p>}
                           </div>
                           <div className="settings__flex-item-wfull">
                             <label className="settings__name" htmlFor="">
@@ -451,14 +559,17 @@ const UserSettings = () => {
                             </label>
                             <input
                               type="password"
-                              className="settings__input"
+                              name="confirmPassword"
+                              className={`settings__input ${error.confirmPassword ? "wrong"  : "" }`}
                               placeholder="****************************************"
+                              value={dataPassword.confirmPassword}
+                              onChange={onInputChange}
+                              onBlur={validateInput}
                             />
+                          {error.confirmPassword && <p className='settings__mes'>{error.confirmPassword}</p>}
                           </div>
-                        </div>
-                        <div className="p-30">
-                          <button className="settings__button">Xác nhận</button>
-                        </div>
+                          <button type="submit" disabled={disable} onClick={(e) => onSubmitPassword(e) } className={`settings__button ${!disable ? "active" : ""}`}>Xác nhận</button>
+                        </form>         
                       </div>
                       <div className="settings__flex">
                         <div className="settings__flex-item">
@@ -513,7 +624,15 @@ const UserSettings = () => {
                     </div>
                     <div className="settings__actions">
                       <button className="settings__actions cancle">Hủy</button>
-                      <button
+                      {/* <button
+                        type="submit"
+                        className={`settings__actions save ${!disableSave ? "active" : ""}`}
+                        onClick={onSave}
+                        disabled={disableSave}
+                      >
+                        Lưu
+                      </button> */}
+                        <button
                         type="submit"
                         className="settings__actions save"
                         onClick={onSave}

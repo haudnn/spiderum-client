@@ -48,6 +48,11 @@ export const updatePost = createActions({
     userUpdateSuccess: (payload) => payload,
     userUpdateFailure: (err) => err,
  })
+ export const userUpdatePassword = createActions({
+    userUpdatePasswordRequest: (payload) => payload,
+    userUpdatePasswordSuccess: (payload) => payload,
+    userUpdatePasswordFailure: (err) => err,
+ })
 export const checkCurrentUser = createActions({
     checkCurrentUserRequest: undefined, 
     checkCurrentUserSuccess: (payload) => payload,

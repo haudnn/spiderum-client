@@ -1,0 +1,151 @@
+@use "../../scss/"as *;
+.user{
+    padding-top: 30px;
+    max-width: 1192px;
+    margin: 0 auto;
+        &__cover{
+            display: flex;
+            position: relative;
+            border-radius: 3px;
+            background-color: rgba(237,242,247,1);
+            border: 1px solid rgba(226,232,240,1);
+            box-shadow: 0 10px 15px -3px rgba(47,181,250,.05),0 4px 6px -2px rgba(47,181,250,.025);
+            padding-top: calc(9 / 25 * 100%);
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+                & img{
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: inherit;
+                    -o-object-fit: cover;
+                    object-fit: cover;
+                }
+        }
+        &__profile{
+            margin-top: 30px;
+            position: relative;
+            max-width: 1192px;
+            margin-left: auto;
+            margin-right: auto;
+                &-content{
+                    display: grid;
+                    grid-gap: 1.2rem;
+                    grid-template-columns: 1fr 3fr;
+                }
+                &-sidebar{
+                    grid-template-columns: 1fr 3fr;
+                    margin-top: -15rem;
+                    width: 340px;
+                    position: relative;
+                    display: grid;
+                }
+                &-dynamic{
+                    height: 800px;
+                    max-height: 800px;
+                    top: 144px;
+                    width: 340px;
+                    display: grid;
+                    grid-template-columns: minmax(0,1fr);
+                    position: sticky;
+                    // -webkit-transition: top .25s linear;
+                }
+                &-widget{
+                    height: max-content;
+                    margin: 0;
+                    border-top-left-radius: 3px;
+                    border-top-right-radius: 3px;
+                    background-color: rgba(255,255,255,1);
+                    box-shadow: 0 10px 15px -3px rgba(47,181,250,.05),0 4px 6px -2px rgba(47,181,250,.025);
+                    border: 1px solid rgba(226,232,240,1);
+                        &-body{
+                            padding: 1.875rem;
+                        }
+                        &-content{
+                            text-align: center;
+                        }
+                        &-avt{
+                            position: relative;
+                            display: block;
+                            width: 8rem;
+                            height: 8rem;
+                            margin-left: auto;
+                            margin-right: auto;
+                            text-align: center;
+                                &-link{
+                                    width: 100%;
+                                    height: 100%;
+                                    display: block;
+                                    flex-shrink: 0;
+                                    background-color: rgba(237,242,247,1);
+                                    border-radius: 50%;
+                                        & img{
+                                            display: block;
+                                            width: 100%;
+                                            height: 100%;
+                                            object-fit: cover;
+                                            border-radius: inherit;
+                                        }
+                                }
+                        }
+                        &-disname{
+                            margin-top: 0.75rem;
+                            font-size: 18px;
+                            color: #4a5568;
+                            font-weight: 700;
+                        }
+                        &-username{
+                            color: #a0aec0;
+                            font-size: 14px;
+
+                        }
+                        &-bio{
+                            overflow-wrap: break-word;
+                            margin-top: 10px;
+                            text-align: center;
+                        }
+                        &-button{
+                           margin: 15px 0;
+                           display: flex;
+                            justify-content: space-around;
+                                &-item{
+                                    padding:0 18px;
+                                    height: 2.7rem;
+                                    display: flex;    
+                                    justify-content: center;
+                                    align-items: center;
+                                    border: 1px solid rgb(226, 232, 240);
+                                    border-radius: 0.25rem;
+                                    background-color: #fff;
+                                    cursor: pointer;
+                                    text-transform: none;
+                                    overflow: visible;
+                                    font-size: 16px;
+                                }
+                        }
+                        &-stats{
+                            display: flex;
+                            align-items: flex-start;
+                            justify-content: space-evenly;
+                            text-align: center;
+                            padding-top: 20px;
+                            border-top: 1px solid rgb(226, 232, 240);
+
+                        }
+
+                }
+        }
+}
+.label{
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    color: rgba(160,174,192,1);
+}
+.value{
+    font-size: 17px;
+    font-weight: 700;
+    color: rgba(74,85,104,1);
+}

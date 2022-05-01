@@ -1,6 +1,5 @@
 import axios from 'axios';
 const token = localStorage.getItem('token')
-const userId = localStorage.getItem('id')
 
 // Post
 export const getAllPosts = () => axios.get(`/api/v1/posts`)
@@ -14,6 +13,7 @@ export const checkCurrentUser = () =>  axios.get('/api/v1/auth/', {headers: {Aut
 export const login = (payload) => axios.post("/api/v1/auth/login", payload);
 export const register = (payload) => axios.post("/api/v1/auth/register", payload);
 export const userUpdate = (payload) => axios.put(`/api/v1/auth/update/`, payload, {headers: {Authorization: `Bearer ${token}`}})
+export const userUpdatePassword = (payload) => axios.put(`/api/v1/auth/password/`, payload, {headers: {Authorization: `Bearer ${token}`}})
 // User Cate
 export const createCategoryUser = (payload) => axios.put(`/api/v1/auth/create/category`, payload, {headers: {Authorization: `Bearer ${token}`}})
 export const deleteCategoryUser = (payload) => axios.put(`/api/v1/auth/delete/category/`, payload, {headers: {Authorization: `Bearer ${token}`}})

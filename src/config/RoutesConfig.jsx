@@ -9,6 +9,7 @@ import Register from "../pages/Register/Register";
 import ChooseTopics from "../pages/ChooseTopics/ChooseTopics";
 import EditPost from "../pages/EditPost/EditPost";
 import UserSettings from "../pages/UserSettings/UserSettings";
+import User from "../pages/User/User";
 const RoutesConfig = () => {
   return (
     <Routes>
@@ -19,6 +20,7 @@ const RoutesConfig = () => {
         <Route path="/post/:slug" element={<Post />} />
         <Route path="/login" element={<Login/>} ></Route>
         <Route path="/register" element={<Register/>} ></Route>
+        <Route path="/user/:phone" element={<User/>} ></Route>
         <Route path="/user/settings" element={<UserSettings/>} ></Route>
         <Route path="/" element={<Home />} />
     </Routes>

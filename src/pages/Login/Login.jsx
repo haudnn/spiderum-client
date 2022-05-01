@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import "./login.scss";
-import { Link, useNavigate, useHistory }from "react-router-dom";
+import { Link, useNavigate }from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
 import {  userState$ } from '../../redux/selectors'
