@@ -285,3 +285,63 @@
 .p-30{
     padding: 0 30px;
 }
+.modal__change-email{
+    transition: all .1s ease-in-out;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    background-color: hsla(0,0%,100%,.5);
+    backdrop-filter: blur(15px);
+    visibility: visible;
+}
+.modal-box{
+    height: fit-content;
+    position: relative;
+    background-color: transparent;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+.mes-err{
+    font-style: italic;
+    color: #f56565;
+    font-size: 12px;
+    font-weight: 500;
+}
+.modal-content{
+    margin-bottom: 20px;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none;
+}
+.inputContainer {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+.input-field {
+    width: 100%;
+    padding-right: 40px;
+}
+.inputIcon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+        &:hover{
+            color: #4299e1;
+        }
+}

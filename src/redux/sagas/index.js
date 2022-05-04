@@ -26,7 +26,7 @@ function* createPostSaga(action) {
     const post = yield call(api.createPost, action.payload);
     yield put(actions.createPost.createPostSuccess(post.data));
   } catch (err) {
-    yield put(actions.createPost.createPostFailure(err.response.data.message));
+    yield put(actions.createPost.createPostFailure(err.response.data.err));
   }
 }
 function* updatePostSaga(action) {

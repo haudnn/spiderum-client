@@ -8,6 +8,7 @@ const Footer = () => {
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
     location.pathname !== "/category" &&
+    location.pathname !== "/search" &&
     location.pathname !== `/post/update/${path}` ? (
     <footer className="footer">
       <div className="footer__container">

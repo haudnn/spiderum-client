@@ -5,6 +5,8 @@ import { userState$ } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
 import "./categoryitem.scss";
+import Filter from "../../components/Filter/Filter";
+import TrendingPosts from "../../components/TrendingPosts/TrendingPosts";
 const CategoryItem = () => {
   const currentUser = useSelector(userState$);
   const dispatch = useDispatch();
@@ -163,18 +165,18 @@ const CategoryItem = () => {
                           <div className="category__content-post-author flex-end">
                             <div className="flex-align-gap-10">
                               <div>
-                                <Link to="/">
+                                <Link to={`/user/${e.author.userName}`}>
                                   <img
-                                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/e0134d8000c911ebb2e9f38cb09f8367.png"
+                                    src={e.author.avatar ? e.author.avatar : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"}
                                     alt=""
                                     className="post-avt"
                                   />
                                 </Link>
                               </div>
                               <div>
-                                <Link to="/">
+                                <Link to={`/user/${e.author.userName}`}>
                                   <p className="post-username">
-                                    {e.author.userName}
+                                    {e.author.displayName ? e.author.displayName : e.author.userName}
                                   </p>
                                 </Link>
                                 <span className="time-read">Hôm qua</span>
@@ -213,43 +215,11 @@ const CategoryItem = () => {
                     </div>
                   ))}
                   <div className="category__content-trending border box-shadow">
-                    <div className="grid">
-                      <div className="row">
-                        {postItem.map((e, i) => (
-                          <div className="col l-4">
-                            <div className="category__content-trending-container">
-                              <div className="category__content-trending-img">
-                                <img
-                                  src={
-                                    e.attachment
-                                      ? e.attachment
-                                      : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"
-                                  }
-                                  alt=""
-                                />
-                              </div>
-                              <div>
-                                <Link to="/">
-                                  <span className="title-category">
-                                    {e.category.name}
-                                  </span>
-                                </Link>
-                                <Link to={`/post/${e.slug}`}>
-                                  <p className="title-post-sm">{e.title}</p>
-                                </Link>
-                                <Link to="/">
-                                  <p className="post-username">
-                                    {e.author.userName}
-                                  </p>
-                                </Link>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <TrendingPosts posts={postItem} slice={4}  slidesToShow={3}/>
                   </div>
-                  <div className="category__content-filter"></div>
+                  <div className="category__content-filter">
+                    <Filter posts={postItem}/>
+                  </div>
                 </div>
               </div>
               <div className="col l-4">

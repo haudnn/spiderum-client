@@ -7,7 +7,7 @@ const PostItem = ({ post }) => {
     <div className="row mb">
       <div className="col l-4 c-12">
         <div className="filter__content-img">
-          <Link to="/" className="filter__content-img">
+          <Link to={`/post/${post.slug}`} className="filter__content-img">
             <img
               src={
                 post.attachment
@@ -24,7 +24,7 @@ const PostItem = ({ post }) => {
         <div className="filter__content-container">
           <div className="filter__content-heading">
             <div>
-              <Link to="/">
+              <Link to={`/category/${post.category.slug}`}>
                 <span className="title-category">{post.category.name}</span>
               </Link>
               <span className="time-read">4 phút đọc</span>
@@ -59,18 +59,19 @@ const PostItem = ({ post }) => {
           <div className="filter__content-author">
             <div className="filter__content-author-user">
               <div className="post-avt">
-                <Link to="/">
+                <Link to={`/user/${post.author.userName}`} >
                   <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
+                    className="post-avt"
+                    src={ post.author.avatar ? post.author.avatar :"https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"}
                     alt=""
                   />
                 </Link>
               </div>
               <div>
-                <Link to="/">
-                  <p className="post-username">{post.author.userName}</p>
+                <Link to={`/user/${post.author.userName}`}>
+                  <p className="post-username">{post.author.displayName ? post.author.displayName : post.author.userName}</p>
                 </Link>
-                <span className="time-read">{" "} {`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`}</span>
+                <span className="time-read">{`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`}</span>
               </div>
             </div>
             <div className="filter__content-interactive">

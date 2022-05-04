@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import './adv.scss'
 const Adv = () => {
   return (
-    <div className="col l-4">
       <div className="adv">
         <div className="adv__donate box-shadow ">
           <p className="adv__donate-content">
@@ -187,7 +186,6 @@ const Adv = () => {
             <span className="adv__about-text">© 2021 Công ty Cổ phần Felizz</span>
         </div>
       </div>
-    </div>
   );
 };
 

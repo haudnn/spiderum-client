@@ -3,14 +3,16 @@ import EditorJS from "@editorjs/editorjs";
 import { Link, useNavigate } from "react-router-dom";
 import * as actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import {allPostsState$,categoriesState$} from '../../redux/selectors'
+import {postState$,categoriesState$} from '../../redux/selectors'
 import config from './tools'
 import "./createpost.scss";
 const CreatePost = () => {
-  const posts = useSelector(allPostsState$)
+  const post = useSelector(postState$)
+  const toast = useRef(null)
   const categorise =  useSelector(categoriesState$)
   const dispatch = useDispatch();
   const [editor, seteditor] = useState({});
+  const [error, setError] = useState(null);
   const refEdit = useRef();
   const [visible, setVisible] = useState(false);
   const navigate  = useNavigate();
@@ -44,6 +46,7 @@ useEffect(()=>{
 //   },
 // });
 const handleVisibleModal = useCallback((e) => {
+  setError(null)
   e.preventDefault();
   editor.save()
   .then((outputData) => {
@@ -54,6 +57,9 @@ const handleVisibleModal = useCallback((e) => {
   setVisible(!visible)
 },[visible,editor,data])
 const onSave = useCallback((e) => {
+  if(data.category === '') {
+    setData({ ...data, category: '625ebdc502fc384796865706' })
+  }
   try{
     e.preventDefault();
     dispatch(actions.createPost.createPostRequest(data))
@@ -66,10 +72,14 @@ const onSubmit = useCallback((e)=>{
   e.preventDefault();
 },[])
 useEffect(()=>{
-  if( posts.post && posts.isLoading){
-    navigate(`/post/${posts.post.data.post.slug}`)
+  if(post.isLoading){
+    navigate(`/post/${post.post.data.slug}`)
    }
-},[posts,navigate])
+  if(post.err){
+    setError(post.err)
+  }
+},[post,navigate])
+console.log(post)
    return (
     <div className="mt-80">
       <div className="post">
@@ -98,9 +108,15 @@ useEffect(()=>{
                 </button>
               </div>        
           </div>
-          {visible && (
+          {visible && (            
             <div className="modal">
               <div className="modal__container">
+                  {error ? (   <div class="toast-mess-container">
+                    <button ref={toast} class={`alert-toast-message err`}>
+                        {error}
+                    </button>
+                      </div> ) : ""
+                  }
                 <div className="modal__content">
                   <div className="modal__desc">
                     <p className="modal__title">
@@ -142,9 +158,10 @@ useEffect(()=>{
                     <p className="modal__title">Chọn danh mục</p>
                     <div className="modal__category-container">
                       <select id="selected-id" className="modal__category-select"  onChange={(e) => setData({ ...data, category: e.target.value })}>
+                        <option value="625ebdc502fc384796865706" key="625ebdc502fc384796865706" className="modal__category-option">QUAN ĐIỂM - TRANH LUẬN</option>
                         <option className="modal__category-option">-- Chọn danh mục --</option>
                         {
-                          categorise.data.map((e,i)=>(
+                          categorise.data.slice(1).map((e,i)=>(
                             <option value={e._id} key={e._id} className="modal__category-option">{e.name}</option>
                           ))
                         }

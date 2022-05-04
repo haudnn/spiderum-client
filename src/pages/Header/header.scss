@@ -1,4 +1,5 @@
 @use "../../scss/"as *;
+
 .header {
     position: fixed;
     top: 0;
@@ -9,16 +10,18 @@
     padding-top: 15px;
     border-bottom: 1px solid rgba(226, 232, 240, 1);
     box-shadow: 0 10px 15px -3px rgba(47, 181, 250, .05), 0 4px 6px -2px rgba(47, 181, 250, .025);
+
     &__container {
         max-width: $max-width;
         margin: 0 auto;
     }
+
     &__top {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        // display: none;
     }
-
     &__button {
         padding: 0.5rem 1rem;
         background-color: $blue;
@@ -28,12 +31,14 @@
         border-radius: 3px;
         cursor: pointer;
     }
+
     &__menu {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-top: 20px;
         gap: 0 20px;
+
         &-top {
             display: flex;
             justify-content: space-between;
@@ -59,6 +64,7 @@
             position: relative;
             cursor: pointer;
         }
+
         &-menu {
             z-index: 999;
             position: fixed;
@@ -73,6 +79,7 @@
             border: 1px solid rgba(226, 232, 240, 1);
             box-shadow: 0 10px 15px -3px rgba(47, 181, 250, .05), 0 4px 6px -2px rgba(47, 181, 250, .025);
         }
+
         &-link {
             display: flex;
             align-items: center;
@@ -128,12 +135,14 @@
                 width: 3.5rem;
                 font-size: .75rem;
                 padding-bottom: 15px;
+
                 &.right {
                     right: 0;
                     background: linear-gradient(270deg, #fff 25%, hsla(0, 0%, 100%, .9) 60%, hsla(0, 0%, 100%, 0));
                 }
             }
         }
+
         &-link {
             text-transform: uppercase;
             font-size: 12px;
@@ -146,6 +155,7 @@
             overflow-y: hidden;
             max-width: 790px;
         }
+
         &-list {
             display: flex;
             align-items: center;
@@ -154,14 +164,15 @@
             gap: 0 40px;
             position: relative;
             width: 100%;
-            overflow-x:hidden ;
+            overflow-x: hidden;
             overflow-y: hidden;
             white-space: nowrap;
             user-select: none;
             cursor: pointer;
             padding-bottom: 15px;
         }
-        &-item{
+
+        &-item {
             justify-content: center;
             white-space: nowrap;
             text-transform: uppercase;
@@ -189,6 +200,7 @@
             background-color: #f1f5fa;
         }
     }
+
     &__notify {
         position: absolute;
         z-index: 9999;
@@ -378,6 +390,7 @@
             align-items: center;
             gap: 0 10px;
             border-radius: 7px;
+
             &:hover {
                 background-color: $hover-color;
             }
@@ -400,6 +413,7 @@
         transform: translate(0px, 0px);
         transition: transform 0.2s linear 0;
         background-color: $white;
+
         &-section {
             width: $max-width;
             margin: 0 auto;
@@ -407,7 +421,8 @@
             padding: 0 10px;
             border-radius: 5px;
         }
-        &-container{
+
+        &-container {
             position: relative;
             display: flex;
             align-items: flex-end;
@@ -421,10 +436,52 @@
             -webkit-user-select: none;
             -ms-user-select: none;
         }
+
         &-info {
             display: flex;
             align-items: center;
             gap: 0 20px;
         }
     }
+
+    &__search {
+        background-color: rgb(246, 248, 252);
+        height: 3rem;
+        border-radius: 5px;
+        margin: 10px;
+        max-width: 1192px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+
+        &-btn {
+            &-cancel {
+                background-image: url(https://spiderum.com/back.9fd7eefbe7748dee1195.svg);
+                background-position: 50%;
+                height: 2.25rem;
+                width: 2.25rem;
+                background-repeat: no-repeat;
+                display: block;
+                cursor: pointer;
+                background-color: unset;
+            }
+        }
+        &-bar{
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            justify-content: space-between;
+            border-radius: 5px;
+            padding: 5px 10px;
+            flex-grow: 1;
+        }
+        &-input {
+            display: block;
+            margin-right: 0.5rem;
+            background: transparent;
+            width: 100%;
+            font-size: 15px;
+        }
+    }
+
 }

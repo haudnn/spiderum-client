@@ -3,7 +3,7 @@ export const INIT_STATE = {
         isLoading: false,
         data: [],
         err: null,
-        post: null,
+        // post: null,
     },
     categories: {
         isLoading: false,
@@ -15,7 +15,8 @@ export const INIT_STATE = {
         currentUser: null,
         err: null,
         token: false,
-        categoryUser: false
+        categoryUser: false,
+        isUpdated:false,
     },
     post: {
         post: null,

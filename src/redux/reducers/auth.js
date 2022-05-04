@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constant";
-import {getType, login, logout, register, checkCurrentUser, createCategoryUser } from "../actions";
+import {getType, login, logout, register, checkCurrentUser, createCategoryUser, userUpdate } from "../actions";
 export default function userReducers(state = INIT_STATE.auth,action){
     switch(action.type) {
         case getType(login.loginRequest):
@@ -16,6 +16,21 @@ export default function userReducers(state = INIT_STATE.auth,action){
             return { 
                 isLoggedIn :false,
                 err:action.payload
+            }
+        case getType(userUpdate.userUpdateRequest):
+            return { 
+                ...state,
+                isUpdated :false,
+            }
+        case getType(userUpdate.userUpdateSuccess):
+            return { 
+                ...state,
+                isUpdated :true,
+            }
+        case getType(userUpdate.userUpdateFailure):
+            return { 
+                ...state,
+                isUpdated :false,
             }
         case getType(register.registerRequest):
             return { 
@@ -63,6 +78,7 @@ export default function userReducers(state = INIT_STATE.auth,action){
             }
         case getType(logout):
             return { 
+                token:false,
                 isLoggedIn: true,
                 currentUser: null,
                 err:null,

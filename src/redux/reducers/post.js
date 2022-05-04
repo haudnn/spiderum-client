@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constant";
-import { getType, getPost} from "../actions";
+import { getType, getPost , createPost} from "../actions";
 
 export default function postReducers(state = INIT_STATE.post,action){
     switch(action.type) {
@@ -20,6 +20,30 @@ export default function postReducers(state = INIT_STATE.post,action){
                 isLoading:false,
                 err:action.payload
             }
+        
+        case getType(createPost.createPostRequest):
+            return {
+            //   post:null,
+                ...state,
+                isLoading:false,
+            //   data: [...state.data, action.payload],
+            };
+        case getType(createPost.createPostSuccess):
+            return {
+                ...state,
+                isLoading:true,
+                post:action.payload,
+            //   data: [...state.data, action.payload],
+            };
+        case getType(createPost.createPostFailure):
+            return {
+            //   ...state,
+            //   data: [...state.data, action.payload],
+                ...state,
+                isLoading:false,
+                err:action.payload,
+            //   isLoading:true,
+            };
         default:
             return state;
     } 

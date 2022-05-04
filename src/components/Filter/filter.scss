@@ -1,8 +1,8 @@
 @use "../../scss/"as *;
 
 .filter {
+    margin-top: 50px;   
     padding-bottom: 50px;
-
     &__bar {
         display: flex;
         align-items: center;
@@ -89,6 +89,7 @@
             width: 100%;
             display: block;
             height: 150px;
+            margin-top: 10px;
             &-item {
                 position: absolute;
                 top: 0;

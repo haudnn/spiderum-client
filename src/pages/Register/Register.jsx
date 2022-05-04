@@ -31,7 +31,7 @@ const Register = () => {
     }
     else if(loginSuccess.isLoggedIn === true) {
       localStorage.setItem("token",loginSuccess.token)
-      navigate('/')
+      window.location.href = 'http://localhost:3000/';
     }
   },[loginSuccess,navigate])
   return (

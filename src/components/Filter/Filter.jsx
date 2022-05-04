@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
-import Adv from '../Adv/Adv'
 import "./filter.scss";
-import { allPostsState$ } from "../../redux/selectors";
-import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../redux/actions";
-const Filter = () => {
-  const dispatch = useDispatch();
-  const posts = useSelector(allPostsState$);
-  useEffect(() => {
-    dispatch(actions.getAllPosts.getAllPostsRequest());
-  }, [dispatch]);
+const Filter = ({posts}) => {
   const [flilterActive, setFilterActive] = useState(0);
   const [tabActive, setTabActive] = useState(0);
   const [pageCurrent, setPageCurrent] = useState(1);
@@ -216,91 +207,82 @@ const Filter = () => {
     },
   ];
   return (
-    <section className="filter container">
+    <section className="filter">
       <div className="filter__wrapper">
+        <div className="filter__bar">
+          <h3 className="title">DÀNH CHO BẠN</h3>
+          <div className="filter__sort">
+            {fitterList.map((e, i) => (
+              <Link
+                key={i}
+                to={e.path}
+                className={`filter__sort-item ${
+                  flilterActive === i ? "active" : ""
+                }`}
+                onClick={() => handleFilterActive(i)}
+              >
+                <i
+                  className={`filter__sort-icon ${
+                    flilterActive === i ? "active" : ""
+                  }`}
+                >
+                  {e.icon}
+                </i>
+                <span
+                  className={`filter__sort-text ${
+                    flilterActive === i ? "active" : ""
+                  }`}
+                >
+                  {e.displayName}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="filter__page">
+          <div></div>
+          <div className="filter__page-current">
+            <span>Trang: 1 / 683 </span>
+          </div>
+        </div>
         <div className="grid">
           <div className="row">
-            <div className="col l-8">
-              <div className="filter__bar">
-                <h3 className="title">DÀNH CHO BẠN</h3>
-                <div className="filter__sort">
-                  {fitterList.map((e, i) => (
-                    <Link
-                      key={i}
-                      to={e.path}
-                      className={`filter__sort-item ${
-                        flilterActive === i ? "active" : ""
-                      }`}
-                      onClick={() => handleFilterActive(i)}
-                    >
-                      <i
-                        className={`filter__sort-icon ${
-                          flilterActive === i ? "active" : ""
-                        }`}
-                      >
-                        {e.icon}
-                      </i>
-                      <span
-                        className={`filter__sort-text ${
-                          flilterActive === i ? "active" : ""
-                        }`}
-                      >
-                        {e.displayName}
-                      </span>
-                    </Link>
-                  ))}
+            <div className="col l-12">
+              <div className="filter__content">
+                <div className="filter__content-details">
+                  <div className="grid">
+                    {posts.slice(0, 10).map((post) => (
+                      <PostItem post={post} key={post._id} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="filter__page">
-                <div></div>
-                <div className="filter__page-current">
-                  <span>Trang: 1 / 683 </span>
-                </div>
-              </div>
-              <div className="grid">
-                <div className="row">
-                    <div className="col l-12">
-                      <div className="filter__content">
-                        <div className="filter__content-details">
-                          <div className="grid">
-                            {
-                              posts.data.slice(0,10).map((post) => (
-                                <PostItem post={post} key={post._id}/>
-                              ))
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div className="filter__pagination">
-                <ul className="filter__pagination-list">
-                    <li className="filter__pagination-item">
-                      <span
-                      className={`filter__pagination-text ${
-                        pageCurrent === 1 ? "active" : ""
-                      }`}
-                      onClick={() => handelPageCurrent(1)}
-                      >
-                        1
-                      </span>
-                    </li>
-                    <li className="filter__pagination-item">
-                      <span
-                      className={`filter__pagination-text ${
-                        pageCurrent === 2 ? "active" : ""
-                      }`}
-                      onClick={() => handelPageCurrent(2)}
-                      >
-                        2
-                      </span>
-                    </li>
-                </ul>
               </div>
             </div>
-            <Adv/>
           </div>
+        </div>
+        <div className="filter__pagination">
+          <ul className="filter__pagination-list">
+            <li className="filter__pagination-item">
+              <span
+                className={`filter__pagination-text ${
+                  pageCurrent === 1 ? "active" : ""
+                }`}
+                onClick={() => handelPageCurrent(1)}
+              >
+                1
+              </span>
+            </li>
+            <li className="filter__pagination-item">
+              <span
+                className={`filter__pagination-text ${
+                  pageCurrent === 2 ? "active" : ""
+                }`}
+                onClick={() => handelPageCurrent(2)}
+              >
+                2
+              </span>
+            </li>
+          </ul>
         </div>
         <div className="listtab" ref={tabRef}>
           <div className="listtab__container">

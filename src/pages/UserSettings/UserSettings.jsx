@@ -1,89 +1,139 @@
 import React, { useEffect, useCallback, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./usersettings.scss";
 import { userState$, passwordState$ } from "../../redux/selectors";
 const UserSettings = () => {
-  const toast = useRef(null)
   const dispatch = useDispatch();
+  const toast = useRef(null);
   const currentUser = useSelector(userState$);
   const userPassword = useSelector(passwordState$);
   const [preview, setPreview] = useState();
   const [selectedFile, setSelectedFile] = useState();
   const [previewCover, setPreviewCover] = useState();
   const [selectedFileCover, setSelectedFileCover] = useState();
-  // const [isChecked, setIsChecked] = useState("male");
   const [text, setText] = useState("");
   const [dataUser, setDataUser] = useState({});
   const [disable, setDisable] = useState(true);
-  const [disableSave, setDisableSave] = useState(true);
+  const [isUpdate, setIsUpdate] = useState(false);
+  // const [disableSave, setDisableSave] = useState(true);
   const [isSuccess, setIsSuccess] = useState(null);
   const [isErr, setIsErr] = useState(null);
-  
+  const [isSuccessEmail, setIsSuccessEmail] = useState(null);
+  const [isErrEmail, setIsErrEmail] = useState(null);
+  const [dataEmail, setDataEmail] = useState({
+    mail:"",
+    password: "",
+  }); 
+  const [errorMail, setErrorMail] = useState({
+    mail:"",
+    password: "",
+  });
   const [dataPassword, setDataPassword] = useState({
-    oldPassword:'',
-    password: '',
-    confirmPassword: ''
+    oldPassword: "",
+    password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState({
-    password: '',
-    confirmPassword: '',
-    oldPassword:'',
-  })
-
-  const onInputChange = e => {
-    const { name, value } = e.target;
-    setDataPassword(prev => ({
-      ...prev,
-      [name]: value
-    }));
-
-    validateInput(e);
-  }
-useEffect(() => {
-  if(dataPassword.password !== '' && dataPassword.confirmPassword !== '' &&  dataPassword.oldPassword !== ''){
-    if(error.password === '' && error.confirmPassword === '' &&  error.oldPassword === ''){
-      setDisable(false)
-    }
-    else{
-      setDisable(true)
-    }
-  }
-},[error,dataPassword])
-
- const validateInput = e => {
-  let { name, value } = e.target;
-  setError(prev => {
-    const stateObj = { ...prev, [name]: "" };
-    switch (name) {
-      case "oldPassword":
-        if (value.length < 9 ) {
-          stateObj[name] = "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
-        }
-        break;
-      case "password":
-        if(dataPassword.confirmPassword && value !== dataPassword.confirmPassword){
-          stateObj["confirmPassword"] = "Mật khẩu nhập lại không chính xác.";
-        }
-        else if(dataPassword.oldPassword && value === dataPassword.oldPassword){
-          stateObj[name] = "Mật khẩu mới không được giống mật khẩu cũ";
-        }
-        else if(value.length < 9 ) {
-          stateObj[name] = "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
-        }
-        break;
-      case "confirmPassword":
-        if (dataPassword.password && value !== dataPassword.password) {
-          stateObj[name] = "Mật khẩu nhập lại không chính xác";
-        }
-        break;
-      default:
-        break;
-    }
-    return stateObj;
+    password: "",
+    confirmPassword: "",
+    oldPassword: "",
   });
-}
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setDataPassword((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    validateInput(e);
+  };
+  useEffect(() => {
+    if (
+      dataPassword.password !== "" &&
+      dataPassword.confirmPassword !== "" &&
+      dataPassword.oldPassword !== ""
+    ) {
+      if (
+        error.password === "" &&
+        error.confirmPassword === "" &&
+        error.oldPassword === ""
+      ) {
+        setDisable(false);
+      } else {
+        setDisable(true);
+      }
+    }
+  }, [error, dataPassword]);
+  const validateInput = (e) => {
+    let { name, value } = e.target;
+    setError((prev) => {
+      const stateObj = { ...prev, [name]: "" };
+      switch (name) {
+        case "oldPassword":
+          if (value.length < 9) {
+            stateObj[name] =
+              "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
+          }
+          break;
+        case "password":
+          if (
+            dataPassword.confirmPassword &&
+            value !== dataPassword.confirmPassword
+          ) {
+            stateObj["confirmPassword"] = "Mật khẩu nhập lại khum chính xác.";
+          } else if (
+            dataPassword.oldPassword &&
+            value === dataPassword.oldPassword
+          ) {
+            stateObj[name] = "Mật khẩu mới khum được giống mật khẩu cũ";
+          } else if (value.length < 9) {
+            stateObj[name] =
+              "Mật khẩu phải có tối thiểu 9 kí tự và ít hơn 100 kí tự.";
+          }
+          break;
+        case "confirmPassword":
+          if (dataPassword.password && value !== dataPassword.password) {
+            stateObj[name] = "Mật khẩu nhập lại khum chính xác";
+          }
+          break;
+        default:
+          break;
+      }
+      return stateObj;
+    });
+  };
+  const onInputEmailChange = (e) => {
+    const { name, value } = e.target;
+    setDataEmail((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    validateInputEmail(e);
+  };
+  const  validateInputEmail = (e) => {
+    let { name, value } = e.target;
+    setErrorMail((prev) => {
+      const stateObj = { ...prev, [name]: "" };
+      switch (name) {
+        case "mail":
+          if (!/.+@.+\.[A-Za-z]+$/.test(value) ) {
+            stateObj[name] =
+              "Email khum hợp lệ.";
+          }
+          break;
+        case "password":
+          if (value.length < 6) {
+            stateObj[name] = "Mật khẩu khum hợp lệ";
+          }
+          break;
+        default:
+          break;
+      }
+      return stateObj;
+    });
+  };
   useEffect(() => {
     if (currentUser.currentUser) {
       setDataUser(currentUser.currentUser);
@@ -151,38 +201,61 @@ useEffect(() => {
   const handelChangeData = (e) => {
     setDataUser({ ...dataUser, intro: e.target.value });
   };
-  // const setGender = () => {
-  //   setDataUser({ ...dataUser, gender: isChecked });
-  // };
   const onSubmit = useCallback((e) => {
     e.preventDefault();
   }, []);
-  const onSubmitPassword = useCallback((e) => {
-    setIsErr(null)
-    setIsSuccess(null)
-    try{
-      e.preventDefault();
-      dispatch(actions.userUpdatePassword.userUpdatePasswordRequest({
-        oldPassword: dataPassword.oldPassword,
-        password:dataPassword.password
-      }))
-    }
-    catch (err) {
-      dispatch(actions.userUpdatePassword.userUpdatePasswordFailure)
-    }
-  },[dispatch,dataPassword]) 
+  const onSubmitPassword = useCallback(
+    (e) => {
+      setIsErr(null);
+      setIsSuccess(null);
+      try {
+        e.preventDefault();
+        dispatch(
+          actions.userUpdatePassword.userUpdatePasswordRequest({
+            oldPassword: dataPassword.oldPassword,
+            password: dataPassword.password,
+          })
+        );
+      } catch (err) {
+        dispatch(actions.userUpdatePassword.userUpdatePasswordFailure);
+      }
+    },
+    [dispatch, dataPassword]
+  );
+  const onSubmitEmail = useCallback(
+    async (e) => {
+      setIsSuccessEmail(null)
+      setIsErrEmail(null)
+      try{
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const option = {
+          method: "put",
+          url: `/api/v1/auth/update/email`,
+          data:dataEmail,
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios(option);
+        setIsSuccessEmail(response.data.data)
+      }   
+      catch(error){
+        setIsErrEmail(error.response.data.message)
+      }          
+    },
+    [dataEmail]
+  );
   useEffect(() => {
-    if(userPassword.isLoading){
-      setIsErr(null)
-      setIsSuccess(userPassword.data.data)
+    if (userPassword.isLoading) {
+      setIsErr(null);
+      setIsSuccess(userPassword.data.data);
     }
-    if(!userPassword.isLoading){
-      setIsSuccess(null)
-      setIsErr(userPassword.err)
+    if (!userPassword.isLoading) {
+      setIsSuccess(null);
+      setIsErr(userPassword.err);
     }
-  },[userPassword])
-  console.log(dataPassword)
-  console.log(userPassword)
+  }, [userPassword]);
   const onSave = useCallback(
     (e) => {
       try {
@@ -195,22 +268,108 @@ useEffect(() => {
     [dataUser, dispatch]
   );
   useEffect(() => {
-    const timer = setTimeout(()=>{
-      toast.current.style.animation = 'hide_slide 1s ease forwards';
-    },4000);
+    if (currentUser.isUpdated) {
+      window.location.href = `http://localhost:3000/user/${currentUser.currentUser.userName}`;
+    }
+  });
+  useEffect(() => {
+    if(isSuccessEmail){
+      setIsUpdate(false)
+    }
+  },[isSuccessEmail])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      toast.current.style.animation = "hide_slide 1s ease forwards";
+    }, 4000);
     return () => clearTimeout(timer);
-  },[isErr,isSuccess])
+  }, [isErr, isSuccess, isErrEmail,isSuccessEmail]);
   return (
     <div className="container">
+       {isSuccessEmail ? (
+            <div class="toast-mess-container">
+              <button
+                ref={toast}
+                class={`alert-toast-message success`}
+              >
+                {isSuccessEmail}
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+      {isUpdate ? (
+        <div className="modal__change-email">
+            {isErrEmail  ? (
+            <div class="toast-mess-container">
+              <button
+                ref={toast}
+                class={`alert-toast-message err`}
+              >
+                {isErrEmail }
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="modal-box">
+            <form onSubmit={onSubmit} >
+              <div className="modal-content">
+                <label className="settings__name">EMAIL MỚI</label>
+                <input
+                  type="text"
+                  name="mail"
+                  className="settings__input"
+                  value={dataEmail.mail}
+                  onChange={onInputEmailChange}
+                  onBlur={validateInputEmail}
+                  placeholder="example@gmail.com"
+                />               
+                <p className="mes-err">{errorMail.mail}</p>
+              </div>
+              <div className="modal-content">
+                <label className="settings__name">MẬT KHẨU XÁC NHẬN</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="settings__input"
+                  value={dataEmail.password}
+                  onChange={onInputEmailChange}
+                  onBlur={validateInputEmail}
+                />
+                  <p className="mes-err">{errorMail.password}</p>
+              </div>
+              <div className="settings__actions">
+                <button  onClick={() => setIsUpdate(false)} className="settings__actions cancle">
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="settings__actions save"
+                  onClick={onSubmitEmail}
+                  >
+                  Lưu
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
       <div className="mt-190">
         <div className="settings">
-          {
-            isErr  || isSuccess  ? (
-              <div class="toast-mess-container">
-                <button ref={toast} class={`alert-toast-message ${isErr ? "err" : "success"}`}>{isErr ? isErr : isSuccess}</button>     
-              </div>
-            ) : ""
-          }
+          {isErr || isSuccess ? (
+            <div class="toast-mess-container">
+              <button
+                ref={toast}
+                class={`alert-toast-message ${isErr ? "err" : "success"}`}
+              >
+                {isErr ? isErr : isSuccess}
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
           <div className="grid">
             <div className="row">
               <div className="l-4">
@@ -346,15 +505,18 @@ useEffect(() => {
                           />
                         </div>
                         <div className="settings__flex-item">
-                          <label className="settings__name">EMAIL</label>
-                          <input
-                            type="text"
-                            className="settings__input"
-                            onChange={(e) =>
-                              setDataUser({ ...dataUser, mail: e.target.value })
-                            }
-                            value={dataUser.mail}
-                          />
+                          <div>
+                            <label className="settings__name">EMAIL</label>
+                            <div className="inputContainer">
+                            <input
+                              type="text"
+                              className="settings__input input-field"
+                              value={dataUser.mail }
+                              onClick={() => setIsUpdate(true)}                      
+                            />
+                            <i onClick={() => setIsUpdate(true)} class='inputIcon bx bxs-pencil'></i>
+                            </div>
+                          </div>
                         </div>
                         <div className="settings__flex-item">
                           <label className="settings__name">NGÀY SINH</label>
@@ -457,68 +619,6 @@ useEffect(() => {
                             </div>
                           </div>
                         </div>
-                        {/* <div className="settings__flex-item">
-                          <label className="settings__name">GIỚI TÍNH</label>
-                          <div className="settings__gender">
-                            <div  onClick={() => {
-                                setIsChecked("male");
-                              }}>
-                              <input
-                                type="radio"
-                                id="male"
-                                value="male"
-                                name="gender"
-                                // checked={dataUser.gender}
-                                checked={ dataUser.gender ? dataUser.gender :  true}
-                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
-                              />
-                              <label
-                                for="male"
-                                className="settings__gender-text"
-                              >
-                                Nam
-                              </label>
-                            </div>
-                            <div  onClick={() => {
-                                setIsChecked("female");
-                              }} >
-                              <input
-                                type="radio"
-                                id="female"
-                                value="female"
-                                name="gender"
-                                checked={ dataUser.gender ? dataUser.gender :  ""}
-                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
-                              />
-                              <label
-                                for="female"
-                                className="settings__gender-text"
-                              >
-                                Nữ
-                              </label>
-                            </div>
-                            <div
-                             onClick={() => {
-                              setIsChecked("other");
-                            }} 
-                            >
-                              <input
-                                type="radio"
-                                id="other"
-                                value="other"
-                                name="gender"
-                                checked={ dataUser.gender ? dataUser.gender :  ""}
-                                onChange={(e) => setDataUser({...dataUser,gender: e.target.value})}
-                              />
-                              <label
-                                for="other"
-                                className="settings__gender-text"
-                              >
-                                Khác
-                              </label>
-                            </div>
-                          </div>
-                        </div> */}
                       </div>
                       <div className="settings__form">
                         <p className="settings__password">Đổi mật khẩu</p>
@@ -530,28 +630,38 @@ useEffect(() => {
                             <input
                               type="password"
                               name="oldPassword"
-                              className={`settings__input ${error.oldPassword ? "wrong"  : "" }`}
+                              className={`settings__input ${
+                                error.oldPassword ? "wrong" : ""
+                              }`}
                               placeholder="****************************************"
                               value={dataPassword.oldPassword}
                               onChange={onInputChange}
                               onBlur={validateInput}
                             />
-                            {error.oldPassword && <p className='settings__mes'>{error.oldPassword}</p>}
+                            {error.oldPassword && (
+                              <p className="settings__mes">
+                                {error.oldPassword}
+                              </p>
+                            )}
                           </div>
                           <div className="settings__flex-item-wfull">
-                            <label className="settings__name" htmlFor="">
+                            <label className="settings__name">
                               Mật khẩu mới
                             </label>
                             <input
                               type="password"
                               name="password"
-                              className={`settings__input ${error.password ? "wrong"  : "" }`}
+                              className={`settings__input ${
+                                error.password ? "wrong" : ""
+                              }`}
                               placeholder="****************************************"
                               value={dataPassword.password}
                               onChange={onInputChange}
                               onBlur={validateInput}
                             />
-                             {error.password && <p className='settings__mes'>{error.password}</p>}
+                            {error.password && (
+                              <p className="settings__mes">{error.password}</p>
+                            )}
                           </div>
                           <div className="settings__flex-item-wfull">
                             <label className="settings__name" htmlFor="">
@@ -560,16 +670,31 @@ useEffect(() => {
                             <input
                               type="password"
                               name="confirmPassword"
-                              className={`settings__input ${error.confirmPassword ? "wrong"  : "" }`}
+                              className={`settings__input ${
+                                error.confirmPassword ? "wrong" : ""
+                              }`}
                               placeholder="****************************************"
                               value={dataPassword.confirmPassword}
                               onChange={onInputChange}
                               onBlur={validateInput}
                             />
-                          {error.confirmPassword && <p className='settings__mes'>{error.confirmPassword}</p>}
+                            {error.confirmPassword && (
+                              <p className="settings__mes">
+                                {error.confirmPassword}
+                              </p>
+                            )}
                           </div>
-                          <button type="submit" disabled={disable} onClick={(e) => onSubmitPassword(e) } className={`settings__button ${!disable ? "active" : ""}`}>Xác nhận</button>
-                        </form>         
+                          <button
+                            type="submit"
+                            disabled={disable}
+                            onClick={(e) => onSubmitPassword(e)}
+                            className={`settings__button ${
+                              !disable ? "active" : ""
+                            }`}
+                          >
+                            Xác nhận
+                          </button>
+                        </form>
                       </div>
                       <div className="settings__flex">
                         <div className="settings__flex-item">
@@ -577,7 +702,7 @@ useEffect(() => {
                             Số chứng minh thư
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="settings__input"
                             value={dataUser.identification}
                             onChange={(e) =>
@@ -609,7 +734,7 @@ useEffect(() => {
                             Số điện thoại
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="settings__input"
                             value={dataUser.mobile}
                             onChange={(e) =>
@@ -623,7 +748,9 @@ useEffect(() => {
                       </div>
                     </div>
                     <div className="settings__actions">
-                      <button className="settings__actions cancle">Hủy</button>
+                      <button className="settings__actions cancle">
+                        <Link to="/">Hủy</Link>
+                      </button>
                       {/* <button
                         type="submit"
                         className={`settings__actions save ${!disableSave ? "active" : ""}`}
@@ -632,7 +759,7 @@ useEffect(() => {
                       >
                         Lưu
                       </button> */}
-                        <button
+                      <button
                         type="submit"
                         className="settings__actions save"
                         onClick={onSave}

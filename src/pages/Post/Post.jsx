@@ -4,10 +4,13 @@ import EditorJS from "@editorjs/editorjs";
 import "./post.scss";
 import axios from "axios";
 import { Config } from "./tools";
-import { userState$ } from "../../redux/selectors";
+import { userState$, postState$ } from "../../redux/selectors";
 import { useSelector } from "react-redux";
 const Post = () => {
   const navigate = useNavigate();
+  const post = useSelector(postState$)
+  const [isSuccess, setIsSuccess] = useState(null);
+  console.log(post)
   const currentUser = useSelector(userState$);
   const location = useLocation();
   const [isUser, setIsUser] = useState(false);
@@ -17,6 +20,13 @@ const Post = () => {
   const [authPost, setAuthPost] = useState({});
   const [content, setContent] = useState("");
   const [response, setResponse] = useState("");
+  useEffect(()=>{
+    if(post.post){
+      if(post.post.data){
+        setIsSuccess(post.post.data.status)
+      }
+    }
+  },[post])
   const path = location.pathname.split("/")[2];
   const getPost = useCallback(async () => {
     const res = await axios.get(`/api/v1/posts/${path}`);
@@ -75,6 +85,12 @@ const Post = () => {
   return (
     <div className="mt-80">
       <div className="post__details-container">
+      {isSuccess ? (   <div class="toast-mess-container">
+                    <button class={`alert-toast-message success`}>
+                        {isSuccess}
+                    </button>
+                      </div> ) : ""
+                  }
         <div className="post__details-auth">
           <div className="post__details-category">
             <Link to={`/category/${categoryPost.slug}`}>
@@ -91,18 +107,21 @@ const Post = () => {
           </div>
           <div className="post__details mt-20 flex-box">
             <div className="flex-align-gap-10">
-              <div className="post-avt-div">
-                <img
-                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/aec845906a1911ec8130097cb62284e8.png"
-                  alt=""
-                />
-              </div>
-              <div>
-                <Link to="/">
-                  <p className="post-username">{authPost.userName}</p>
-                </Link>
-                <span className="time-read">52 phút trước</span>
-              </div>
+                  <div className="post-avt-div">
+                    <Link to={`/user/${authPost.userName}`}>
+                      <img
+                        src={authPost.avatar ? authPost.avatar : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"}
+                        alt=""
+                      />
+                    </Link>
+                
+                  </div>
+                  <div>
+                    <Link to={`/user/${authPost.userName}`}>
+                      <p className="post-username">{authPost.displayName ? authPost.displayName : authPost.userName}</p>
+                    </Link>
+                      <span className="time-read">52 phút trước</span>
+                  </div>
             </div>
             {isUser ? (
               <div className="flex-align-gap-10">

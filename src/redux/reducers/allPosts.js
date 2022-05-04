@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constant";
-import { getAllPosts, getType, createPost, updatePost, deletePost} from "../actions";
+import { getAllPosts, getType,updatePost, deletePost} from "../actions";
 export default function allPostsReducers(state = INIT_STATE.allPosts,action){
     switch(action.type) {
         case getType(getAllPosts.getAllPostsRequest):
@@ -12,33 +12,13 @@ export default function allPostsReducers(state = INIT_STATE.allPosts,action){
                 ...state,
                 isLoading:false,
                 data: action.payload,
-                post:action.payload
+                // post:action.payload
             }
         case getType(getAllPosts.getAllPostsFailure):
             return {
                 ...state,
                 isLoading:false,
             }
-        case getType(createPost.createPostRequest):
-            return {
-              post:null,
-              isLoading:false,
-              data: [...state.data, action.payload],
-            };
-        case getType(createPost.createPostSuccess):
-            return {
-              post:action.payload,
-              isLoading:true,
-              data: [...state.data, action.payload],
-            };
-        case getType(createPost.createPostFailure):
-            return {
-              ...state,
-              data: [...state.data, action.payload],
-              err:action.payload,
-              isLoading:true,
-            };
-           
         case getType(updatePost.updatePostSuccess):
             return {
               ...state,
@@ -48,8 +28,6 @@ export default function allPostsReducers(state = INIT_STATE.allPosts,action){
             return {
               ...state,
                 data: state.data.filter(post => post._id !== action.payload._id)
-                // filter cac bai post co id khac voi id dc payload 
-                // tra ve new arr
             };
         default:
             return state;
