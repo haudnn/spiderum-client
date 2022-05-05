@@ -5,11 +5,15 @@ import PostItem from "../../components/PostItem/PostItem";
 import "./user.scss";
 import axios from "axios";
 import TrendingPosts from "../../components/TrendingPosts/TrendingPosts";
+import {  userState$}from "../../redux/selectors";
+import {useSelector } from "react-redux";
 const User = () => {
+  const userState = useSelector(userState$)
   const [currentUser, setCurrentUser] = useState(null);
   const [posts, setPosts] = useState(null);  
   const [visible, setVisible] = useState(true);
   const slider = useRef(null);
+  const [userId, setUserId] = useState([]);
   const { username } = useParams();
   const sliderSettings = {
     slidesToShow: 3,
@@ -26,6 +30,11 @@ const User = () => {
     const response = await axios(option);
     setCurrentUser(response.data.data);
   }, [username]);
+  useEffect(() => {
+    if(currentUser){
+      setUserId([currentUser.user._id])     
+    }
+  },[currentUser])
   const getPostsByUser = useCallback(async () => {
     const option = {
       method: "get",
@@ -52,15 +61,50 @@ const User = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const handelUnFlow = useCallback( async(e) => {
+    const token = localStorage.getItem("token")
+    try{
+      e.preventDefault();
+      const option = {
+        method: "put",
+        url: `/api/v1/auth/update/unfollower/`,
+        data: userId,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      await axios(option);
+    }
+    catch(err) {
+    }
+  },[userId])
+  const handelFlow = useCallback( async(e) => {
+    const token = localStorage.getItem("token")
+    try{
+      e.preventDefault();
+      const option = {
+        method: "put",
+        url: `/api/v1/auth/update/follower/`,
+        data: userId,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios(option);
+      console.log(response)
+    }
+    catch(err) {
+    }
+  },[userId])
   return (
     currentUser &&
-    posts && (
+    posts &&  (
       <div className="main">
         <div className="user">
           <div className="user__cover">
             <img src={currentUser.user.cover} alt="" />
           </div>
-          <div className="user__profile">
+          <div className="user__profile" >
             <div className="user__profile-content">
               <div className="user__profile-sidebar">
                 <div className="user__profile-dynamic" style={ visible ? { height:'800px', maxHeight: '50%', top: "160px"} : {height:'800px', maxHeight: '50%', top: "-200px"}}>
@@ -76,7 +120,7 @@ const User = () => {
                           </Link>
                         </div>
                         <h1 className="user__profile-widget-disname">
-                          <Link to="/">{currentUser.user.displayName}</Link>
+                          <Link to="/">{currentUser.user.displayName}  </Link>
                         </h1>
                         <p className="user__profile-widget-username">
                           <Link to="/">@{currentUser.user.userName}</Link>
@@ -85,24 +129,47 @@ const User = () => {
                           {currentUser.user.intro}
                         </div>
                         <div className="user__profile-widget-button">
-                          <button className="user__profile-widget-button-item">
-                            <span>Theo dõi</span>
-                          </button>
+                          {
+                            userState.currentUser ? 
+                            (
+                              userState.currentUser.following.includes(currentUser.user._id) ? (
+                                <div onClick={() => window.location.reload(false)}>
+                                   <button className="user__profile-widget-button-item flow" onClick={handelUnFlow}>
+                                  <span className="flow-icon">
+                                    <i class='bx bxs-check-circle'></i>
+                                  </span>
+                                  <span className="flow-text">Đang Theo dõi</span>
+                                </button>
+                                </div>
+                              )
+                              : (
+                                <div  onClick={() => window.location.reload(false)}>
+                                  <button className="user__profile-widget-button-item" onClick={handelFlow}>
+                                    <span>Theo dõi</span>
+                                  </button>
+                                </div>
+                              )
+                              ) : <Link to='/login'>
+                                <button className="user__profile-widget-button-item">
+                                  <span>Theo dõi</span>
+                                </button>
+                              </Link>
+                          }
                           <button className="user__profile-widget-button-item">
                             <span>Nhắn tin</span>
                           </button>
                         </div>
                         <div className="user__profile-widget-stats">
                           <div>
-                            <p className="label">Followers</p>
+                            <p className="label">Người theo dõi</p>
                             <p className="value">
-                              {currentUser.user.followers}
+                              {currentUser.user.followers ? currentUser.user.followers.length : "0" }
                             </p>
                           </div>
                           <div>
-                            <p className="label">Following</p>
+                            <p className="label">Đang theo dõi</p>
                             <p className="value">
-                              {currentUser.user.following}
+                              {currentUser.user.following ? currentUser.user.following.length : "0"}
                             </p>
                           </div>
                         </div>

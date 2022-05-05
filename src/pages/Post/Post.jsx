@@ -10,7 +10,6 @@ const Post = () => {
   const navigate = useNavigate();
   const post = useSelector(postState$)
   const [isSuccess, setIsSuccess] = useState(null);
-  console.log(post)
   const currentUser = useSelector(userState$);
   const location = useLocation();
   const [isUser, setIsUser] = useState(false);
@@ -19,7 +18,7 @@ const Post = () => {
   const [categoryPost, setCategoryPost] = useState({});
   const [authPost, setAuthPost] = useState({});
   const [content, setContent] = useState("");
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState(null);
   useEffect(()=>{
     if(post.post){
       if(post.post.data){
@@ -76,12 +75,13 @@ const Post = () => {
     },
     [dataPost._id]
   );
-  // console.log(response)
   useEffect(() => {
+   if(response) {
     if (response.message) {
-      navigate(`/`);
+      window.location.href = 'http://localhost:3000/';
     }
-  }, [navigate,response.message]);
+   }
+  }, [navigate,response]);
   return (
     <div className="mt-80">
       <div className="post__details-container">

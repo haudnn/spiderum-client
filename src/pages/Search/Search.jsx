@@ -62,10 +62,7 @@ const Search = () => {
                   users.slice(0, 10).map((user) => (
                     <UsersSearch user={user} key={user._id} />
                   ))                               
-                }       
-                 {/* {posts.slice(0, 10).map((post) => (
-                   <PostItem post={post} key={post._id} />
-                   ))} */}           
+                }           
             </div>
           </div>
         </div>

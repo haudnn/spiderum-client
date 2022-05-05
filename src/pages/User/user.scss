@@ -274,6 +274,16 @@
             
         }
 }
+.flow{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 5px;
+    width: max-content;
+        &-icon{
+            color: rgba(47,181,250, 1);
+        }
+}
 .label{
     font-weight: 700;
     font-size: 15px;

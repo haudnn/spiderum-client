@@ -68,6 +68,7 @@ const onSave = useCallback((e) => {
     dispatch(actions.createPost.createPostFailure())
   }
 },[data,dispatch])
+console.log(data.content)
 const onSubmit = useCallback((e)=>{
   e.preventDefault();
 },[])

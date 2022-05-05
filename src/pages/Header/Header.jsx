@@ -102,13 +102,11 @@ const Header = () => {
     localStorage.removeItem("token")
     dispatch(actions.logout());
   }
-  console.log(currentUser)
   useEffect(() => {
     if(currentUser.isLoggedIn){
       window.location.href = 'http://localhost:3000/';
     }
   },[currentUser])
-// console.log(currentUser)
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [
@@ -212,7 +210,7 @@ const Header = () => {
 
   return location.pathname !== "/category" ? (
     location.pathname !== "/login" && location.pathname !== "/register" ? (
-      location.pathname !== "/post/create" && location.pathname !== `/post/update/${path}` ? (
+      location.pathname !== "/post/create/" && location.pathname !== `/post/update/${path}` ? (
         <header className={`header ${visible ? "" : "header-height"}`}>
           <div className={`header__container ${cls} `}>    
             {
@@ -452,7 +450,7 @@ const Header = () => {
                       )}
                     </li>
                     <li>
-                      <Link to="post/create">
+                      <Link to="post/create/">
                         <button className="header__button">Viết bài</button>
                       </Link>
                     </li>

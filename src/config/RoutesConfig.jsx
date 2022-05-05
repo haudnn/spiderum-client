@@ -9,9 +9,9 @@ import Register from "../pages/Register/Register";
 import ChooseTopics from "../pages/ChooseTopics/ChooseTopics";
 import EditPost from "../pages/EditPost/EditPost";
 import UserSettings from "../pages/UserSettings/UserSettings";
-
 import User from "../pages/User/User";
 import Search from "../pages/Search/Search";
+import AuthRegister from "../pages/AuthRegister/AuthRegister";
 const RoutesConfig = () => {
   return (
     <Routes>
@@ -21,7 +21,8 @@ const RoutesConfig = () => {
         <Route path="/post/update/:slug" element={<EditPost/>} />
         <Route path="/post/:slug" element={<Post />} />
         <Route path="/login" element={<Login/>} ></Route>
-        <Route path="/register" element={<Register/>} ></Route>
+        {/* <Route path="/register" element={<Register/>} ></Route> */}
+        <Route path="/register" element={<AuthRegister/>} ></Route>
         <Route path="/search" element={<Search/>} ></Route>
         <Route path="/user/:username" element={<User/>} ></Route>
         <Route path="/user/settings" element={<UserSettings/>} ></Route>
