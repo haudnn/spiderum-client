@@ -21,8 +21,8 @@ const RoutesConfig = () => {
         <Route path="/post/update/:slug" element={<EditPost/>} />
         <Route path="/post/:slug" element={<Post />} />
         <Route path="/login" element={<Login/>} ></Route>
-        {/* <Route path="/register" element={<Register/>} ></Route> */}
         <Route path="/register" element={<AuthRegister/>} ></Route>
+        <Route path="/tao-tai-khoan" element={<Register/>} ></Route>
         <Route path="/search" element={<Search/>} ></Route>
         <Route path="/user/:username" element={<User/>} ></Route>
         <Route path="/user/settings" element={<UserSettings/>} ></Route>

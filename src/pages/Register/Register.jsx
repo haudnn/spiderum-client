@@ -1,11 +1,19 @@
 import React, { useCallback, useState,useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useSearchParams} from "react-router-dom";
 import "./register.scss";
 import { useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import {  userState$ } from '../../redux/selectors'
 const Register = () => {
-  let navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get('token')
+  const uidFb = searchParams.get('uid')
+  const navigate = useNavigate()
+  useEffect(() => {
+    if(!token && !uidFb) {
+      navigate('/register')
+    }
+  }, [token,navigate,uidFb])
   const dispatch = useDispatch();
   const [errMessages, setErrMessages] = useState([]);
   const loginSuccess = useSelector( userState$)
@@ -15,6 +23,7 @@ const Register = () => {
     password: "",
     mobile: "",
     identification: "",
+    socialIdFacebook:uidFb
   });
   const onSubmit = useCallback((e) => {
     try{

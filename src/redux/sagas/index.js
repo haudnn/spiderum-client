@@ -58,6 +58,18 @@ function* registerSaga(action) {
     yield put(actions.register.registerFailure(err.response.data.message));
   }
 }
+function* registerWithFacebookSaga (action) {
+  try {
+    const register = yield call(api.registerWithFacebook, action.payload);
+    yield put(actions.register.registerWithFacebookSuccess(register));
+    console.log(register)
+    // const currentuser = yield call(api.login, action.payload);
+    // yield put(actions.login.loginSuccess(currentuser.data));
+  } catch (err) {
+    yield put(actions.register.registerWithFacebookFailure(err.response));
+  }
+}
+
 function* userUpdateSaga(action) {
   try {
     const user = yield call(api.userUpdate, action.payload);
@@ -120,11 +132,13 @@ function* mySaga(){
   // AUTH
   yield takeLatest(actions.login.loginRequest, loginSaga);
   yield takeLatest(actions.register.registerRequest, registerSaga);
+  yield takeLatest(actions.registerWithFacebook.registerWithFacebookRequest,registerWithFacebookSaga);
   yield takeLatest(actions.userUpdate.userUpdateRequest, userUpdateSaga);  
   yield takeLatest(actions.userUpdatePassword.userUpdatePasswordRequest, userUpdatePasswordSaga);
   yield takeLatest(actions.checkCurrentUser.checkCurrentUserRequest, checkCurrentUserSaga);
   yield takeLatest(actions.createCategoryUser.createCategoryUserRequest, createCategoryUserSaga);
   yield takeLatest(actions.deleteCategoryUser.deleteCategoryUserRequest, deleteCategoryUserSaga);
+
   // CATEGORIES
   yield takeLatest(actions.getAllCategories.getAllCategoriesRequest, getAllCategoriesSaga);
 }

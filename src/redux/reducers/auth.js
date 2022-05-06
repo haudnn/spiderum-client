@@ -1,5 +1,5 @@
 import { INIT_STATE } from "../../constant";
-import {getType, login, logout, register, checkCurrentUser, createCategoryUser, userUpdate } from "../actions";
+import {getType, login, logout, register, checkCurrentUser, createCategoryUser, userUpdate, registerWithFacebook } from "../actions";
 export default function userReducers(state = INIT_STATE.auth,action){
     switch(action.type) {
         case getType(login.loginRequest):
@@ -76,6 +76,21 @@ export default function userReducers(state = INIT_STATE.auth,action){
                 ...state,
                 err:action.payload
             }
+
+        case getType(registerWithFacebook.registerWithFacebookRequest):
+            return { 
+                isLoggedIn :false,
+            }
+        case getType(registerWithFacebook.registerWithFacebookSuccess):
+            return { 
+                isLoggedIn :true,
+            }
+        case getType(registerWithFacebook.registerWithFacebookFailure):
+            return { 
+                isLoggedIn :false,
+                err:action.payload
+            }
+
         case getType(logout):
             return { 
                 token:false,

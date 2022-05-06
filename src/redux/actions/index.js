@@ -38,6 +38,11 @@ export const updatePost = createActions({
     loginSuccess: (payload) => payload,
     loginFailure: (err) => err,
  })
+ export const registerWithFacebook = createActions({
+   registerWithFacebookRequest: (payload) => payload,
+   registerWithFacebookSuccess: (payload) => payload,
+   registerWithFacebookFailure: (err) => err,
+ })
  export const register = createActions({
     registerRequest: (payload) => payload,
     registerSuccess: (payload) => payload,

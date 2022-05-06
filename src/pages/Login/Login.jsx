@@ -4,12 +4,41 @@ import { Link, useNavigate }from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../redux/actions'
 import {  userState$ } from '../../redux/selectors'
+import firebase,{ auth } from '../../components/firebase/config'
+import axios from 'axios'
 const Login = () => {
   const [data, setData] = useState({userName: "",password: ""});
   const [errMessage, setErrMessage] = useState(null);
   const loginSuccess = useSelector( userState$)
+  const fbProvider = new firebase.auth.FacebookAuthProvider()
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  const handleAuthFacebook = async () => {
+    await auth.signInWithPopup(fbProvider)
+    auth.onAuthStateChanged(async (user) => {
+      if(user._delegate.accessToken) {
+        const option  ={
+          method: "post", 
+          url:`/api/v1/auth/facebook/`,
+          data:{
+            uid:user._delegate.uid
+          },
+        }
+        const response = await axios(option)
+        if(!response.data.data){
+            navigate(`/tao-tai-khoan?token=${user._delegate.accessToken}&uid=${user._delegate.uid}`)
+        } 
+        else {
+          dispatch(actions.login.loginRequest(
+            {
+              userName: response.data.data.userName,
+              password: response.data.data.password
+          }
+          ))
+        }  
+      }
+  })
+  };
   const onSubmit = useCallback((e) => {
   try{
     e.preventDefault();
@@ -70,12 +99,12 @@ useEffect(()=> {
         </form>
         <p className="login__text">Đăng nhập bằng</p>
         <div className="login__facebook">
-          <Link to="/" className="login__facebook-link">
-            <button className="login__form-button fb">
+          <div className="login__facebook-link">
+            <button className="login__form-button fb" onClick={handleAuthFacebook}>
               <i className="login__icon bx bxl-facebook"></i>
               <span className="login__text fb">Facebook</span>
             </button>
-          </Link>
+          </div>
         </div>
         <Link to="/">
           <p className="login__text link">Quên mật khẩu?</p>

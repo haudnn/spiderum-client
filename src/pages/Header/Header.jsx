@@ -207,9 +207,8 @@ const Header = () => {
     setQuery(null)
     navigate(`/search?q=${query}&type=post`)
   }
-
   return location.pathname !== "/category" ? (
-    location.pathname !== "/login" && location.pathname !== "/register" ? (
+    location.pathname !== "/login" && location.pathname !== "/register" && location.pathname !== `/tao-tai-khoan`  ? (
       location.pathname !== "/post/create/" && location.pathname !== `/post/update/${path}` ? (
         <header className={`header ${visible ? "" : "header-height"}`}>
           <div className={`header__container ${cls} `}>    
