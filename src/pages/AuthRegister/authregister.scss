@@ -83,14 +83,14 @@
                 }
                 &-sending{
                     margin-top: 15px;
-                    display: flex;
-                    gap: 0 10px;
+                    // display: flex;
+                    // gap: 0 10px;
                         & p{
                             font-size: 14px;
                             line-height: 18px;
                             max-width: 80%;
                         }
-                        & input{
+                        & button{
                             background: #2FB5FA;
                             border-radius: 0;
                             color: #FFF;

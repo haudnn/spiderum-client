@@ -8,7 +8,7 @@ import { userState$, postState$ } from "../../redux/selectors";
 import { useSelector } from "react-redux";
 const Post = () => {
   const navigate = useNavigate();
-  const post = useSelector(postState$)
+  const post = useSelector(postState$);
   const [isSuccess, setIsSuccess] = useState(null);
   const currentUser = useSelector(userState$);
   const location = useLocation();
@@ -19,13 +19,13 @@ const Post = () => {
   const [authPost, setAuthPost] = useState({});
   const [content, setContent] = useState("");
   const [response, setResponse] = useState(null);
-  useEffect(()=>{
-    if(post.post){
-      if(post.post.data){
-        setIsSuccess(post.post.data.status)
+  useEffect(() => {
+    if (post.post) {
+      if (post.post.data) {
+        setIsSuccess(post.post.data.status);
       }
     }
-  },[post])
+  }, [post]);
   const path = location.pathname.split("/")[2];
   const getPost = useCallback(async () => {
     const res = await axios.get(`/api/v1/posts/${path}`);
@@ -52,8 +52,8 @@ const Post = () => {
     }
   }, [dataPost, content]);
   useEffect(() => {
-    if (currentUser.currentUser  ) {
-      if (authPost._id === currentUser.currentUser._id ) {
+    if (currentUser.currentUser) {
+      if (authPost._id === currentUser.currentUser._id) {
         setIsUser(true);
       }
     }
@@ -76,21 +76,22 @@ const Post = () => {
     [dataPost._id]
   );
   useEffect(() => {
-   if(response) {
-    if (response.message) {
-      window.location.href = 'http://localhost:3000/';
+    if (response) {
+      if (response.message) {
+        window.location.href = "http://localhost:3000/";
+      }
     }
-   }
-  }, [navigate,response]);
+  }, [navigate, response]);
   return (
     <div className="mt-80">
       <div className="post__details-container">
-      {isSuccess ? (   <div class="toast-mess-container">
-                    <button class={`alert-toast-message success`}>
-                        {isSuccess}
-                    </button>
-                      </div> ) : ""
-                  }
+        {isSuccess ? (
+          <div class="toast-mess-container">
+            <button class={`alert-toast-message success`}>{isSuccess}</button>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="post__details-auth">
           <div className="post__details-category">
             <Link to={`/category/${categoryPost.slug}`}>
@@ -107,21 +108,28 @@ const Post = () => {
           </div>
           <div className="post__details mt-20 flex-box">
             <div className="flex-align-gap-10">
-                  <div className="post-avt-div">
-                    <Link to={`/user/${authPost.userName}`}>
-                      <img
-                        src={authPost.avatar ? authPost.avatar : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"}
-                        alt=""
-                      />
-                    </Link>
-                
-                  </div>
-                  <div>
-                    <Link to={`/user/${authPost.userName}`}>
-                      <p className="post-username">{authPost.displayName ? authPost.displayName : authPost.userName}</p>
-                    </Link>
-                      <span className="time-read">52 phút trước</span>
-                  </div>
+              <div className="post-avt-div">
+                <Link to={`/user/${authPost.userName}`}>
+                  <img
+                    src={
+                      authPost.avatar
+                        ? authPost.avatar
+                        : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
+                    }
+                    alt=""
+                  />
+                </Link>
+              </div>
+              <div>
+                <Link to={`/user/${authPost.userName}`}>
+                  <p className="post-username">
+                    {authPost.displayName
+                      ? authPost.displayName
+                      : authPost.userName}
+                  </p>
+                </Link>
+                <span className="time-read">52 phút trước</span>
+              </div>
             </div>
             {isUser ? (
               <div className="flex-align-gap-10">
@@ -140,28 +148,144 @@ const Post = () => {
         <div className="post__details-content">
           <div className="post__details-content-container">
             <div id="editorjs" />
-            <div className="tags__wrapper">
-              <Link className="post__tag" to="/">
-                YẾU ĐUỐI
-              </Link>
-              <Link className="post__tag" to="/">
-                THẾ HỆ
-              </Link>
-              <Link className="post__tag" to="/">
-                TÂM LY HỌC
-              </Link>
-              <Link className="post__tag" to="/">
-                THƯỢNG ĐẲNG
-              </Link>
-              <Link className="post__tag" to="/">
-                #GEN Z
-              </Link>
-            </div>
           </div>
           <div className="sticky-bar"></div>
         </div>
-        <div className="post__details-bar">
-          <div></div>
+        <div className="post__tool-bar">
+          <div className="pull-left">
+            <div className="vote">
+              <div className="upvote">
+                <div>
+                  <i className="vote-icon bx bx-up-arrow"></i>
+                </div>
+              </div>
+              <span className="value">69</span>
+              <div className="downvote">
+                <div className="vote-icon">
+                  <i class="bx bx-down-arrow"></i>
+                </div>
+              </div>
+            </div>
+            <div className="view-count">700 lượt xem</div>
+          </div>
+          <div className="pull-right">
+            <div className="right-tools">
+              <Link to="/" className="tool">
+                <i class="bx bxl-facebook-circle"></i>
+              </Link>
+              <div className="bookmark">
+                <Link to="/" title="Click để lưu bài viết">
+                  <i class="bx bx-bookmarks"></i>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="post__subscription">
+          <div className="post__author">
+            <div className="post__author-container">
+              <div className="post__author-infos">
+                <div className="post__author-avt">
+                  <Link to="/">
+                    <img
+                      src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/d5bfdc4072c411ec85fc41a2f5147a1f.jpeg"
+                      alt=""
+                    />
+                  </Link>
+                </div>
+                <div className="name">
+                  <Link to="/" className="name-main">
+                    Minh Tu Le
+                  </Link>
+                  <p>@tikhung01</p>
+                </div>
+              </div>
+              <div className="sub-container">
+                <button className="btn-fl">Follow</button>
+              </div>
+            </div>
+            <div className="user-desc">Tại sao? Phải, tại sao.</div>
+          </div>
+          <div className="category__item">
+            <div className="catergory__info">
+              <Link className="name-main" to="/">
+                <span>Phim</span>
+              </Link>
+              <p>/phim</p>
+            </div>
+            <button className="btn-fl">Follow</button>
+          </div>
+        </div>
+        <div className="comment__container">
+          <section className="comment__section">
+            <div>
+              <div className="comment__form-container">
+                <form action="" className="comment__form">
+                  <div
+                    className="comment__form-data"
+                    suppressContentEditableWarning
+                    placeholder="Hãy chia sẻ cảm nghĩ của bạn về bài viết"
+                  ></div>
+                  <div className="comment__form-actions">
+                    <div className="comment__form-actions-submit">Gửi</div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="comment__nav-tab">
+              <div className="separator"></div>
+              <ul className="comment__nav-list">
+                <li className="comment__nav-item active">
+                  <Link to="/">Hot nhất</Link>
+                </li>
+                <li className="comment__nav-item">
+                  <Link to="/">Mới nhất</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="comment__tree-view">
+              <div className="comments">
+                <div className="comments__node">
+                  <div className="comment__child">
+                    <div className="comment__child-avt">
+                      <Link to="/">
+                        <img
+                          src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/36462660c77911ec91a38d378d083ff6.jpeg"
+                          alt="nguyenlong266"
+                        />
+                      </Link>
+                    </div>
+                    <div className="comment__child-body">
+                      <div className="creator-info">
+                        <Link to="/">
+                          <span className="name-main">Nguyn Long</span>
+                        </Link>
+                        <div className="metadata">
+                          <span className="date">Hôm qua</span>
+                        </div>
+                        <div className="comment__child-content">mê tú linh</div>
+                        <div className="comment__child-actions">
+                          <div className="vote">
+                            <div className="upvote">
+                              <div>
+                                <i className="vote-icon bx bx-up-arrow"></i>
+                              </div>
+                            </div>
+                            <span className="value">69</span>
+                            <div className="downvote">
+                              <div className="vote-icon">
+                                <i class="bx bx-down-arrow"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
       {visiable ? (

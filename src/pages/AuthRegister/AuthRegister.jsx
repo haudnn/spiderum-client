@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {Link, useNavigate } from "react-router-dom"
 import firebase,{ auth } from '../../components/firebase/config'
 import axios from 'axios'
@@ -10,6 +10,7 @@ const AuthRegister = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const loginSuccess = useSelector( userState$)
+  const [mail, setMail] = useState({});
   const fbProvider = new firebase.auth.FacebookAuthProvider()
   const handleAuthFacebook = async () => {
     await auth.signInWithPopup(fbProvider)
@@ -19,7 +20,8 @@ const AuthRegister = () => {
           method: "post", 
           url:`/api/v1/auth/facebook/`,
           data:{
-            uid:user._delegate.uid
+            uid:user._delegate.uid,
+            token:user._delegate.accessToken
           },
         }
         const response = await axios(option)
@@ -53,6 +55,16 @@ const AuthRegister = () => {
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
   },[])
+  const handleAuthMail = useCallback( async (e) => {
+    e.preventDefault();
+    const option  ={
+      method: "post", 
+      url:`/api/v1/auth/mail/`,
+      data:mail
+    }
+    const response = await axios(option)
+    console.log(response)
+  },[mail])
   return (
     <div className="auth">
       <div className="auth__container">
@@ -71,12 +83,12 @@ const AuthRegister = () => {
                 </button>
               </div>            
               <div className="auth__logging-email">
-              <p className='auth__logging-tilte'>Hoặc bằng email</p>
-                <input className='auth__logging-email-input' type="text" placeholder='email@example.com'/>
-                <div className="auth__logging-email-sending">
-                  <p >Thư xác nhận sẽ được gửi vào hòm thư của bạn</p>
-                  <input className= ""type="submit" value="Gửi" />
-                </div>
+              <form className='auth__logging-tilte'>Hoặc bằng email</form>
+                <form className="auth__logging-email-sending" onSubmit={handleSubmit}>
+                  <input className='auth__logging-email-input' value={mail.mail} onChange={(e) => setMail({ ...mail, mail: e.target.value })} type="text" placeholder='email@example.com'/>
+                  <p>Thư xác nhận sẽ được gửi vào hòm thư của bạn</p>
+                  <button type="submit" value="Gửi" onClick={handleAuthMail}>Gửi</button>
+                </form>
               </div>
           </form>
           <div className="auth__back">

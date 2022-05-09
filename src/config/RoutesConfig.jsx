@@ -12,6 +12,7 @@ import UserSettings from "../pages/UserSettings/UserSettings";
 import User from "../pages/User/User";
 import Search from "../pages/Search/Search";
 import AuthRegister from "../pages/AuthRegister/AuthRegister";
+import Messages from "../pages/Messages/Messages";
 const RoutesConfig = () => {
   return (
     <Routes>
@@ -26,6 +27,7 @@ const RoutesConfig = () => {
         <Route path="/search" element={<Search/>} ></Route>
         <Route path="/user/:username" element={<User/>} ></Route>
         <Route path="/user/settings" element={<UserSettings/>} ></Route>
+        <Route path="/messages/" element={<Messages/>} ></Route>
         <Route path="/" element={<Home />} />
     </Routes>
   );
