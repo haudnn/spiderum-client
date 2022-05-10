@@ -82,7 +82,6 @@ const User = () => {
     },
     [userId]
   );
-  console.log(currentUser)
   const handelFlow = useCallback(
     async (e) => {
       const token = localStorage.getItem("token");

@@ -62,7 +62,7 @@ const PostItem = ({ post }) => {
                 <Link to={`/user/${post.author.userName}`} >
                   <img
                     className="post-avt"
-                    src={ post.author.avatar ? post.author.avatar :"https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"}
+                    src={ post.author.avatar ? post.author.avatar :"https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"}
                     alt=""
                   />
                 </Link>

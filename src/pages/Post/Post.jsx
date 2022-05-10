@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 const Post = () => {
   const navigate = useNavigate();
   const post = useSelector(postState$);
+  const [voteCount, setVoteCount] = useState(null);
+  const [voteCountUpdate, setVoteCountUpdate] = useState([]);
   const [isSuccess, setIsSuccess] = useState(null);
   const currentUser = useSelector(userState$);
   const location = useLocation();
@@ -18,6 +20,8 @@ const Post = () => {
   const [categoryPost, setCategoryPost] = useState({});
   const [authPost, setAuthPost] = useState({});
   const [content, setContent] = useState("");
+  const [active, setActive] = useState(false);
+  const [activeCate, setActiveCate] = useState(false);
   const [response, setResponse] = useState(null);
   useEffect(() => {
     if (post.post) {
@@ -27,12 +31,41 @@ const Post = () => {
     }
   }, [post]);
   const path = location.pathname.split("/")[2];
+  const handleVote = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      const option = {
+        method: "post",
+        url: `/api/v1/posts/vote`,
+        data: {
+          "postId" : dataPost._id,
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }; 
+      const res = await axios(option);
+      setVoteCountUpdate(res.data.data.voteCount)
+    },
+    [dataPost._id]
+  );
+  useEffect(() => {
+    if(voteCountUpdate){
+      setVoteCount(voteCountUpdate.length)
+    }
+  },[voteCountUpdate])
   const getPost = useCallback(async () => {
     const res = await axios.get(`/api/v1/posts/${path}`);
     setDataPost(res.data.post);
     setAuthPost(res.data.post.author);
     setCategoryPost(res.data.post.category);
   }, [path]);
+  useEffect(() => {
+    if(dataPost.voteCount) {
+      setVoteCount(dataPost.voteCount.length)
+    }
+  },[dataPost.voteCount])
   useEffect(() => {
     getPost();
   }, [getPost]);
@@ -82,6 +115,102 @@ const Post = () => {
       }
     }
   }, [navigate, response]);
+  const handleUnFlow = useCallback(
+    async (e) => {
+      const token = localStorage.getItem("token");
+      try {
+        e.preventDefault();
+        const option = {
+          method: "put",
+          url: `/api/v1/auth/update/unfollower/`,
+          data:[authPost._id],
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        await axios(option);
+        setActive(false)
+      } catch (err) {}
+    },
+    [authPost._id]
+  );
+  const handleFlow = useCallback(
+    async (e) => {
+      const token = localStorage.getItem("token");
+      try {
+        e.preventDefault();
+        const option = {
+          method: "put",
+          url: `/api/v1/auth/update/follower/`,
+          data: [authPost._id],
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        await axios(option);
+        setActive(true)
+      } catch (err) {}
+    },
+    [authPost._id]
+  );
+  const handleFlowCategory = useCallback(
+    async (e) => {
+      const token = localStorage.getItem("token");
+      try {
+        e.preventDefault();
+        const option = {
+          method: "put",
+          url: `/api/v1/auth/create/category`,
+          data:[categoryPost._id],
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        await axios(option);
+        setActiveCate(true)
+      } catch (err) {}
+    },
+    [categoryPost._id]
+  );
+  const handleUnFlowCategory = useCallback(
+    async (e) => {
+      const token = localStorage.getItem("token");
+      try {
+        e.preventDefault();
+        const option = {
+          method: "put",
+          url: `/api/v1/auth/delete/category`,
+          data:[categoryPost._id],
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        await axios(option);
+        setActiveCate(false)
+      } catch (err) {}
+    },
+    [categoryPost._id]
+  );
+  useEffect(() => {
+    if(currentUser.currentUser){
+      if(currentUser.currentUser.following.includes(authPost._id)){
+        setActive(true)
+      }
+      else{
+        setActive(false)
+      }
+    }
+  },[authPost,currentUser])
+  useEffect(() => {
+    if(currentUser.currentUser){
+      if(currentUser.currentUser.category.find((e) => e._id === categoryPost._id)){
+          setActiveCate(true)
+      }
+      else{
+          setActiveCate(false)
+      }
+    }
+  },[categoryPost,currentUser])
   return (
     <div className="mt-80">
       <div className="post__details-container">
@@ -154,17 +283,12 @@ const Post = () => {
         <div className="post__tool-bar">
           <div className="pull-left">
             <div className="vote">
-              <div className="upvote">
-                <div>
-                  <i className="vote-icon bx bx-up-arrow"></i>
+              <div className="upvote" onClick={handleVote}>
+                <div className={`vote-icon`}>
+                  <i className="bx bx-up-arrow"></i>
                 </div>
               </div>
-              <span className="value">69</span>
-              <div className="downvote">
-                <div className="vote-icon">
-                  <i class="bx bx-down-arrow"></i>
-                </div>
-              </div>
+              <span className="value">{voteCount}</span>
             </div>
             <div className="view-count">700 lượt xem</div>
           </div>
@@ -186,34 +310,53 @@ const Post = () => {
             <div className="post__author-container">
               <div className="post__author-infos">
                 <div className="post__author-avt">
-                  <Link to="/">
-                    <img
-                      src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/d5bfdc4072c411ec85fc41a2f5147a1f.jpeg"
-                      alt=""
-                    />
+                  <Link to={`/user/${authPost.userName}`}>
+                  <img
+                    src={
+                      authPost.avatar
+                        ? authPost.avatar
+                        : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
+                    }
+                    alt=""
+                  />
                   </Link>
                 </div>
                 <div className="name">
-                  <Link to="/" className="name-main">
-                    Minh Tu Le
+                  <Link  to={`/user/${authPost.userName}`} className="name-main">
+                  {authPost.displayName
+                      ? authPost.displayName
+                      : authPost.userName}
                   </Link>
-                  <p>@tikhung01</p>
+                  <p>@{authPost.userName}</p>
                 </div>
               </div>
               <div className="sub-container">
-                <button className="btn-fl">Follow</button>
+                {
+                  active ? (
+                    <button className="btn-fl followed" onClick={handleUnFlow}>Following</button>
+                   
+                  ) : (
+                    <button className="btn-fl follow" onClick={handleFlow}>Follow</button>  
+                  )
+                }
               </div>
             </div>
-            <div className="user-desc">Tại sao? Phải, tại sao.</div>
+            <div className="user-desc">{authPost.intro}</div>
           </div>
           <div className="category__item">
             <div className="catergory__info">
-              <Link className="name-main" to="/">
-                <span>Phim</span>
+              <Link className="name-main" to={`/category/${categoryPost.slug}`}>
+                <span>{categoryPost.name}</span>
               </Link>
-              <p>/phim</p>
+              <p>/{categoryPost.slug}</p>
             </div>
-            <button className="btn-fl">Follow</button>
+              {
+                  activeCate ? (
+                    <button className="btn-fl followed" onClick={handleUnFlowCategory}>Following</button>                  
+                  ) : (
+                    <button className="btn-fl follow" onClick={handleFlowCategory}>Follow</button>  
+                  )
+                }
           </div>
         </div>
         <div className="comment__container">
@@ -251,7 +394,7 @@ const Post = () => {
                       <Link to="/">
                         <img
                           src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/36462660c77911ec91a38d378d083ff6.jpeg"
-                          alt="nguyenlong266"
+                          alt=""
                         />
                       </Link>
                     </div>

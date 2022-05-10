@@ -251,7 +251,7 @@ const Filter = ({posts}) => {
               <div className="filter__content">
                 <div className="filter__content-details">
                   <div className="grid">
-                    {posts.slice(0, 10).map((post) => (
+                    {posts.map((post) => (
                       <PostItem post={post} key={post._id} />
                     ))}
                   </div>
