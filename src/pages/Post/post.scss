@@ -156,7 +156,7 @@
     color: #969696;
     cursor: pointer;
         &.like{
-            color:#48bb78
+            color:#48bb78;
         }
         &.dislike{
             color: #f56565;
@@ -340,7 +340,7 @@
             display: flex;
             align-items: center;
             margin-top: 0.5rem;
-            margin-left: -2.5rem;
+            margin-left: -4rem;
             margin-bottom: 1rem;
             color: rgba(113,128,150,.75);
             font-size: .835rem;
@@ -351,7 +351,7 @@
         }
         &-content{
             word-break: break-word;
-            margin-left: -3rem;
+            margin-left: -4rem;
             padding-bottom: 5px;
             white-space: pre-wrap;    
             margin-top: 0.7rem;
@@ -401,15 +401,16 @@
         border-bottom: 1px solid rgba(226,232,240,1);
         margin-top: -1rem;
         margin-bottom: 1rem;
+        width: 100%;
         &-data{
             width: 100%;
             max-width: calc(100% - 68px);
             min-height: 3rem;
             cursor: text;
-                ::before{
-                    content: attr(placeholder);
-                    color: rgba(gray,1);
-                }
+            overflow-wrap: break-word;
+            font-size: 15px;  
+            display: block;
+            
         }
         &-actions{
             display: flex;
@@ -419,6 +420,8 @@
                 margin-left: 0.5rem;
                 height: fit-content;
                 cursor: pointer;
+                width: max-content;
+                font-size: 14px;
                     &:hover{
                         background: rgba(237,242,247,1);
                         color: rgba(28,109,150,1);
@@ -443,4 +446,14 @@
     color: rgba(113,128,150,.75);
     font-size: .835rem;
     line-height: normal;
+}
+.action-reply {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid rgba(74,85,104,.1);
+}
+.comments-reply{
+    margin: 0.5rem 0 1rem 1.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid rgba(74,85,104,.1);
 }

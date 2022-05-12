@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import EditorJS from "@editorjs/editorjs";
 import "./post.scss";
@@ -6,9 +6,11 @@ import axios from "axios";
 import { Config } from "./tools";
 import { userState$, postState$ } from "../../redux/selectors";
 import { useSelector } from "react-redux";
+import Comment from "../../components/Comment/Comment";
 const Post = () => {
   const navigate = useNavigate();
   const post = useSelector(postState$);
+  const inputCmtRef = useRef(null)
   const [voteCount, setVoteCount] = useState(null);
   const [voteCountUpdate, setVoteCountUpdate] = useState([]);
   const [isSuccess, setIsSuccess] = useState(null);
@@ -20,9 +22,12 @@ const Post = () => {
   const [categoryPost, setCategoryPost] = useState({});
   const [authPost, setAuthPost] = useState({});
   const [content, setContent] = useState("");
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState();
   const [activeCate, setActiveCate] = useState(false);
   const [response, setResponse] = useState(null);
+  const [dataComment, setDataComment] = useState({});
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState(null);
   useEffect(() => {
     if (post.post) {
       if (post.post.data) {
@@ -191,6 +196,48 @@ const Post = () => {
     },
     [categoryPost._id]
   );
+  const handleSubmitComment = useCallback( async(e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    try{
+      const option = {
+        method: "post",
+        url: `/api/v1/comment/create`,
+        data:{
+          content : dataComment.content,
+          "postId" : dataPost._id
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios(option);
+      setNewComment(res.data.data)
+      setDataComment({content:""})
+    }
+    catch(err){}
+  },[dataComment,dataPost])
+  const getAllComments = useCallback( async() => {
+    if(dataPost._id){
+      try{
+        const option = {
+          method: "get",
+          url: `/api/v1/comment/${dataPost._id}`,
+        };
+        const res = await axios(option);
+        setComments(res.data.data.comments)
+      }
+      catch(err){
+        
+      }
+    }
+  },[dataPost._id])
+  useEffect(() => {
+    getAllComments()
+    if(newComment) {
+      getAllComments()
+    }
+  },[getAllComments,newComment])
   useEffect(() => {
     if(currentUser.currentUser){
       if(currentUser.currentUser.following.includes(authPost._id)){
@@ -284,8 +331,8 @@ const Post = () => {
           <div className="pull-left">
             <div className="vote">
               <div className="upvote" onClick={handleVote}>
-                <div className={`vote-icon`}>
-                  <i className="bx bx-up-arrow"></i>
+                <div className={`vote-icon`} >
+                  <i class='bx bxs-up-arrow'></i>
                 </div>
               </div>
               <span className="value">{voteCount}</span>
@@ -363,14 +410,16 @@ const Post = () => {
           <section className="comment__section">
             <div>
               <div className="comment__form-container">
-                <form action="" className="comment__form">
-                  <div
+                <form  className="comment__form"  ref={inputCmtRef}>
+                  <input
                     className="comment__form-data"
-                    suppressContentEditableWarning
+                    ref={inputCmtRef}     
                     placeholder="Hãy chia sẻ cảm nghĩ của bạn về bài viết"
-                  ></div>
-                  <div className="comment__form-actions">
-                    <div className="comment__form-actions-submit">Gửi</div>
+                    value={dataComment.content}
+                    onChange={(e) => setDataComment({ ...dataComment, content: e.target.value })}
+                  ></input>
+                  <div className="comment__form-actions" onClick={handleSubmitComment}>
+                    <div className="comment__form-actions-submit" >Gửi</div>
                   </div>
                 </form>
               </div>
@@ -389,42 +438,11 @@ const Post = () => {
             <div className="comment__tree-view">
               <div className="comments">
                 <div className="comments__node">
-                  <div className="comment__child">
-                    <div className="comment__child-avt">
-                      <Link to="/">
-                        <img
-                          src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/36462660c77911ec91a38d378d083ff6.jpeg"
-                          alt=""
-                        />
-                      </Link>
-                    </div>
-                    <div className="comment__child-body">
-                      <div className="creator-info">
-                        <Link to="/">
-                          <span className="name-main">Nguyn Long</span>
-                        </Link>
-                        <div className="metadata">
-                          <span className="date">Hôm qua</span>
-                        </div>
-                        <div className="comment__child-content">mê tú linh</div>
-                        <div className="comment__child-actions">
-                          <div className="vote">
-                            <div className="upvote">
-                              <div>
-                                <i className="vote-icon bx bx-up-arrow"></i>
-                              </div>
-                            </div>
-                            <span className="value">69</span>
-                            <div className="downvote">
-                              <div className="vote-icon">
-                                <i class="bx bx-down-arrow"></i>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {comments.length > 0  ? (
+                    comments.map((comment) => (
+                      <Comment comment={comment} key={comment._id} />
+                    ))
+                  ) : ""}
                 </div>
               </div>
             </div>

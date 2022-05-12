@@ -23,7 +23,7 @@ const Messages = () => {
       <div className="mes__header">
         <div className="mes__header-logo">
           <Link to="/">
-            <img src="" alt="" />
+            <img src="https://spiderum.com/assets/icons/wideLogo.png" alt="" className="mes__header-logo-img"/>
           </Link>
         </div>
       </div>
@@ -32,14 +32,14 @@ const Messages = () => {
           <div className="mes__search">
             <input
               type="text"
-              placeholder="Tìm theo tên"
+              placeholder="Tìm theo tên..."
               className="mes__search-input"
             />
           </div>
           <ul className="mes__chatlist">
             <li className="mes__chatitem">
               <div className="mes__chatavt">
-                <img src="" alt="" />
+                <img src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/9ec6b140b6f011ebbd783187720a8dea.jpg" alt="" />
               </div>
               <span className="mes__time">1:49 PM</span>
               <div className="mes__content">
@@ -60,6 +60,7 @@ const Messages = () => {
               <p>May 8, 2022</p>
             </div>
             <div className="mes__box-chat">
+              {/* right */}
               <div className="mes__box-chat-buble">
                 <div className="chat-buble right">
                   <div>
@@ -67,30 +68,31 @@ const Messages = () => {
                       <img src="" alt="" />
                     </Link>
                   </div>
-                  <div className="content">
-                    <div className="inner-content"></div>
-                    <p className="time"></p>
+                  <div className="content right">
+                    <div className="inner-content">hello</div>
+                    <p className="mestime">1:42 PM</p>
                   </div>
                 </div>
               </div>
+              {/* left */}
               <div className="mes__box-chat-buble">
                 <div className="chat-buble left">
-                  <div>
-                    <Link to="/">
-                      <img src="" alt="" />
+                  <div className="chat-avatar-container">
+                    <Link to="/" className="chat-avatar">
+                      <img src="https://www.gravatar.com/avatar/b5624e8eb33903826dddfa5927074579?d=wavatar&f=y" alt="" />
                     </Link>
                   </div>
-                  <div className="content">
-                    <div className="inner-content"></div>
-                    <p className="time"></p>
+                  <div className="content left">
+                    <div className="inner-content left">hello</div>
+                    <p className="mestime left">1:42 PM</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="mes__box-input">
-            <div>
-                <input type="text" placeholder="" />
+            <div className="mes__box-input-container">
+                <input className="mes__box-input-text" type="text" placeholder="Viết gì đó...." />
                 <div className="send">
                     <i class='bx bx-send'></i>
                 </div>
