@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { userState$, categoriesState$ } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import * as actions from "../../redux/actions";
 import "./header.scss";
+import Notifications from "../../components/Notifications/Notifications";
 const Header = () => {
   const listRef = useRef();
   const inputRef = useRef(null);
@@ -18,7 +20,10 @@ const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [query, setQuery] = useState(null);
+  const [countNotifications, setCountNotifications] = useState(0);
+  const [notifications, setNotifications] = useState([]);
   const location = useLocation();
+
   const path = location.pathname.split("/")[3];
   useEffect(() => {
     if (listRef.current) {
@@ -59,11 +64,32 @@ const Header = () => {
     dispatch(actions.checkCurrentUser.checkCurrentUserRequest());
   }, [dispatch]);
   useEffect(() => {
-    checkCurrentUser();
+    checkCurrentUser()
   }, [checkCurrentUser]);
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
+  const getAllNotifications = useCallback( async() => {
+    const token = localStorage.getItem("token")
+    if(token) {
+      try{
+        const option = {
+          method: "get",
+          url: `/api/v1/notifications/`,
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        const res = await axios(option);
+        setNotifications(res.data.data)
+      }
+      catch(err){}
+    }
+  }, [])
+   useEffect(() => {
+    getAllNotifications()
+  },[getAllNotifications])
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.pageYOffset > 350 || window.pageYOffset > 120) {
@@ -90,23 +116,6 @@ const Header = () => {
       document.body.removeEventListener("click", handleClickWindow, true);
     };
   }, []);
-  // const handleLogout = useCallback((e) => {
-  //     // e.preventDefault()
-  //     localStorage.removeItem("token")
-  //     dispatch(actions.logout());
-  //     // window.location.href = 'http://localhost:3000/';
-  //   },
-  //   [dispatch]
-  // );
-  const handleLogout = (e) => {
-    localStorage.removeItem("token");
-    dispatch(actions.logout());
-  };
-  useEffect(() => {
-    if (currentUser.isLoggedIn) {
-      window.location.href = "http://localhost:3000/";
-    }
-  }, [currentUser]);
   const cls = visible ? "visible" : "hide";
   const cls2 = headerPost ? "visible" : "hide";
   const headerDropDown = [
@@ -207,6 +216,11 @@ const Header = () => {
     setQuery(null);
     navigate(`/search?q=${query}&type=post`);
   };
+  useEffect(() => {
+    if(notifications.length >0 ) {
+      setCountNotifications(notifications.filter((x) => { return x.isRead === false; }).length)
+    }
+  },[notifications, countNotifications])
   return location.pathname !== "/category"  ? (
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
@@ -266,86 +280,30 @@ const Header = () => {
                           </div>
                         </Link>
                       </li>
-                      <li
-                        className="header__icon-top-wrapper "
-                        onClick={handleShowNotify}
-                      >
-                        <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
+                      <li className="header__icon-top-wrapper" onClick={handleShowNotify}>
+                        <button className="icon-notify">
+                          <i class=" header__icon header__icon-top bx bx-bell"></i>
+                            { countNotifications  === 0 ? "" : (<span className="badge">{countNotifications}</span>)}
+                        </button>
                         {showNotify && (
-                          <div className="header__notify">
-                            <header className="header__notify-header">
-                              <h3>Thông báo</h3>
-                            </header>
-                            <div className="header__notify-wrapper">
-                              <ul className="header__notify-list">
-                                <li className="header__notify-item">
-                                  <Link to="/" className="header__notify-link">
-                                    <div className="header__notify-menu">
-                                      <img
-                                        src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                        alt=""
-                                        className="header__notify-img"
-                                      />
-                                      <div className="header__notify-info">
-                                        <span className="header__notify-strong">
-                                          <b>Husky </b>
-                                        </span>
-                                        <span>
-                                          cũng đã bình luận vào bài viết
-                                        </span>
-                                        <q class="header__notify-strong header__notify-content">
-                                          <b className="">
-                                            Turning Red – Phim tuyên giáo về trò
-                                            chơi mới của chủ nghĩa Đa văn hóa
-                                            hay danh tính người nhập cư Canada
-                                          </b>
-                                        </q>
-                                      </div>
-                                      <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                                    </div>
-                                    <div className="header__notify-time">
-                                      <i class="bx bxs-conversation"></i>
-                                      <span className="time">16 tháng 3</span>
-                                    </div>
-                                  </Link>
-                                </li>
-                                <li className="header__notify-item">
-                                  <Link to="/" className="header__notify-link">
-                                    <div className="header__notify-menu">
-                                      <img
-                                        src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                        alt=""
-                                        className="header__notify-img"
-                                      />
-                                      <div className="header__notify-info">
-                                        <span className="header__notify-strong">
-                                          <b>Husky </b>
-                                        </span>
-                                        <span>
-                                          cũng đã bình luận vào bài viết{" "}
-                                        </span>
-                                        <q class="header__notify-strong header__notify-content">
-                                          <b className="">
-                                            Turning Red – Phim tuyên giáo về trò
-                                            chơi mới của chủ nghĩa Đa văn hóa
-                                            hay danh tính người nhập cư Canada
-                                          </b>
-                                        </q>
-                                      </div>
-                                      <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                                    </div>
-                                    <div className="header__notify-time">
-                                      <i class="bx bxs-conversation"></i>
-                                      <span className="time">16 tháng 3</span>
-                                    </div>
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                            <footer className="header__notify-footer">
-                              <p>Hiển thị thêm</p>
-                            </footer>
-                          </div>
+                           <div className="header__notify">
+                               <header className="header__notify-header">
+                                  <h3>Thông báo</h3>                                
+                                </header>
+                                <div className="header__notify-wrapper">
+                                  <ul className="header__notify-list">
+                                  { notifications.length > 0  ? (
+                                      notifications.map((notification) => (
+                                        <Notifications notification={notification} key={notification._id} />
+                                    ))
+                                  ) : "Không có gì xem ở đây cả" }
+                                  </ul>
+                                </div>
+                                   <footer className="header__notify-footer">
+                                  <p>Hiển thị thêm</p>
+                                </footer>
+                           </div>
+                           
                         )}
                       </li>
                       <li>
@@ -449,9 +407,8 @@ const Header = () => {
                               </div>
                               <div className="header__dropdown-logout">
                                 <div className="p-10">
-                                  <div
-                                    onClick={(e) => handleLogout()}
-                                    type="submit"
+                                  <Link
+                                    to="/login"
                                     className="header__dropdown-link p-10 "
                                   >
                                     <i className="header__dropdown-icon">
@@ -481,14 +438,8 @@ const Header = () => {
                                         ></path>
                                       </svg>
                                     </i>
-                                    <Link
-                                      to="/"
-                                      className="header__dropdown-text"
-                                    >
-                                      {" "}
-                                      Đăng xuất
-                                    </Link>
-                                  </div>
+                                    Đăng xuất
+                                  </Link>
                                 </div>
                               </div>
                             </div>
@@ -609,10 +560,7 @@ const Header = () => {
                 </Link>
               </div>
               <div className="header__post-info">
-                <div
-                  className="header__icon-top-wrapper"
-                  onClick={handleShowNotify}
-                >
+                <div className="header__icon-top-wrapper noti" onClick={handleShowNotify}>
                   <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
                   {showNotify && (
                     <div className="header__notify">

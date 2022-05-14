@@ -93,8 +93,7 @@ function* checkCurrentUserSaga(action) {
     const checkCurrentUser = yield call(api.checkCurrentUser, action.payload);
     yield put(actions.checkCurrentUser.checkCurrentUserSuccess(checkCurrentUser.data.data.user));
   } catch (err) {
-    yield put(actions.checkCurrentUser.checkCurrentUserFailure(err.response.data.message));
-    console.log(err.response.data.message)
+    yield put(actions.checkCurrentUser.checkCurrentUserFailure(err.response));
   }
 }
 function* createCategoryUserSaga(action) {
@@ -123,6 +122,16 @@ function* getAllCategoriesSaga(action) {
       yield put(actions.getAllCategories.getAllCategoriesFailure(err))
   }
 }
+// noti 
+function* getNotificationsSaga(action) {
+  try { 
+    const noti = yield call(api.getAllNotifications);
+    yield put(actions.getNotifications.getNotificationsSuccess(noti.data.data))
+  }catch(err){ 
+      yield put(actions.getNotifications.getNotificationsFailure(err))
+  }
+}
+
 function* mySaga(){
   // POSTS
   yield takeLatest(actions.getAllPosts.getAllPostsRequest, getAllPostsSaga);
@@ -141,5 +150,8 @@ function* mySaga(){
 
   // CATEGORIES
   yield takeLatest(actions.getAllCategories.getAllCategoriesRequest, getAllCategoriesSaga);
+
+  // NOTI
+  yield takeLatest(actions.getNotifications.getNotificationsRequest, getNotificationsSaga);
 }
 export default mySaga;

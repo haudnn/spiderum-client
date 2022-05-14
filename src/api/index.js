@@ -21,3 +21,5 @@ export const deleteCategoryUser = (payload) => axios.put(`/api/v1/auth/delete/ca
 
 // Category
 export const getAllCategories = () => axios.get(`/api/v1/category/`)
+// noti
+export const getAllNotifications = () => axios.get(`/api/v1/notifications/` , {headers: {Authorization: `Bearer ${token}`}})

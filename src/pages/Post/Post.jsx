@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate,useSearchParams } from "react-router-dom";
 import EditorJS from "@editorjs/editorjs";
 import "./post.scss";
 import axios from "axios";
@@ -9,6 +9,8 @@ import { useSelector } from "react-redux";
 import Comment from "../../components/Comment/Comment";
 const Post = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const notiId = searchParams.get('notiId')
   const post = useSelector(postState$);
   const inputCmtRef = useRef(null)
   const [voteCount, setVoteCount] = useState(null);
@@ -258,6 +260,44 @@ const Post = () => {
       }
     }
   },[categoryPost,currentUser])
+  const updateView = useCallback(async (e) => {
+    if(dataPost._id) {
+      const token = localStorage.getItem("token");
+      const option = {
+        method: "post",
+        url: `/api/v1/posts/views`,
+        data: {
+          "postId" : dataPost._id,
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }; 
+      await axios(option);
+    }
+    },[dataPost._id]);
+  useEffect(() => {
+    updateView()
+  },[updateView])
+  const updateNoti = useCallback(async (e) => {
+    if(notiId) {
+      const token = localStorage.getItem("token");
+      const option = {
+        method: "put",
+        url: `/api/v1/notifications/read`,
+        data: {
+          "notificationID" :notiId,
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }; 
+      await axios(option);
+    }
+    },[notiId]);
+  useEffect(() => {
+    updateNoti()
+  },[updateNoti])
   return (
     <div className="mt-80">
       <div className="post__details-container">
@@ -304,7 +344,6 @@ const Post = () => {
                       : authPost.userName}
                   </p>
                 </Link>
-                <span className="time-read">52 phút trước</span>
               </div>
             </div>
             {isUser ? (
@@ -337,7 +376,7 @@ const Post = () => {
               </div>
               <span className="value">{voteCount}</span>
             </div>
-            <div className="view-count">700 lượt xem</div>
+            <div className="view-count">{dataPost.views} lượt xem</div>
           </div>
           <div className="pull-right">
             <div className="right-tools">

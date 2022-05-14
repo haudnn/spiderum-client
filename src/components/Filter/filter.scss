@@ -117,6 +117,11 @@
             display: flex;
             align-items: center;
             gap: 0 20px;
+                &-container {
+                    display: flex;
+                    align-items: center;
+                    gap : 0 5px;
+                }
         }
     }
 

@@ -32,5 +32,11 @@ export const INIT_STATE = {
         isLoading:false,
         data:null,
         err:null
+    },
+    noti : {
+        isLoading:false,
+        isRead: false,
+        data:null,
+        err:null
     }
 }

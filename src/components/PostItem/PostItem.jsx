@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useState , useEffect} from "react";
 import "./postitem.scss";
 import { Link } from "react-router-dom";
+import ReactPaginate from 'react-paginate';
 const PostItem = ({ post }) => {
   let date = new Date(post.createdAt)
   return (
@@ -75,11 +76,11 @@ const PostItem = ({ post }) => {
               </div>
             </div>
             <div className="filter__content-interactive">
-              <div>
+              <div className="filter__content-interactive-container">
                 <i class="post-icon bx bx-up-arrow"></i>
-                <span className="post-icon"> 9</span>
+                <span className="post-icon">{post.voteCount.length ? post.voteCount.length :"0"}</span>
               </div>
-              <Link to="/">
+              <div className="filter__content-interactive-container">
                 <svg
                   fill="#969696"
                   _ngcontent-serverApp-c41=""
@@ -94,12 +95,8 @@ const PostItem = ({ post }) => {
                     className=" cls-1"
                   ></path>
                 </svg>
-                <span className="post-icon"> 554</span>
-              </Link>
-              <Link to="/">
-                <i class="post-icon bx bx-message"></i>
-                <span className="post-icon"> 22</span>
-              </Link>
+                <span className="post-icon">{post.views}</span>
+              </div>
             </div>
           </div>
         </div>

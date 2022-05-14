@@ -58,7 +58,7 @@ useEffect(()=> {
     localStorage.setItem("token",loginSuccess.token)
   }
   else{
-    localStorage.setItem("token",'')
+    localStorage.removeItem("token")
   }
 },[loginSuccess])
 useEffect(()=> {

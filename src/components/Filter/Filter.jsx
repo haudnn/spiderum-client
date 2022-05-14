@@ -1,11 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
 import "./filter.scss";
 const Filter = ({posts}) => {
   const [flilterActive, setFilterActive] = useState(0);
   const [tabActive, setTabActive] = useState(0);
-  const [pageCurrent, setPageCurrent] = useState(1);
+  const [page, setPage] = useState(0);
+  const [currentButton, setCurrentButton] = useState(1);
+  const PER_PAGE = 10
+  const computedActivityStreams = useMemo(() => {
+    setPage(Math.ceil(posts.length / PER_PAGE));
+    return posts;
+  }, [posts]);
+  const indexOfLastPost = currentButton * PER_PAGE;
+  const indexOfFirstPost = indexOfLastPost - PER_PAGE;
+  const currentActivityLists = computedActivityStreams.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
+  console.log(currentActivityLists)
+  console.log(currentButton)
   const tabRef = useRef();
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +40,6 @@ const Filter = ({posts}) => {
   };
   const handleTabActive = (i) => {
     setTabActive(i);
-  };
-  const handelPageCurrent = (i) => {
-    setPageCurrent(i);
   };
   const fitterList = [
     {
@@ -206,6 +217,9 @@ const Filter = ({posts}) => {
       ),
     },
   ];
+  const  handleSetPage = (i) => {
+    setCurrentButton(i+1)
+  }
   return (
     <section className="filter">
       <div className="filter__wrapper">
@@ -251,7 +265,7 @@ const Filter = ({posts}) => {
               <div className="filter__content">
                 <div className="filter__content-details">
                   <div className="grid">
-                    {posts.map((post) => (
+                    {Array.isArray(currentActivityLists) && currentActivityLists.map((post) => (
                       <PostItem post={post} key={post._id} />
                     ))}
                   </div>
@@ -262,26 +276,13 @@ const Filter = ({posts}) => {
         </div>
         <div className="filter__pagination">
           <ul className="filter__pagination-list">
-            <li className="filter__pagination-item">
-              <span
-                className={`filter__pagination-text ${
-                  pageCurrent === 1 ? "active" : ""
-                }`}
-                onClick={() => handelPageCurrent(1)}
-              >
-                1
-              </span>
-            </li>
-            <li className="filter__pagination-item">
-              <span
-                className={`filter__pagination-text ${
-                  pageCurrent === 2 ? "active" : ""
-                }`}
-                onClick={() => handelPageCurrent(2)}
-              >
-                2
-              </span>
-            </li>
+              {[...Array(page)].map((x, i) =>
+                <li className="filter__pagination-item"   onClick={() => handleSetPage(i)} >
+                  <span className={`filter__pagination-text ${currentButton === i+1 ? "active" : ""}`} >
+                    {i+1}
+                  </span>
+                </li>
+                )}
           </ul>
         </div>
         <div className="listtab" ref={tabRef}>

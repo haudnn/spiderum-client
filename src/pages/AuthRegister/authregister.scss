@@ -104,3 +104,44 @@
             }
         }
 }
+.auth__logging-email-send-two{
+    display: flex;
+    margin-top: 10px;
+        button{ 
+            cursor: pointer;
+        }
+}
+.otp{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 0 20px;
+        input {
+            flex-grow: 1;
+        }
+        button{
+            background: #2FB5FA;
+            border-radius: 0;
+            color: #FFF;
+            border: 0;
+            padding: 13px 7px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space:nowrap
+        }
+}
+.alert-auth{
+    position: fixed;
+    width: 100%;
+}
+.uk-alert{
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f2fae3;
+    color: #659f13;
+    border: 1px solid rgba(101,159,19,.3);
+        div{
+            font-size: 14px;
+        }
+}

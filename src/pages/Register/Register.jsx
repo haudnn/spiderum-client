@@ -10,7 +10,7 @@ const Register = () => {
   const uidFb = searchParams.get('uid')
   const navigate = useNavigate()
   useEffect(() => {
-    if(!token && !uidFb) {
+    if(!token) {
       navigate('/register')
     }
   }, [token,navigate,uidFb])

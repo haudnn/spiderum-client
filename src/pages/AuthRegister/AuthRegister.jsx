@@ -10,7 +10,10 @@ const AuthRegister = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const loginSuccess = useSelector( userState$)
-  const [mail, setMail] = useState({});
+  const [email, setEMail] = useState({});
+  const [visible, setVisible] = useState(false)
+  const [messages, setMessages] = useState(null)
+  const [otp, setOtp] = useState(0)
   const fbProvider = new firebase.auth.FacebookAuthProvider()
   const handleAuthFacebook = async () => {
     await auth.signInWithPopup(fbProvider)
@@ -59,13 +62,32 @@ const AuthRegister = () => {
     e.preventDefault();
     const option  ={
       method: "post", 
-      url:`/api/v1/auth/mail/`,
-      data:mail
+      url:`/api/v1/auth/send`,
+      data:email
     }
     const response = await axios(option)
-    console.log(response)
-  },[mail])
+    setMessages(response.data.data)
+    setVisible(!visible)
+  },[visible,email])
+  const handleSubmitOTP = useCallback( async (e) => {
+    e.preventDefault();
+    const option  ={
+      method: "post", 
+      url:`/api/v1/auth/mail`,
+      data:{
+        "otp" : (parseInt(otp.otp))
+      }
+    }
+    const response = await axios(option)
+    navigate(`/tao-tai-khoan?token=${response.data.data}`)
+  },[otp,navigate])
   return (
+    <>
+    <div className="alert-auth">
+      <div className="uk-alert">
+        <div>{messages}</div>
+      </div>
+    </div>
     <div className="auth">
       <div className="auth__container">
         <div className="auth__content">
@@ -74,32 +96,47 @@ const AuthRegister = () => {
               <img src="https://auth.spiderum.com/assets-auth/images/spiderum-logo.png" alt="" />
             </Link>
           </div>
-          <form className="auth__logging" onSubmit={handleSubmit}>
-              <div className="auth__logging-fb">
-                <label className='auth__logging-tilte'>Đăng ký bằng</label>
-                <button className='auth__logging-fb-btn' onClick={handleAuthFacebook}>
-                  <i class='bx bxl-facebook'></i>
-                  <span>Facebook</span>
-                </button>
-              </div>            
-              <div className="auth__logging-email">
-              <form className='auth__logging-tilte'>Hoặc bằng email</form>
-                <form className="auth__logging-email-sending" onSubmit={handleSubmit}>
-                  <input className='auth__logging-email-input' value={mail.mail} onChange={(e) => setMail({ ...mail, mail: e.target.value })} type="text" placeholder='email@example.com'/>
-                  <p>Thư xác nhận sẽ được gửi vào hòm thư của bạn</p>
-                  <button type="submit" value="Gửi" onClick={handleAuthMail}>Gửi</button>
+          <div className="auth__logging" >
+              <form action="" onSubmit={handleSubmit}>
+                <div className="auth__logging-fb">
+                  <label className='auth__logging-tilte'>Đăng ký bằng</label>
+                  <button className='auth__logging-fb-btn' onClick={handleAuthFacebook}>
+                    <i class='bx bxl-facebook'></i>
+                    <span>Facebook</span>
+                  </button>
+                </div>  
+              </form>
+              <p className='auth__logging-tilte'>Hoặc bằng email</p>          
+              <form className="auth__logging-email" onSubmit={handleSubmit}>
+                <div className="auth__logging-email-sending" >
+                  <input className='auth__logging-email-input' value={email.mail} onChange={(e) => setEMail({ ...email, email: e.target.value })} type="text" placeholder='email@example.com'/>
+                  <div className="auth__logging-email-send-two">
+                    <p>Thư xác nhận sẽ được gửi vào hòm thư của bạn</p>
+                    <button type="submit" value="Gửi" onClick={handleAuthMail}>Gửi</button>
+                  </div>
+                </div>
+              </form>
+              {
+                visible ? (
+                  <form action=""  onSubmit={handleSubmit}>
+                  <div className="otp">
+                    <input className='auth__logging-email-input' value={otp.otp} onChange={(e) => setOtp({ ...otp, otp: e.target.value })}  type="text" placeholder='Nhập mã OTP tại đây...' />
+                    <button type="submit" onClick={handleSubmitOTP}>Xác nhận</button>
+                  </div>
                 </form>
-              </div>
-          </form>
+                ) : ""
+              }
+          </div>
           <div className="auth__back">
             <p>
               <span className='auth__logging-tilte'>Đã có tài khoản? </span>
-              <Link to="/" className="auth__back-login">Đăng nhập</Link>
+              <Link to="/login" className="auth__back-login">Đăng nhập</Link>
             </p>
           </div>
         </div>
       </div>
     </div>
+    </>
   )
 }
 

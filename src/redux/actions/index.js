@@ -14,6 +14,11 @@ export const getPost = createActions({
     getPostSuccess: (payload) => payload,
     getPostFailure: (err) => err,
 })
+export const getNotifications = createActions({
+   getNotificationsRequest: undefined, 
+   getNotificationsSuccess: (payload) => payload,
+   getNotificationsFailure: (err) => err,
+})
 
 export const deletePost = createActions({
     deletePostRequest: (payload) => payload,

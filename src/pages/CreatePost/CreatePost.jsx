@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import * as actions from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import {postState$,categoriesState$} from '../../redux/selectors'
+import axios from "axios";
 import config from './tools'
 import "./createpost.scss";
 const CreatePost = () => {
@@ -68,19 +69,43 @@ const onSave = useCallback((e) => {
     dispatch(actions.createPost.createPostFailure())
   }
 },[data,dispatch])
-console.log(data.content)
 const onSubmit = useCallback((e)=>{
   e.preventDefault();
 },[])
-useEffect(()=>{
-  if(post.isLoading){
-    navigate(`/post/${post.post.data.slug}`)
-   }
+const createPostNotofication =  useCallback( async () => {
+  if(post.isLoading) { 
+    const token = localStorage.getItem("token")
+    try{
+      const option = {
+        method: "post",
+        url: `/api/v1/notifications/`,
+        data : {
+          "postId" : post.post.data.id
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      await axios(option);
+      navigate(`/post/${post.post.data.slug}`)
+    }
+    catch(err){}
+  } 
   if(post.err){
     setError(post.err)
   }
 },[post,navigate])
-console.log(post)
+useEffect(() => {
+  createPostNotofication()
+},[createPostNotofication])
+// useEffect(()=>{
+//   if(post.isLoading){
+    
+//    }
+//   if(post.err){
+//     setError(post.err)
+//   }
+// },[post,navigate])
    return (
     <div className="mt-80">
       <div className="post">
