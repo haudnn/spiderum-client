@@ -292,7 +292,7 @@ const Header = () => {
                                 </header>
                                 <div className="header__notify-wrapper">
                                   <ul className="header__notify-list">
-                                  { notifications.length > 0  ? (
+                                  { notifications.length !== 0  ? (
                                       notifications.map((notification) => (
                                         <Notifications notification={notification} key={notification._id} />
                                     ))
@@ -455,7 +455,7 @@ const Header = () => {
                   ) : (
                     <ul className="header__menu-top">
                       <li>
-                        <div className="header__icon-top-wrapper">
+                        <div className="header__icon-top-wrapper" onClick={() => setIsSearch(true)}>
                           <i class="header__icon header__icon-top bx bx-search-alt-2"></i>
                         </div>
                       </li>

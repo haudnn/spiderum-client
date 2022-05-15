@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
 import "./categoryitem.scss";
 import Filter from "../../components/Filter/Filter";
-import TrendingPosts from "../../components/TrendingPosts/TrendingPosts";
 const CategoryItem = () => {
   const currentUser = useSelector(userState$);
   const dispatch = useDispatch();
@@ -78,6 +77,11 @@ const CategoryItem = () => {
     },
     [dispatch, cateUpdate]
   );
+  useEffect(() => {
+   if(data.name) {
+    document.title = data.name
+   }
+ }, [data.name]);
   return (
     <div className="main">
       <section className="category">
@@ -124,7 +128,7 @@ const CategoryItem = () => {
                   {postItem.slice(0, 1).map((e, i) => (
                     <div className="category__content-post">
                       <div className="category__content-post-img">
-                        <img src={e.attachment} alt="" />
+                        <img src={e.attachment ? e.attachment : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"} alt="" />
                       </div>
                       <div className="category__content-post-details">
                         <div className="category__content-post-details-heading flex-box">
@@ -179,13 +183,13 @@ const CategoryItem = () => {
                                     {e.author.displayName ? e.author.displayName : e.author.userName}
                                   </p>
                                 </Link>
-                                <span className="time-read">Hôm qua</span>
+                                <span className="time-read"></span>
                               </div>
                             </div>
                             <div className="flex-gap-20">
                               <div>
                                 <i class="post-icon bx bx-up-arrow"></i>
-                                <span className="post-icon"> 9</span>
+                                <span className="post-icon">{e.voteCount.length}</span>
                               </div>
                               <Link to="/">
                                 <svg
@@ -202,11 +206,7 @@ const CategoryItem = () => {
                                     className=" cls-1"
                                   ></path>
                                 </svg>
-                                <span className="post-icon"> 554</span>
-                              </Link>
-                              <Link to="/">
-                                <i class="post-icon bx bx-message"></i>
-                                <span className="post-icon"> 22</span>
+                                <span className="post-icon">{e.views}</span>
                               </Link>
                             </div>
                           </div>
@@ -214,9 +214,6 @@ const CategoryItem = () => {
                       </div>
                     </div>
                   ))}
-                  <div className="category__content-trending border box-shadow">
-                    <TrendingPosts posts={postItem} slice={4}  slidesToShow={3}/>
-                  </div>
                   <div className="category__content-filter">
                     <Filter posts={postItem}/>
                   </div>

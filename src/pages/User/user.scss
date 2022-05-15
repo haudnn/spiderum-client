@@ -280,8 +280,10 @@
                             font-size: 16px;
                             padding: 16px;
                             display: block;
-                            border-bottom: 5px solid rgba(47,181,250,1);
-                            color: rgba(47,181,250,1);
+                            &.active {
+                                border-bottom: 5px solid rgba(47,181,250,1);
+                                color: rgba(47,181,250,1);
+                            }
                         }
                         &-icon{
                             display: block;

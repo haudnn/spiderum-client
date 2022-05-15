@@ -141,6 +141,11 @@
     background: #f2fae3;
     color: #659f13;
     border: 1px solid rgba(101,159,19,.3);
+        &.err{
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            background-color: #f8d7da;
+        }
         div{
             font-size: 14px;
         }

@@ -83,6 +83,7 @@
     background-color: hsla(0,0%,100%,.5);
     -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
+    overflow: hidden;
     &__container {
         height: 100%;
         width: 100%;

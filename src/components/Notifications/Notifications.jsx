@@ -2,8 +2,10 @@ import React, { useState} from "react";
 import { Link } from "react-router-dom";
 const Notifications = ({ notification}) => {
   let date = new Date(notification.createdAt);
-  return(
-    <li className={`header__notify-item ${notification.isRead ? "" : "active"}`}>
+  console.log(notification)
+  return( 
+    notification.post ? (
+      <li className={`header__notify-item ${notification.isRead ? "" : "active"}`}>
       <Link to={`/post/${notification.post.slug}?notiId=${notification._id}`} className={`header__notify-link`}> 
         <div className="header__notify-menu">
           <Link to={`/user/${notification.parentId.userName}`} >
@@ -40,6 +42,7 @@ const Notifications = ({ notification}) => {
         </div>
       </Link>
     </li>
+    ) : ""
   );
 };
 

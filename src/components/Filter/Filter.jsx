@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
 import "./filter.scss";
 const Filter = ({posts}) => {
   const [flilterActive, setFilterActive] = useState(0);
+  const [currentSort, setCurrentSort] = useState('default');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [tabActive, setTabActive] = useState(0);
   const [page, setPage] = useState(0);
   const [currentButton, setCurrentButton] = useState(1);
@@ -18,8 +20,6 @@ const Filter = ({posts}) => {
     indexOfFirstPost,
     indexOfLastPost
   );
-  console.log(currentActivityLists)
-  console.log(currentButton)
   const tabRef = useRef();
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +36,15 @@ const Filter = ({posts}) => {
     };
   }, []);
   const handleFilterActive = (index) => {
+    if(index === 0) {
+      setCurrentSort("default");
+    }
+    if(index === 2) {
+      setCurrentSort("vote");
+    }
+    if (index === 3) {
+      setCurrentSort("top");
+    }
     setFilterActive(index);
   };
   const handleTabActive = (i) => {
@@ -64,7 +73,7 @@ const Filter = ({posts}) => {
     },
     {
       displayName: "MỚI",
-      path: "/",
+      path: "/?sort=news",
       icon: (
         <svg
           fill=" #718096"
@@ -84,7 +93,7 @@ const Filter = ({posts}) => {
     },
     {
       displayName: "SÔI NỔI",
-      path: "/",
+      path: "/?sort=controversial",
       icon: (
         <svg
           fill=" #718096"
@@ -104,7 +113,7 @@ const Filter = ({posts}) => {
     },
     {
       displayName: "TOP ",
-      path: "/",
+      path: "/?sort=top",
       icon: (
         <svg
           fill=" #718096"
@@ -124,13 +133,13 @@ const Filter = ({posts}) => {
     },
   ];
   const listTab = [
-    // {
-    //   displayName: "TRANG CHỦ",
-    //   path: "/",
-    //   media: (
-    //     <img src="https://spiderum.com/assets/icons/singleLogo.png" alt="" />
-    //   ),
-    // },
+    {
+      displayName: "TRANG CHỦ",
+      path: "/",
+      media: (
+        <img src="https://spiderum.com/assets/icons/singleLogo.png" alt="" />
+      ),
+    },
     {
       displayName: "THỊNH HÀNH",
       path: "/",
@@ -220,6 +229,20 @@ const Filter = ({posts}) => {
   const  handleSetPage = (i) => {
     setCurrentButton(i+1)
   }
+  const sortTypes = {
+    vote: {
+        fn: (a, b) => b.voteCount.length- a.voteCount.length
+    },
+    top: {
+        fn: (a, b) => b.views - a.views
+    },
+    // trending: {
+    //   fn: (a, b) => b.views - a.views
+    // },
+    default: {
+        fn: (a, b) => a
+    }
+};
   return (
     <section className="filter">
       <div className="filter__wrapper">
@@ -255,9 +278,6 @@ const Filter = ({posts}) => {
         </div>
         <div className="filter__page">
           <div></div>
-          <div className="filter__page-current">
-            <span>Trang: 1 / 683 </span>
-          </div>
         </div>
         <div className="grid">
           <div className="row">
@@ -265,7 +285,7 @@ const Filter = ({posts}) => {
               <div className="filter__content">
                 <div className="filter__content-details">
                   <div className="grid">
-                    {Array.isArray(currentActivityLists) && currentActivityLists.map((post) => (
+                    {Array.isArray(currentActivityLists) && currentActivityLists.sort(sortTypes[currentSort].fn).map((post) => (
                       <PostItem post={post} key={post._id} />
                     ))}
                   </div>
@@ -277,7 +297,7 @@ const Filter = ({posts}) => {
         <div className="filter__pagination">
           <ul className="filter__pagination-list">
               {[...Array(page)].map((x, i) =>
-                <li className="filter__pagination-item"   onClick={() => handleSetPage(i)} >
+                <li className="filter__pagination-item" onClick={() => handleSetPage(i)} >
                   <span className={`filter__pagination-text ${currentButton === i+1 ? "active" : ""}`} >
                     {i+1}
                   </span>

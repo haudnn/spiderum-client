@@ -282,6 +282,7 @@ select:focus {
         &.delete {
             color: #e53e3e;
             border: 1px  solid #e53e3e;
+            padding:12px;
             &:hover {
                 background-color:#e53e3e ;
                 color: $white;

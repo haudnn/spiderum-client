@@ -4,7 +4,7 @@ import "./footer.scss";
 const Footer = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[3];
-  return location.pathname !== "/post/create" &&
+  return location.pathname !== "/post/create/" &&
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
     location.pathname !== "/category" &&

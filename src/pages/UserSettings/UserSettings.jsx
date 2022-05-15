@@ -283,6 +283,9 @@ const UserSettings = () => {
     }, 4000);
     return () => clearTimeout(timer);
   }, [isErr, isSuccess, isErrEmail,isSuccessEmail]);
+  useEffect(() => {
+    document.title = `Cài đặt người dùng`
+ }, [currentUser]);
   return (
     <div className="container">
        {isSuccessEmail ? (

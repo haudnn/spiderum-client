@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./comment.scss";
 import axios from "axios";
+import Reply from "../Reply/Reply";
 const Comment = ({ comment }) => {
   const [voteCount, setVoteCount] = useState(null);
   const [newReply, setNewReply] = useState(null);
@@ -152,50 +153,8 @@ const Comment = ({ comment }) => {
         ""
       )}
       <div className="comments-reply">
-        {replies.map((reply) => (
-          <div className="comment-node">
-            <div className="comment__child-avt">
-              <Link to={`/user/${reply.author.userName}`}>
-                <img
-                  src={
-                    reply.author.avatar
-                      ? reply.author.avatar
-                      : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
-                  }
-                  alt=""
-                />
-              </Link>
-            </div>
-            <div className="comment__child-body">
-              <div className="creator-info">
-                <Link to={`/user/${reply.author.userName}`}>
-                  <span className="name-main">
-                    {reply.author.displayName
-                      ? reply.author.displayName
-                      : reply.author.userName}
-                  </span>
-                </Link>
-                <div className="metadata">
-                  <span className="date">{`${date.getDate()}/${
-                    date.getMonth() + 1
-                  }/${date.getFullYear()}`}</span>
-                </div>
-                <div className="comment__child-content">{reply.content}</div>
-                <div className="comment__child-actions">
-                  <div className="vote">
-                    <div className="upvote" onClick={handleVote}>
-                      <div className="vote-icon">
-                        <i class="bx bxs-up-arrow"></i>
-                      </div>
-                    </div>
-                    <div></div>
-                    <span className="value">{voteCount}</span>
-                  </div>
-                  <p onClick={handelVisible}>Trả lời</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {replies?.map((reply) => (
+            <Reply reply={reply} visible={handelVisible} key={reply._id}/>
         ))}
       </div>
     </div>

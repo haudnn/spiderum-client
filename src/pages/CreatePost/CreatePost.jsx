@@ -22,7 +22,7 @@ const CreatePost = () => {
       title: "",
       content: "",
       description:"",
-      category:"",
+      category:"625ebdc502fc384796865706",
       attachment:"",
   }
     );
@@ -58,9 +58,6 @@ const handleVisibleModal = useCallback((e) => {
   setVisible(!visible)
 },[visible,editor,data])
 const onSave = useCallback((e) => {
-  if(data.category === '') {
-    setData({ ...data, category: '625ebdc502fc384796865706' })
-  }
   try{
     e.preventDefault();
     dispatch(actions.createPost.createPostRequest(data))
@@ -98,14 +95,15 @@ const createPostNotofication =  useCallback( async () => {
 useEffect(() => {
   createPostNotofication()
 },[createPostNotofication])
-// useEffect(()=>{
-//   if(post.isLoading){
-    
-//    }
-//   if(post.err){
-//     setError(post.err)
-//   }
-// },[post,navigate])
+useEffect(() => {
+  const timer = setTimeout(() => {
+    toast.current.style.animation = "hide_slide 1s ease forwards";
+  }, 4000);
+  return () => clearTimeout(timer);
+}, [error]);
+useEffect(() => {
+  document.title = "Viết bài mới..."
+}, []);
    return (
     <div className="mt-80">
       <div className="post">
@@ -154,40 +152,13 @@ useEffect(() => {
                     onChange={(e) => setData({ ...data, description: e.target.value })}>
                     </textarea>
                   </div>
-                  <div className="modal__tagname">
-                    <p className="modal__title">
-                      Thêm thẻ tag
-                      <em className="modal__title-sub"> (tối đa 5 thẻ)</em>
-                    </p>
-                    <div className="modal__tagname-container">
-                      <div className="tagname__search">
-                        <i className="tagname__search-icon bx bx-search"></i>
-                        <input
-                          type="text"
-                          className="tagname__search-input"
-                          placeholder="Tìm thẻ tag..."
-                        />
-                      </div>
-                      <div className="tagname__selected">
-                        <div className="tagname__selected-container">
-                          <span className="tagname__selected-content name">
-                            KHOA HỌC
-                          </span>
-                          <span className="tagname__selected-content quantity">
-                            1102
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div className="modal__category">
                     <p className="modal__title">Chọn danh mục</p>
                     <div className="modal__category-container">
                       <select id="selected-id" className="modal__category-select"  onChange={(e) => setData({ ...data, category: e.target.value })}>
-                        <option value="625ebdc502fc384796865706" key="625ebdc502fc384796865706" className="modal__category-option">QUAN ĐIỂM - TRANH LUẬN</option>
                         <option className="modal__category-option">-- Chọn danh mục --</option>
                         {
-                          categorise.data.slice(1).map((e,i)=>(
+                          categorise.data.map((e,i)=>(
                             <option value={e._id} key={e._id} className="modal__category-option">{e.name}</option>
                           ))
                         }

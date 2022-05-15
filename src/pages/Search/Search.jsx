@@ -55,7 +55,7 @@ const Search = () => {
             <div className="search__content-result">        
                 {
                   type === 'post' ? (
-                    posts.slice(0, 10).map((post) => (
+                    posts.map((post) => (
                       <PostItem post={post} key={post._id} />
                     ))
                   ) :

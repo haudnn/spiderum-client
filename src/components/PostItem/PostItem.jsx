@@ -1,11 +1,41 @@
-import React, {useState , useEffect} from "react";
+import React, {useState , useEffect, useCallback} from "react";
 import "./postitem.scss";
 import { Link } from "react-router-dom";
-import ReactPaginate from 'react-paginate';
+import axios from "axios";
+import Toast from "../Toast/Toast";
 const PostItem = ({ post }) => {
   let date = new Date(post.createdAt)
+  const [message, setMessage] = useState(null);
+  const [err, setErr] = useState(null);
+  const [isActive,setIsActive] = useState(false);
+  const handleSavePost = useCallback( async(id) => {
+    const token = localStorage.getItem("token")
+    try {
+      const option  ={
+        method: "put", 
+        url:`/api/v1/auth/save`,
+        data:{
+          "postId" : id
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+      const response = await axios(option)
+      setIsActive(!isActive)
+      setMessage(response.data.data)
+    }
+    catch(err){
+      setMessage(null)
+      setMessage(err.response.data.data)
+    }
+  },[isActive])
+  console.log(message)
   return (
     <div className="row mb">
+      {
+        message ?  <Toast message={message}/> : ""
+      }
       <div className="col l-4 c-12">
         <div className="filter__content-img">
           <Link to={`/post/${post.slug}`} className="filter__content-img">
@@ -29,25 +59,17 @@ const PostItem = ({ post }) => {
                 <span className="title-category">{post.category.name}</span>
               </Link>
               <span className="time-read">4 phút đọc</span>
-            </div>
-            <div className="">
-              <svg
-                _ngcontent-serverApp-c41=""
-                id="Layer_1"
-                data-name="Layer 1"
-                fill="#969696"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 500 500"
-                height="25"
-                width="25"
-              >
-                <path
-                  _ngcontent-serverApp-c41=""
-                  d="M171.88,52.08a68,68,0,0,0-67.71,67.71v312.5A15.63,15.63,0,0,0,128.93,445L250,357.79,371.07,445a15.62,15.62,0,0,0,24.76-12.68V119.79a68,68,0,0,0-67.7-67.71Zm0,31.25H328.13a36.23,36.23,0,0,1,36.45,36.46v282L259.13,325.87a15.61,15.61,0,0,0-18.26,0L135.42,401.79v-282A36.23,36.23,0,0,1,171.88,83.33Z"
-                  class="cls-1"
-                ></path>
-              </svg>
-            </div>
+            </div>    
+            <Link to={`/`}  onClick={(e) => {handleSavePost(post._id)}} className={`post_saved`}  title="Click để lưu bài viết"> 
+              {
+                post.author.postSaved.includes(post._id) ? (
+                  <i class='bx bxs-bookmark-alt'></i>
+
+                ) : (
+                  <i class='bx bx-bookmark-alt'></i>
+                )
+              }
+            </Link>
           </div>
           <div className="filter__content-main">
             <Link to={`/post/${post.slug}`}>
@@ -78,7 +100,7 @@ const PostItem = ({ post }) => {
             <div className="filter__content-interactive">
               <div className="filter__content-interactive-container">
                 <i class="post-icon bx bx-up-arrow"></i>
-                <span className="post-icon">{post.voteCount.length ? post.voteCount.length :"0"}</span>
+                <span className="post-icon">{post.voteCount ? post.voteCount.length :""}</span>
               </div>
               <div className="filter__content-interactive-container">
                 <svg

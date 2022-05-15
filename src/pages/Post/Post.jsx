@@ -13,6 +13,7 @@ const Post = () => {
   const notiId = searchParams.get('notiId')
   const post = useSelector(postState$);
   const inputCmtRef = useRef(null)
+  const toast = useRef(null);
   const [voteCount, setVoteCount] = useState(null);
   const [voteCountUpdate, setVoteCountUpdate] = useState([]);
   const [isSuccess, setIsSuccess] = useState(null);
@@ -298,12 +299,23 @@ const Post = () => {
   useEffect(() => {
     updateNoti()
   },[updateNoti])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      toast.current.style.animation = "hide_slide 1s ease forwards";
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [isSuccess]);
+  useEffect(() => {
+     if(dataPost){
+      document.title = dataPost.title
+     }
+  }, [dataPost]);
   return (
     <div className="mt-80">
       <div className="post__details-container">
         {isSuccess ? (
           <div class="toast-mess-container">
-            <button class={`alert-toast-message success`}>{isSuccess}</button>
+            <button  ref={toast} class={`alert-toast-message success`}>{isSuccess}</button>
           </div>
         ) : (
           ""
@@ -351,7 +363,7 @@ const Post = () => {
                 <Link to={`/post/update/${path}`}>
                   <span className="button-data edit">Sửa</span>
                 </Link>
-                <button onClick={handleClickDelete}>
+                <button className="btn-delete" onClick={handleClickDelete}>
                   <span className="button-data delete">Xóa</span>
                 </button>
               </div>

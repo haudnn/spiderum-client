@@ -45,6 +45,7 @@ const ChooseTopics = () => {
       dispatch(actions.createCategoryUser.createCategoryUserFailure())
     }
   },[dispatch, data])
+  console.log(data)
   useEffect(() => {
       if(user.categoryUser){
         window.location.href = 'http://localhost:3000/';

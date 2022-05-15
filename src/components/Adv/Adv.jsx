@@ -1,7 +1,11 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import * as actions from '../../redux/actions'
+import { allPostsState$   } from '../../redux/selectors/'
 import './adv.scss'
 const Adv = () => {
+  const posts = useSelector(allPostsState$ )
   return (
       <div className="adv">
         <div className="adv__donate box-shadow ">
@@ -18,105 +22,31 @@ const Adv = () => {
         <div className="adv__widget box-shadow ">
           <p className="adv__widget-title">CÓ THỂ BẠN QUAN TÂM</p>
           <div className="adv__widget-content">
-            <div className="adv__widget-content-details">
-              <div className="adv__widget-avt">
-                <Link to="/">
-                  <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
-                    alt=""
-                  />
-                </Link>
-              </div>
-              <div className="adv__widget-user">
-                <p className="post-title">
-                Bao lâu rồi bạn không sáng tác?
-                </p>
-                <Link to="/">
-                  <span className="username">Hex </span>
-                </Link>
-                <span className="time-read"> - 18 tháng 8 2019</span>
-              </div>
-            </div>
-            <div className="adv__widget-content-details">
-              <div className="adv__widget-avt">
-                <Link to="/">
-                  <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
-                    alt=""
-                    className=""
-                  />
-                </Link>
-              </div>
-              <div className="adv__widget-user">
-                <p className="post-title">
-                Bao lâu rồi bạn không sáng tác?
-                </p>
-                <Link to="/">
-                  <span className="username">Hex </span>
-                </Link>
-                <span className="time-read"> - 18 tháng 8 2019</span>
-              </div>
-            </div>
-            <div className="adv__widget-content-details">
-              <div className="adv__widget-avt">
-                <Link to="/">
-                  <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
-                    alt=""
-                    className=""
-                  />
-                </Link>
-              </div>
-              <div className="adv__widget-user">
-                <p className="post-title">
-                Bao lâu rồi bạn không sáng tác?
-                </p>
-                <Link to="/">
-                  <span className="username">Hex </span>
-                </Link>
-                <span className="time-read"> - 18 tháng 8 2019</span>
-              </div>
-            </div>
-            <div className="adv__widget-content-details">
-              <div className="adv__widget-avt">
-                <Link to="/">
-                  <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
-                    alt=""
-                    className=""
-                  />
-                </Link>
-              </div>
-              <div className="adv__widget-user">
-                <p className="post-title">
-                Bao lâu rồi bạn không sáng tác?
-                </p>
-                <Link to="/">
-                  <span className="username">Hex </span>
-                </Link>
-                <span className="time-read"> - 18 tháng 8 2019</span>
-              </div>
-            </div>
-            <div className="adv__widget-content-details">
-              <div className="adv__widget-avt">
-                <Link to="/">
-                  <img
-                    src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/fe994cf02c8a11eab71043b339168a6e.png"
-                    alt=""
-                    className=""
-                  />
-                </Link>
-              </div>
-              <div className="adv__widget-user">
-                <p className="post-title">
-                Bao lâu rồi bạn không sáng tác?
-                </p>
-                <Link to="/">
-                  <span className="username">Hex </span>
-                </Link>
-                <span className="time-read"> - 18 tháng 8 2019</span>
-              </div>
-            </div>
+            {
+              posts.data.slice(0,5).map((post) =>(
+                <div className="adv__widget-content-details">
+                  <div className="adv__widget-avt">
+                    <Link to={`/user/${post.author.userName}`}>
+                      <img
+                        src={post.author.avatar ? post.author.avatar : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"}
+                        alt=""
+                      />
+                    </Link>
+                  </div>
+                  <div className="adv__widget-user">
+                    <Link  to={`/post/${post.slug} `}>
+                      <p className="post-title">
+                        {post.title}
+                      </p>
+                    </Link>
+                    <Link  to={`/user/${post.author.userName} `}>
+                      <span className="username">{post.author.displayName ? post.author.displayName : post.author.userName} </span>
+                    </Link>
+                    <span className="time-read"> - 18 tháng 8 2019</span>
+                  </div>
+                </div>
+              ))
+            }
           </div>       
         </div>
         <div className="adv__contact box-shadow ">

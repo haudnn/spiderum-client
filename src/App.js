@@ -5,12 +5,11 @@ import Header from './pages/Header/Header'
 import Footer from './pages/Footer/Footer'
 import Gototop from './pages/Gototop/Gototop';
 import RoutesConfig from './config/RoutesConfig';
-
 function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-        <Header/>
+        <Header/> 
         <RoutesConfig/>
         <Gototop/>
         <Footer/>

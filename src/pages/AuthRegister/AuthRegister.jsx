@@ -13,6 +13,7 @@ const AuthRegister = () => {
   const [email, setEMail] = useState({});
   const [visible, setVisible] = useState(false)
   const [messages, setMessages] = useState(null)
+  const [err, setErr] = useState(false)
   const [otp, setOtp] = useState(0)
   const fbProvider = new firebase.auth.FacebookAuthProvider()
   const handleAuthFacebook = async () => {
@@ -68,26 +69,37 @@ const AuthRegister = () => {
     const response = await axios(option)
     setMessages(response.data.data)
     setVisible(!visible)
+    setErr(false)
   },[visible,email])
   const handleSubmitOTP = useCallback( async (e) => {
     e.preventDefault();
-    const option  ={
-      method: "post", 
-      url:`/api/v1/auth/mail`,
-      data:{
-        "otp" : (parseInt(otp.otp))
+    try{
+      const option  ={
+        method: "post", 
+        url:`/api/v1/auth/mail`,
+        data:{
+          "otp" : (parseInt(otp.otp))
+        }
       }
+      const response = await axios(option)
+      navigate(`/tao-tai-khoan?token=${response.data.data}&email=${email.email}`)
     }
-    const response = await axios(option)
-    navigate(`/tao-tai-khoan?token=${response.data.data}`)
-  },[otp,navigate])
+    catch(err) {
+      setErr(true)
+      setMessages(err.response.data.data)
+    }
+  },[otp,navigate,email])
   return (
     <>
-    <div className="alert-auth">
-      <div className="uk-alert">
-        <div>{messages}</div>
+    {
+      messages ? (
+        <div className="alert-auth ">
+          <div className={`uk-alert ${err ? "err" : ""}`}>
+            <div>{messages}</div>
+          </div>
       </div>
-    </div>
+      ) : ""
+    }
     <div className="auth">
       <div className="auth__container">
         <div className="auth__content">
