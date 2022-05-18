@@ -85,7 +85,6 @@ const Suggest = () => {
                           <Link to={`/user/${post.author.userName}`}>
                             <p className="post-username">{post.author.displayName ? post.author.displayName : post.author.userName}</p>
                           </Link>
-                          <span className="time-read">Hôm qua</span>
                         </div>
                       </div>
                       <div className="suggest__content-details-post-icon">

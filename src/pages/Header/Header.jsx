@@ -562,7 +562,7 @@ const Header = () => {
               <div className="header__post-info">
                 <div className="header__icon-top-wrapper noti" onClick={handleShowNotify}>
                   <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
-                  {showNotify && (
+                  {/* {showNotify && (
                     <div className="header__notify">
                       <header className="header__notify-header">
                         <h3>Thông báo</h3>
@@ -633,7 +633,7 @@ const Header = () => {
                         <p>Hiển thị thêm</p>
                       </footer>
                     </div>
-                  )}
+                  )} */}
                 </div>
                 {currentUser.currentUser ? (
                   <div>

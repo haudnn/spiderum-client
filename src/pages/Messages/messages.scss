@@ -1,4 +1,8 @@
 @use "../../scss/"as *;
+.mes{
+    max-height: 80vh;
+    // overflow: hidden;
+}
 .mes__header{
     height: 68px;
     display: flex;
@@ -138,6 +142,7 @@
     height: calc(100% - 72px - 42px - 50px);
     flex-grow: 1;
     width: 100%;
+    height: 100%;
     overflow-y: auto;
     padding-left: 1rem;
     padding-top: 1rem;
@@ -162,7 +167,8 @@
     width: 100%;
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-bottom: 1rem
+    padding-bottom: 1rem;
+    position: relative;
 }
 .mes__box-input-container{
     width: 100%;

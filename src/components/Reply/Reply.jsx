@@ -5,6 +5,11 @@ const Reply = ({ reply, visible }) => {
   let date = new Date(reply.createdAt);
   const [voteCountReply, setVoteCountReply] = useState(null);
   const [voteCountReplyUpdate, setVoteCountReplyUpdate] = useState([]);
+  useEffect(() => {
+    if (reply.voteCount) {
+      setVoteCountReply(reply.voteCount.length);
+    }
+  }, [reply.voteCount]);
   const handleVoteReply = useCallback(async (id) => {
     const token = localStorage.getItem("token");
     const option = {
@@ -20,11 +25,7 @@ const Reply = ({ reply, visible }) => {
     const res = await axios(option);
     setVoteCountReplyUpdate(res.data.data.voteCount);
   }, []);
-  useEffect(() => {
-    if (reply.voteCount) {
-      setVoteCountReply(reply.voteCount.length);
-    }
-  }, [reply.voteCount]);
+  console.log(voteCountReply);
   useEffect(() => {
     if (voteCountReplyUpdate) {
       setVoteCountReply(voteCountReplyUpdate.length);
@@ -70,7 +71,7 @@ const Reply = ({ reply, visible }) => {
                 </div>
               </div>
               <div></div>
-              <span className="value">{voteCountReply}</span>
+              <span className="value">{voteCountReply ? voteCountReply :  reply.voteCount.length}</span>
             </div>
           </div>
         </div>

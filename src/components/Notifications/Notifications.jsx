@@ -20,17 +20,19 @@ const Notifications = ({ notification}) => {
             />
           </Link>
           <div className="header__notify-info">
-            <span className="header__notify-strong">
-              <b>
-                {notification.parentId.displayName
-                  ? notification.parentId.displayName
-                  : notification.parentId.userName}{" "}
-              </b>
-            </span>
-            <span>vừa đăng một bài viết mới: </span>
-            <q class="header__notify-strong header__notify-content">
-              <b className="">{notification.post.title}</b>
-            </q>
+            <div className="header__notify-info-container">
+              <span className="header__notify-strong">
+                <b>
+                  {notification.parentId.displayName
+                    ? notification.parentId.displayName
+                    : notification.parentId.userName}{" "}
+                </b>
+              </span>
+              <span>vừa đăng một bài viết mới: </span>
+              <q class="header__notify-strong header__notify-content">
+                <b className="">{notification.post.title}</b>
+              </q>
+            </div>
           </div>
           <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
         </div>

@@ -1,12 +1,96 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect,useRef } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { userState$} from "../../redux/selectors";
 import "./messages.scss";
+import { io } from "socket.io-client";
 const Messages = () => {
+  const userState =  useSelector(userState$);
+  const [conversations, setConversations] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const socket = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
   const username = searchParams.get("username");
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+  // useEffect(() => {
+  //   arrivalMessage &&
+  //     currentChat?.members.includes(arrivalMessage.sender) &&
+  //     setMessages((prev) => [...prev, arrivalMessage]);
+  // }, [arrivalMessage, currentChat]);
+  // useEffect(() => {
+  //   socket.current.emit("addUser",   userState.currentUser?._id);
+  //   // socket.current.on("getUsers", (users) => {
+  //   //   setOnlineUsers(
+  //   //     user.followings.filter((f) => users.some((u) => u.userId === f))
+  //   //   );
+  //   // });
+  // }, [userState]);
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await axios.get(`api/v1/conversation/${userState.currentUser._id}`);
+        setConversations(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConversations();
+  }, [userState]);
+  console.log(conversations)
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(`api/v1/messages/${currentUser.user._id}`);
+        setMessages(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [currentUser]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const message = {
+      sender:  userState.currentUser?._id,
+      text: newMessage,
+      conversationId: currentUser.user?._id,
+    };
+
+    // const receiverId = currentChat.members.find(
+    //   (member) => member !==   userState.currentUser?._id
+    // );
+
+    socket.current.emit("sendMessage", {
+      senderId: userState.currentUser?._id,
+      receiverId : currentUser.user?._id,
+      text: newMessage,
+    });
+
+    try {
+      const res = await axios.post("api/v1/messages", message);
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getUser = useCallback(async () => {
     const option = {
       method: "get",
@@ -18,6 +102,7 @@ const Messages = () => {
   useEffect(() => {
     getUser();
   }, [getUser]);
+  console.log(messages)
   return (
     <div className="mes">
       <div className="mes__header">
@@ -62,17 +147,23 @@ const Messages = () => {
             <div className="mes__box-chat">
               {/* right */}
               <div className="mes__box-chat-buble">
-                <div className="chat-buble right">
-                  <div>
-                    <Link to="/">
-                      <img src="" alt="" />
-                    </Link>
-                  </div>
-                  <div className="content right">
-                    <div className="inner-content">hello</div>
-                    <p className="mestime">1:42 PM</p>
-                  </div>
-                </div>
+                {
+                  messages.length !== 0 ? (
+                    messages.map((m) => (
+                      <div className="chat-buble right">
+                      <div>
+                        <Link to="/">
+                          <img src="" alt="" />
+                        </Link>
+                      </div>
+                      <div className="content right">
+                        <div className="inner-content">{m.text}</div>
+                        <p className="mestime">1:42 PM</p>
+                      </div>
+                    </div>
+                    ))
+                  ) : ""
+                }
               </div>
               {/* left */}
               <div className="mes__box-chat-buble">
@@ -92,8 +183,9 @@ const Messages = () => {
           </div>
           <div className="mes__box-input">
             <div className="mes__box-input-container">
-                <input className="mes__box-input-text" type="text" placeholder="Viết gì đó...." />
-                <div className="send">
+                <input className="mes__box-input-text" type="text" placeholder="Viết gì đó...."      onChange={(e) => setNewMessage(e.target.value)}
+                    value={newMessage}/>
+                <div className="send"  onClick={handleSubmit}>
                     <i class='bx bx-send'></i>
                 </div>
             </div>

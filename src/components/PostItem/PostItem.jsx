@@ -8,7 +8,8 @@ const PostItem = ({ post }) => {
   const [message, setMessage] = useState(null);
   const [err, setErr] = useState(null);
   const [isActive,setIsActive] = useState(false);
-  const handleSavePost = useCallback( async(id) => {
+  const handleSavePost = useCallback( async(e,id) => {
+    e.preventDefault();
     const token = localStorage.getItem("token")
     try {
       const option  ={
@@ -30,7 +31,6 @@ const PostItem = ({ post }) => {
       setMessage(err.response.data.data)
     }
   },[isActive])
-  console.log(message)
   return (
     <div className="row mb">
       {
@@ -41,9 +41,7 @@ const PostItem = ({ post }) => {
           <Link to={`/post/${post.slug}`} className="filter__content-img">
             <img
               src={
-                post.attachment
-                  ? post.attachment
-                  : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"
+                post.attachment ? post.attachment : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-thumbnails/defaultthumbnail.png"
               }
               alt="Ảnh của bài viết"
               className="filter__content-img-item"
@@ -60,15 +58,8 @@ const PostItem = ({ post }) => {
               </Link>
               <span className="time-read">4 phút đọc</span>
             </div>    
-            <Link to={`/`}  onClick={(e) => {handleSavePost(post._id)}} className={`post_saved`}  title="Click để lưu bài viết"> 
-              {
-                post.author.postSaved.includes(post._id) ? (
-                  <i class='bx bxs-bookmark-alt'></i>
-
-                ) : (
-                  <i class='bx bx-bookmark-alt'></i>
-                )
-              }
+            <Link to={`/`}  onClick={(e) => {handleSavePost(e,post._id)}} className={`post_saved`}  title="Click để lưu bài viết"> 
+              <i class='bx bxs-bookmark-alt'></i>
             </Link>
           </div>
           <div className="filter__content-main">

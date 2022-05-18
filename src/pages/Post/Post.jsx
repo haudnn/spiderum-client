@@ -7,6 +7,7 @@ import { Config } from "./tools";
 import { userState$, postState$ } from "../../redux/selectors";
 import { useSelector } from "react-redux";
 import Comment from "../../components/Comment/Comment";
+import { FacebookIcon, FacebookShareButton } from 'react-share';
 const Post = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,6 +64,7 @@ const Post = () => {
       setVoteCount(voteCountUpdate.length)
     }
   },[voteCountUpdate])
+  const shareUrl = `http://192.168.1.7:3000/post/${dataPost?.slug}`
   const getPost = useCallback(async () => {
     const res = await axios.get(`/api/v1/posts/${path}`);
     setDataPost(res.data.post);
@@ -393,7 +395,10 @@ const Post = () => {
           <div className="pull-right">
             <div className="right-tools">
               <Link to="/" className="tool">
-                <i class="bx bxl-facebook-circle"></i>
+                {/* <i class="bx bxl-facebook-circle"></i> */}
+                <FacebookShareButton url={shareUrl}>
+                    <FacebookIcon size={40} round={true}></FacebookIcon>
+                  </FacebookShareButton>
               </Link>
               <div className="bookmark">
                 <Link to="/" title="Click để lưu bài viết">
