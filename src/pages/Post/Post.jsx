@@ -64,7 +64,7 @@ const Post = () => {
       setVoteCount(voteCountUpdate.length)
     }
   },[voteCountUpdate])
-  const shareUrl = `http://192.168.1.7:3000/post/${dataPost?.slug}`
+  const shareUrl = `http://192.168.1.145:3000/post/${dataPost?.slug}`
   const getPost = useCallback(async () => {
     const res = await axios.get(`/api/v1/posts/${path}`);
     setDataPost(res.data.post);

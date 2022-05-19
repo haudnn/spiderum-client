@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 const Notifications = ({ notification}) => {
   let date = new Date(notification.createdAt);
@@ -43,8 +43,45 @@ const Notifications = ({ notification}) => {
           }/${date.getFullYear()}`}</span>
         </div>
       </Link>
-    </li>
-    ) : ""
+      </li>
+    ) : (
+      <li className={`header__notify-item ${notification.isRead ? "" : "active"}`}>
+      <Link to={`/user/${notification.parentId.userName}?notiId=${notification._id}`} className={`header__notify-link`}> 
+        <div className="header__notify-menu">
+          <Link  to={`/user/${notification.parentId.userName}?notiId=${notification._id}`}  >
+            <img
+              src={
+                notification.parentId.avatar
+                  ? notification.parentId.avatar
+                  : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
+              }
+              alt=""
+              className="header__notify-img"
+            />
+          </Link>
+          <div className="header__notify-info">
+            <div className="header__notify-info-container">
+              <span className="header__notify-strong">
+                <b>
+                  {notification.parentId.displayName
+                    ? notification.parentId.displayName
+                    : notification.parentId.userName}{" "}
+                </b>
+              </span>
+              <span> đã theo dõi bạn </span>
+            </div>
+          </div>
+          <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
+        </div>
+        <div className="header__notify-time">
+          <i class="bx bxs-conversation"></i>
+          <span className="time">{`${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`}</span>
+        </div>
+      </Link>
+      </li>
+    )
   );
 };
 

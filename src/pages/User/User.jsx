@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 const User = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const notiId = searchParams.get('notiId')
   const userState = useSelector(userState$);
   const [currentUser, setCurrentUser] = useState(null);
   const [posts, setPosts] = useState(null);
@@ -64,8 +65,26 @@ const User = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const handelClickMes = useCallback(() => {
-    navigate(`/messages?username=${currentUser.user.userName}`);
+  const handelClickMes = useCallback( async(e) => {
+    const token = localStorage.getItem("token");
+    try {
+      e.preventDefault();
+      const option = {
+        method: "post",
+        url: `/api/v1/auth/update/unfollower/`,
+        data: {
+          
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      await axios(option);
+    }
+    catch (error) {
+      
+    }
+    navigate(`/messages?uid=${currentUser.user._id}`);
   }, [navigate, currentUser]);
   const handelUnFlow = useCallback(
     async (e) => {
@@ -129,6 +148,25 @@ const User = () => {
       document.title = `Những bài viết của ${currentUser.user.userName}`
     }
  }, [currentUser]);
+ const updateNoti = useCallback(async (e) => {
+  if(notiId) {
+    const token = localStorage.getItem("token");
+    const option = {
+      method: "put",
+      url: `/api/v1/notifications/read`,
+      data: {
+        "notificationID" :notiId,
+      },
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    }; 
+    await axios(option);
+  }
+  },[notiId]);
+useEffect(() => {
+  updateNoti()
+},[updateNoti])
   return userState.currentUser
     ? currentUser && posts && (
         <div className="main">

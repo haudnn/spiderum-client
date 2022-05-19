@@ -1,23 +1,24 @@
-import React, { useCallback, useState, useEffect,useRef } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { userState$} from "../../redux/selectors";
+import { userState$ } from "../../redux/selectors";
 import "./messages.scss";
 import { io } from "socket.io-client";
+import Conversations from "../../components/Conversations/Conversations";
+import Message from "../../components/Message/Message";
 const Messages = () => {
-  const userState =  useSelector(userState$);
+  const userState = useSelector(userState$);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
+  const scrollRef = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
-  const username = searchParams.get("username");
+  const uid = searchParams.get("uid");
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (data) => {
@@ -28,87 +29,100 @@ const Messages = () => {
       });
     });
   }, []);
-  // useEffect(() => {
-  //   arrivalMessage &&
-  //     currentChat?.members.includes(arrivalMessage.sender) &&
-  //     setMessages((prev) => [...prev, arrivalMessage]);
-  // }, [arrivalMessage, currentChat]);
-  // useEffect(() => {
-  //   socket.current.emit("addUser",   userState.currentUser?._id);
-  //   // socket.current.on("getUsers", (users) => {
-  //   //   setOnlineUsers(
-  //   //     user.followings.filter((f) => users.some((u) => u.userId === f))
-  //   //   );
-  //   // });
-  // }, [userState]);
+  useEffect(() => {
+    socket.current.emit("addUser", userState.currentUser?._id);
+  }, [userState]);
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+  const createConversation = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const option = {
+        method: "post",
+        url: `/api/v1/conversation/`,
+        data: {
+          receiverId: uid,
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios(option);
+      console.log(res.data);
+    } catch (err) {}
+  }, [uid]);
+  useEffect(() => {
+    createConversation();
+  }, [createConversation]);
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get(`api/v1/conversation/${userState.currentUser._id}`);
-        setConversations(res.data);
+        const res = await axios.get(
+          `api/v1/conversation/${userState.currentUser._id}`
+        );
+        setConversations(res.data.data);
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
   }, [userState]);
-  console.log(conversations)
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(`api/v1/messages/${currentUser.user._id}`);
-        setMessages(res.data.data);
+        const res = await axios.get(`api/v1/messages/${currentChat._id}`);
+        setMessages(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     getMessages();
-  }, [currentUser]);
-  const handleSubmit = async (e) => {
+  }, [currentChat]);
+  const onSubmit = useCallback((e) => {
     e.preventDefault();
-    const message = {
-      sender:  userState.currentUser?._id,
-      text: newMessage,
-      conversationId: currentUser.user?._id,
-    };
-
-    // const receiverId = currentChat.members.find(
-    //   (member) => member !==   userState.currentUser?._id
-    // );
-
-    socket.current.emit("sendMessage", {
-      senderId: userState.currentUser?._id,
-      receiverId : currentUser.user?._id,
-      text: newMessage,
-    });
-
-    try {
-      const res = await axios.post("api/v1/messages", message);
-      setMessages([...messages, res.data]);
-      setNewMessage("");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getUser = useCallback(async () => {
-    const option = {
-      method: "get",
-      url: `/api/v1/auth/${username}`,
-    };
-    const response = await axios(option);
-    setCurrentUser(response.data.data);
-  }, [username]);
+  }, []);
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const message = {
+        sender: userState.currentUser?._id,
+        text: newMessage,
+        conversationId: currentChat?._id,
+      };
+      const receiverId = currentChat?.members.find(
+        (member) => member !== userState.currentUser?._id
+      );
+      socket.current.emit("sendMessage", {
+        senderId: userState.currentUser?._id,
+        receiverId,
+        text: newMessage,
+      });
+      try {
+        const res = await axios.post("api/v1/messages", message);
+        setMessages([...messages, res.data]);
+        setNewMessage("");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [currentChat, messages, newMessage, userState]
+  );
   useEffect(() => {
-    getUser();
-  }, [getUser]);
-  console.log(messages)
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
     <div className="mes">
       <div className="mes__header">
         <div className="mes__header-logo">
           <Link to="/">
-            <img src="https://spiderum.com/assets/icons/wideLogo.png" alt="" className="mes__header-logo-img"/>
+            <img
+              src="https://spiderum.com/assets/icons/wideLogo.png"
+              alt=""
+              className="mes__header-logo-img"
+            />
           </Link>
         </div>
       </div>
@@ -122,18 +136,25 @@ const Messages = () => {
             />
           </div>
           <ul className="mes__chatlist">
-            <li className="mes__chatitem">
-              <div className="mes__chatavt">
-                <img src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/9ec6b140b6f011ebbd783187720a8dea.jpg" alt="" />
-              </div>
-              <span className="mes__time">1:49 PM</span>
-              <div className="mes__content">
-                <h2 className="mes__title">ReactJS</h2>
-                <div className="mes__preview">
-                  <span>123</span>
-                </div>
-              </div>
-            </li>
+            {conversations.length > 0
+              ? conversations.map((conversation) => (
+                  <li
+                    onClick={() => setCurrentChat(conversation)}
+                    className={`mes__chatitem ${
+                      currentChat?._id === conversation._id ? "active" : ""
+                    }`}
+                  >
+                    <Conversations
+                      key={conversation._id}
+                      conversation={conversation}
+                      currentUser={conversation.members.filter(
+                        (member) => member !== userState.currentUser?._id
+                      )}
+                      // currentChat={currentChat?._id}
+                    />
+                  </li>
+                ))
+              : ""}
           </ul>
         </div>
         <div className="mes__box">
@@ -145,51 +166,45 @@ const Messages = () => {
               <p>May 8, 2022</p>
             </div>
             <div className="mes__box-chat">
-              {/* right */}
               <div className="mes__box-chat-buble">
-                {
-                  messages.length !== 0 ? (
-                    messages.map((m) => (
-                      <div className="chat-buble right">
-                      <div>
-                        <Link to="/">
-                          <img src="" alt="" />
-                        </Link>
+                {messages.length > 0
+                  ? messages.map((message) => (
+                      <div
+                        ref={scrollRef}
+                        className={`chat-buble ${
+                          message.sender === userState.currentUser?._id
+                            ? "right"
+                            : "left"
+                        }`}
+                      >
+                        <Message
+                          key={message._id}
+                          message={message}
+                          receiverId={currentChat?.members.filter(
+                            (member) => member !== userState.currentUser?._id
+                          )}
+                          own={message.sender === userState.currentUser?._id}
+                        />
                       </div>
-                      <div className="content right">
-                        <div className="inner-content">{m.text}</div>
-                        <p className="mestime">1:42 PM</p>
-                      </div>
-                    </div>
                     ))
-                  ) : ""
-                }
-              </div>
-              {/* left */}
-              <div className="mes__box-chat-buble">
-                <div className="chat-buble left">
-                  <div className="chat-avatar-container">
-                    <Link to="/" className="chat-avatar">
-                      <img src="https://www.gravatar.com/avatar/b5624e8eb33903826dddfa5927074579?d=wavatar&f=y" alt="" />
-                    </Link>
-                  </div>
-                  <div className="content left">
-                    <div className="inner-content left">hello</div>
-                    <p className="mestime left">1:42 PM</p>
-                  </div>
-                </div>
+                  : ""}
               </div>
             </div>
           </div>
-          <div className="mes__box-input">
+          <form onSubmit={onSubmit} className="mes__box-input">
             <div className="mes__box-input-container">
-                <input className="mes__box-input-text" type="text" placeholder="Viết gì đó...."      onChange={(e) => setNewMessage(e.target.value)}
-                    value={newMessage}/>
-                <div className="send"  onClick={handleSubmit}>
-                    <i class='bx bx-send'></i>
-                </div>
+              <input
+                className="mes__box-input-text"
+                type="text"
+                placeholder="Viết gì đó...."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <button type="submit" className="send" onClick={handleSubmit}>
+                <i class="bx bx-send"></i>
+              </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

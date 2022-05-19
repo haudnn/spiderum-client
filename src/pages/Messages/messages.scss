@@ -1,8 +1,10 @@
 @use "../../scss/"as *;
 .mes{
-    max-height: 80vh;
-    // overflow: hidden;
-}
+    height:95vh;
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    }
 .mes__header{
     height: 68px;
     display: flex;
@@ -59,7 +61,6 @@
     overflow-y: auto;
 }
 .mes__chatitem{
-    background: rgba(51,152,212,1);
     transition: none;
     height: 100px;
     cursor: pointer;
@@ -70,6 +71,11 @@
     position: relative;
     border-bottom: 1px solid #e3ebf6;
     box-sizing: border-box;
+    color: #333;
+        &.active{
+            background: rgba(51,152,212,1);
+            color:$white;
+        }
 }
 .mes__chatavt{
     height: 56px;
@@ -102,12 +108,11 @@
 .mes__title{
     font-size: medium;
     font-weight: 700;
-    color: #fff;
 }
 .mes__preview{
     position: relative;
     height: 3em;
-    color: #fff;
+    color: #333;
         &::after{
             content: "";
             text-align: right;
@@ -138,16 +143,15 @@
     font-size: medium;
 }
 .mes__box-content{
-    opacity: 1;
-    height: calc(100% - 72px - 42px - 50px);
     flex-grow: 1;
     width: 100%;
-    height: 100%;
     overflow-y: auto;
     padding-left: 1rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
-    transition: opacity .1s ease-in;
+    height: calc(100% - 72px - 70px);
+    opacity: 1;
+    transition: opacity .1s ease-in
 }
 .mes__box-time{
     display: flex;
@@ -222,37 +226,29 @@
         }
 }
 .content{
-    // border-top-left-radius: 1.25rem;
-    // border-bottom-left-radius: 1.25rem;
-    // border-top-right-radius: 1.25rem;
-    border-radius: calc(1.25rem / 2);
-    max-width: 32rem;
+    max-width: 564px;
+    overflow-x: hidden;
     width: 100%;
-    background-color: rgba(51,152,212,1);
-    color: rgba(255,255,255,1);
-    padding: 0.75rem 1rem 0.25rem;
+    padding-right: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
     overflow-wrap: break-word;
     position: relative;
+    border-radius: 18px;
         &.right{
-            border-top-left-radius: 1.25rem;
-            border-bottom-left-radius: 1.25rem;
-            border-bottom-right-radius: 1.25rem;
+            background-color: rgba(51,152,212,1);
+            color: rgba(255,255,255,1);
         }
         &.left{
-            margin-left: 0.5rem;
-            border-top-left-radius: 1.25rem;
-            background-color: rgba(226,232,240,1);
-            color: rgba(113,128,150,1);
-            border-top-right-radius: 1.25rem;
-            border-bottom-right-radius: 1.25rem;
+            background-color:#f0f2f5;
+            color: #050505;
         }
 }
 .inner-content{
-    color: rgba(255,255,255,1);
-    overflow-wrap: break-word;
-        &.left{
-            color: rgba(113,128,150,1);
-        }
+    font-size: .9375rem;
+    white-space: pre-wrap;
+    line-height: 20px;
 }
 .chat-avatar-container{
     width: 2.5rem;
@@ -283,4 +279,18 @@
         &.left { 
             color: #b0b0b0;
         } 
+}
+.avatar-mes{
+    margin-right: 7px;
+        & a {
+            display: block;    
+            width: 30px;
+            height: 30px;
+                & img{
+                    width: 100%;
+                    height: 100%;
+                    border-radius:50%;
+                    object-fit: cover;
+                }
+        }
 }

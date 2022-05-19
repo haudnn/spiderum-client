@@ -64,15 +64,15 @@ const Header = () => {
     dispatch(actions.checkCurrentUser.checkCurrentUserRequest());
   }, [dispatch]);
   useEffect(() => {
-    checkCurrentUser()
+    checkCurrentUser();
   }, [checkCurrentUser]);
   const handleShow = () => setShowCategory(!showCategory);
   const handleShowNotify = () => setShowNotify(!showNotify);
   const handleShowDropDown = () => setShowDropDown(!showDropDown);
-  const getAllNotifications = useCallback( async() => {
-    const token = localStorage.getItem("token")
-    if(token) {
-      try{
+  const getAllNotifications = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
         const option = {
           method: "get",
           url: `/api/v1/notifications/`,
@@ -81,14 +81,13 @@ const Header = () => {
           },
         };
         const res = await axios(option);
-        setNotifications(res.data.data)
-      }
-      catch(err){}
+        setNotifications(res.data.data);
+      } catch (err) {}
     }
-  }, [])
-   useEffect(() => {
-    getAllNotifications()
-  },[getAllNotifications])
+  }, []);
+  useEffect(() => {
+    getAllNotifications();
+  }, [getAllNotifications]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -217,11 +216,15 @@ const Header = () => {
     navigate(`/search?q=${query}&type=post`);
   };
   useEffect(() => {
-    if(notifications.length >0 ) {
-      setCountNotifications(notifications.filter((x) => { return x.isRead === false; }).length)
+    if (notifications.length > 0) {
+      setCountNotifications(
+        notifications.filter((x) => {
+          return x.isRead === false;
+        }).length
+      );
     }
-  },[notifications, countNotifications])
-  return location.pathname !== "/category"  ? (
+  }, [notifications, countNotifications]);
+  return location.pathname !== "/category" ? (
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
     location.pathname !== "/messages" &&
@@ -274,36 +277,46 @@ const Header = () => {
                         </div>
                       </li>
                       <li>
-                        <Link to="/">
-                          <div className="header__icon-top-wrapper">
-                            <i class="header__icon header__icon-top  bx bx-envelope"></i>
-                          </div>
+                        <Link to="/messages">
+                          <button className="icon-notify">
+                            <i class="header__icon header__icon-top bx bxl-messenger"></i>
+                            <span className="badge">1</span>
+                          </button>
                         </Link>
                       </li>
-                      <li className="header__icon-top-wrapper" onClick={handleShowNotify}>
+                      <li
+                        className="header__icon-top-wrapper"
+                        onClick={handleShowNotify}
+                      >
                         <button className="icon-notify">
                           <i class=" header__icon header__icon-top bx bx-bell"></i>
-                            { countNotifications  === 0 ? "" : (<span className="badge">{countNotifications}</span>)}
+                          {countNotifications === 0 ? (
+                            ""
+                          ) : (
+                            <span className="badge">{countNotifications}</span>
+                          )}
                         </button>
                         {showNotify && (
-                           <div className="header__notify">
-                               <header className="header__notify-header">
-                                  <h3>Thông báo</h3>                                
-                                </header>
-                                <div className="header__notify-wrapper">
-                                  <ul className="header__notify-list">
-                                  { notifications.length !== 0  ? (
-                                      notifications.map((notification) => (
-                                        <Notifications notification={notification} key={notification._id} />
+                          <div className="header__notify">
+                            <header className="header__notify-header">
+                              <h3>Thông báo</h3>
+                            </header>
+                            <div className="header__notify-wrapper">
+                              <ul className="header__notify-list">
+                                {notifications.length !== 0
+                                  ? notifications.map((notification) => (
+                                      <Notifications
+                                        notification={notification}
+                                        key={notification._id}
+                                      />
                                     ))
-                                  ) : "Không có gì xem ở đây cả" }
-                                  </ul>
-                                </div>
-                                   <footer className="header__notify-footer">
-                                  <p>Hiển thị thêm</p>
-                                </footer>
-                           </div>
-                           
+                                  : "Không có gì xem ở đây cả"}
+                              </ul>
+                            </div>
+                            <footer className="header__notify-footer">
+                              <p>Hiển thị thêm</p>
+                            </footer>
+                          </div>
                         )}
                       </li>
                       <li>
@@ -455,7 +468,10 @@ const Header = () => {
                   ) : (
                     <ul className="header__menu-top">
                       <li>
-                        <div className="header__icon-top-wrapper" onClick={() => setIsSearch(true)}>
+                        <div
+                          className="header__icon-top-wrapper"
+                          onClick={() => setIsSearch(true)}
+                        >
                           <i class="header__icon header__icon-top bx bx-search-alt-2"></i>
                         </div>
                       </li>
@@ -560,7 +576,10 @@ const Header = () => {
                 </Link>
               </div>
               <div className="header__post-info">
-                <div className="header__icon-top-wrapper noti" onClick={handleShowNotify}>
+                <div
+                  className="header__icon-top-wrapper noti"
+                  onClick={handleShowNotify}
+                >
                   <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
                   {/* {showNotify && (
                     <div className="header__notify">
