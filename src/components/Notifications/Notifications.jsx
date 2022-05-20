@@ -53,7 +53,7 @@ const Notifications = ({ notification}) => {
               src={
                 notification.parentId.avatar
                   ? notification.parentId.avatar
-                  : "https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/c7967c50a8e811ec8f3e8be3eb7f2505.png"
+                  : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
               }
               alt=""
               className="header__notify-img"
