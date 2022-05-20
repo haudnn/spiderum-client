@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,  useCallback } from "react";
 import axios from "axios";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-const Conversations = ({ conversation, currentUser }) => {
+import SkeletonCard from "../SkeletonCard/SkeletonCard";
+const Conversations = ({ conversation, currentUser, notiId }) => {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [preview, setPreview] = useState(null);
@@ -29,37 +28,65 @@ const Conversations = ({ conversation, currentUser }) => {
     getUser();
   }, [currentUser, conversation]);
   useEffect(() => {
-    if(messages.length > 0 ) {
-      setPreview(messages.slice(-1))
+    if (messages.length > 0) {
+      setPreview(messages.slice(-1));
     }
   }, [messages]);
+  const readNotiMes = useCallback(async (id) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const option = {
+          method: "put",
+          url: `/api/v1/notimes/read`,
+          data : {
+            "targetUser" :id
+          },
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        await axios(option);
+      } catch (err) {}
+    }
+  },[])
   return (
     <>
-      <div className="mes__chatavt">
-        <img
-          src={
-            user?.data.user?.avatar
-              ? user?.data.user?.avatar
-              : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
-          }
-          alt=""
-        />
-      </div>
-      <span className="mes__time">1:49 PM</span>
-      <div className="mes__content">
-        <h2 className="mes__title">
-          {user?.data.user?.displayName
-            ? user.data.user.displayName
-            : user?.data.user?.userName}
-        </h2>
-        <div className="mes__preview">
-          {
-            preview?.map((p) => (
-              <span>{p.text}</span>
-            ))
-          }
-        </div>
-      </div>
+      {!user && <SkeletonCard />}
+      {user && (
+        <>
+          <div className="mes__chatavt">
+            <img
+              src={
+                user?.data.user?.avatar
+                  ? user?.data.user?.avatar
+                  : "https://www.gravatar.com/avatar/262cfa0997548c39953a9607a56f27da?d=wavatar&f=y"
+              }
+              alt=""
+            />
+          </div>
+          <span className="mes__time">1:49 PM</span>
+          <div className="mes__content" onClick={() => readNotiMes(user?.data.user?._id)}>
+            <h2 className="mes__title">
+              {user?.data.user?.displayName
+                ? user.data.user.displayName
+                : user?.data.user?.userName}
+            </h2>
+            <div className="mes__preview">
+              {preview?.map((p) => (
+                <span>{p.text}</span>
+              ))}
+              {
+                notiId?.includes(user?.data.user?._id) ? (
+                  <div className="mes__unread">
+                    <span></span>
+                  </div>
+                ) : ""
+              }
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

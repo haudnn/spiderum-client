@@ -17,13 +17,13 @@ const Header = () => {
   const [headerPost, setHeaderPost] = useState(true);
   const [showCategory, setShowCategory] = useState(false);
   const [showNotify, setShowNotify] = useState(false);
+  const [countNotiMes, setCountNotiMes] = useState(0);
   const [showDropDown, setShowDropDown] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [query, setQuery] = useState(null);
   const [countNotifications, setCountNotifications] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const location = useLocation();
-
   const path = location.pathname.split("/")[3];
   useEffect(() => {
     if (listRef.current) {
@@ -224,6 +224,25 @@ const Header = () => {
       );
     }
   }, [notifications, countNotifications]);
+  const getNotificationsMessage = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const option = {
+          method: "get",
+          url: `/api/v1/notimes`,
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        const res = await axios(option);
+        setCountNotiMes(res.data.data.count)
+      } catch (err) {}
+    }
+  }, []);
+  useEffect(() => {
+    getNotificationsMessage()
+  },[getNotificationsMessage])
   return location.pathname !== "/category" ? (
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
@@ -279,8 +298,12 @@ const Header = () => {
                       <li>
                         <Link to="/messages">
                           <button className="icon-notify">
-                            <i class="header__icon header__icon-top bx bxl-messenger"></i>
-                            <span className="badge">1</span>
+                          { countNotiMes === 0 ? (<i class="header__icon header__icon-top bx bxl-messenger"></i>) : (
+                            <>
+                               <i class="header__icon header__icon-top bx bxl-messenger"></i>
+                              <span className="badge">{countNotiMes }</span>
+                            </>
+                          )}                         
                           </button>
                         </Link>
                       </li>
@@ -581,78 +604,6 @@ const Header = () => {
                   onClick={handleShowNotify}
                 >
                   <i class=" header__icon header__icon-top icon-notify bx bx-bell"></i>
-                  {/* {showNotify && (
-                    <div className="header__notify">
-                      <header className="header__notify-header">
-                        <h3>Thông báo</h3>
-                      </header>
-                      <div className="header__notify-wrapper">
-                        <ul className="header__notify-list">
-                          <li className="header__notify-item">
-                            <Link to="/" className="header__notify-link">
-                              <div className="header__notify-menu">
-                                <img
-                                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                  alt=""
-                                  className="header__notify-img"
-                                />
-                                <div className="header__notify-info">
-                                  <span className="header__notify-strong">
-                                    <b>Husky </b>
-                                  </span>
-                                  <span>cũng đã bình luận vào bài viết </span>
-                                  <q class="header__notify-strong header__notify-content">
-                                    <b className="">
-                                      Turning Red – Phim tuyên giáo về trò chơi
-                                      mới của chủ nghĩa Đa văn hóa hay danh tính
-                                      người nhập cư Canada
-                                    </b>
-                                  </q>
-                                </div>
-                                <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                              </div>
-                              <div className="header__notify-time">
-                                <i class="bx bxs-conversation"></i>
-                                <span className="time">16 tháng 3</span>
-                              </div>
-                            </Link>
-                          </li>
-                          <li className="header__notify-item">
-                            <Link to="/" className="header__notify-link">
-                              <div className="header__notify-menu">
-                                <img
-                                  src="https://s3-ap-southeast-1.amazonaws.com/images.spiderum.com/sp-xs-avatar/0343e540c6df11eb9be3793afa050621.jpg"
-                                  alt=""
-                                  className="header__notify-img"
-                                />
-                                <div className="header__notify-info">
-                                  <span className="header__notify-strong">
-                                    <b>Husky </b>
-                                  </span>
-                                  <span>cũng đã bình luận vào bài viết </span>
-                                  <q class="header__notify-strong header__notify-content">
-                                    <b className="">
-                                      Turning Red – Phim tuyên giáo về trò chơi
-                                      mới của chủ nghĩa Đa văn hóa hay danh tính
-                                      người nhập cư Canada
-                                    </b>
-                                  </q>
-                                </div>
-                                <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
-                              </div>
-                              <div className="header__notify-time">
-                                <i class="bx bxs-conversation"></i>
-                                <span className="time">16 tháng 3</span>
-                              </div>
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                      <footer className="header__notify-footer">
-                        <p>Hiển thị thêm</p>
-                      </footer>
-                    </div>
-                  )} */}
                 </div>
                 {currentUser.currentUser ? (
                   <div>

@@ -84,8 +84,8 @@ const User = () => {
     catch (error) {
       
     }
-    navigate(`/messages?uid=${currentUser.user._id}`);
-  }, [navigate, currentUser]);
+    window.location.href = `http://localhost:3000/messages?uid=${currentUser.user._id}`;
+  }, [currentUser]);
   const handelUnFlow = useCallback(
     async (e) => {
       const token = localStorage.getItem("token");

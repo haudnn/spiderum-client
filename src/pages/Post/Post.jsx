@@ -435,11 +435,13 @@ const Post = () => {
               </div>
               <div className="sub-container">
                 {
-                  active ? (
-                    <button className="btn-fl followed" onClick={handleUnFlow}>Following</button>
-                   
-                  ) : (
-                    <button className="btn-fl follow" onClick={handleFlow}>Follow</button>  
+                  currentUser.currentUser?._id === authPost?._id ? "" : (
+                    active ? (
+                      <button className="btn-fl followed" onClick={handleUnFlow}>Following</button>
+                     
+                    ) : (
+                      <button className="btn-fl follow" onClick={handleFlow}>Follow</button>  
+                    )
                   )
                 }
               </div>

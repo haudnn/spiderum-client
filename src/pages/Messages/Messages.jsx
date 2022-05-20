@@ -7,9 +7,11 @@ import "./messages.scss";
 import { io } from "socket.io-client";
 import Conversations from "../../components/Conversations/Conversations";
 import Message from "../../components/Message/Message";
+import MessageHeader from "../../components/MessageHeader/MessageHeader";
 const Messages = () => {
   const userState = useSelector(userState$);
   const [conversations, setConversations] = useState([]);
+    const [countNotiMes, setCountNotiMes] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -87,14 +89,15 @@ const Messages = () => {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      const receiverId = currentChat?.members.find(
+        (member) => member !== userState.currentUser?._id
+      );
       const message = {
         sender: userState.currentUser?._id,
         text: newMessage,
         conversationId: currentChat?._id,
+        receiverId : receiverId 
       };
-      const receiverId = currentChat?.members.find(
-        (member) => member !== userState.currentUser?._id
-      );
       socket.current.emit("sendMessage", {
         senderId: userState.currentUser?._id,
         receiverId,
@@ -113,11 +116,33 @@ const Messages = () => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+  const getNotificationsMessage = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const option = {
+          method: "get",
+          url: `/api/v1/notimes`,
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        };
+        const res = await axios(option);
+        setCountNotiMes(res.data.data.notification)
+      } catch (err) {}
+    }
+  }, []);
+  useEffect(() => {
+    getNotificationsMessage()
+  },[getNotificationsMessage])
+  const handleBack = () => {
+    window.location.href= "http://localhost:3000/"
+  }
   return (
     <div className="mes">
       <div className="mes__header">
         <div className="mes__header-logo">
-          <Link to="/">
+          <Link to="/" onClick={handleBack}>
             <img
               src="https://spiderum.com/assets/icons/wideLogo.png"
               alt=""
@@ -150,6 +175,7 @@ const Messages = () => {
                       currentUser={conversation.members.filter(
                         (member) => member !== userState.currentUser?._id
                       )}
+                      notiId={countNotiMes?.map((e) => e.parentId._id)}
                       // currentChat={currentChat?._id}
                     />
                   </li>
@@ -158,53 +184,60 @@ const Messages = () => {
           </ul>
         </div>
         <div className="mes__box">
-          <div className="mes__box-header">
-            <h2 className="mes__box-username">hauhau321</h2>
-          </div>
-          <div className="mes__box-content">
-            <div className="mes__box-time">
-              <p>May 8, 2022</p>
-            </div>
-            <div className="mes__box-chat">
-              <div className="mes__box-chat-buble">
-                {messages.length > 0
-                  ? messages.map((message) => (
-                      <div
-                        ref={scrollRef}
-                        className={`chat-buble ${
-                          message.sender === userState.currentUser?._id
-                            ? "right"
-                            : "left"
-                        }`}
-                      >
-                        <Message
-                          key={message._id}
-                          message={message}
-                          receiverId={currentChat?.members.filter(
-                            (member) => member !== userState.currentUser?._id
-                          )}
-                          own={message.sender === userState.currentUser?._id}
-                        />
-                      </div>
-                    ))
-                  : ""}
+          {currentChat ? (
+            <>
+            <MessageHeader  receiverId={currentChat?.members.filter((member) =>  member !== userState.currentUser?._id)}/>
+              <div className="mes__box-content">
+                <div className="mes__box-time">
+                  <p>May 8, 2022</p>
               </div>
-            </div>
-          </div>
-          <form onSubmit={onSubmit} className="mes__box-input">
-            <div className="mes__box-input-container">
-              <input
-                className="mes__box-input-text"
-                type="text"
-                placeholder="Viết gì đó...."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-              />
-              <button type="submit" className="send" onClick={handleSubmit}>
-                <i class="bx bx-send"></i>
-              </button>
-            </div>
-          </form>
+                <div className="mes__box-chat">
+                  <div className="mes__box-chat-buble">
+                    {messages.length > 0
+                      ? messages.map((message) => (
+                          <div
+                            ref={scrollRef}
+                            className={`chat-buble ${
+                              message.sender === userState.currentUser?._id
+                                ? "right"
+                                : "left"
+                            }`}
+                          >
+                            <Message
+                              key={message._id}
+                              message={message}
+                              receiverId={currentChat?.members.filter(
+                                (member) =>
+                                  member !== userState.currentUser?._id
+                              )}
+                              own={
+                                message.sender === userState.currentUser?._id
+                              }
+                            />
+                          </div>
+                        ))
+                      : ""}
+                  </div>
+                </div>
+              </div>
+              <form onSubmit={onSubmit} className="mes__box-input">
+                <div className="mes__box-input-container">
+                  <input
+                    className="mes__box-input-text"
+                    type="text"
+                    placeholder="Viết gì đó...."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                  />
+                  <button type="submit" className="send" onClick={handleSubmit}>
+                    <i class="bx bx-send"></i>
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <p className="picked-mes">Chọn một cuộc trò chuyện để bắt đầu!</p>
+          )}
         </div>
       </div>
     </div>
