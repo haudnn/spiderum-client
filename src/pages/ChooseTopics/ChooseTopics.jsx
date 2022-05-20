@@ -5,6 +5,7 @@ import {  userState$,categoriesState$ }from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
 const ChooseTopics = () => {
+  // dispatch actions
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [active, setActive] = useState([]);
