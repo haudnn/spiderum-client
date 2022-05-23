@@ -83,7 +83,7 @@
   yarn install | npm install
 ```
 
-4. Using
+3. Using
 
 ```sh
   yarn dev | npm run dev
