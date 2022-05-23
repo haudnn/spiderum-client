@@ -153,14 +153,14 @@
     animation: bounce .25s ease-in-out 0s 4 alternate both;
 }
 .vote-icon{
-    color: #969696;
     cursor: pointer;
-        &.like{
-            color:#48bb78;
+        &.like {
+          color:#48bb78
         }
-        &.dislike{
-            color: #f56565;
+        &.dislike {
+            color:#ed1418
         }
+    
 }
 .value{
     margin-left: 0.5rem;

@@ -3,11 +3,14 @@ import "./postitem.scss";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Toast from "../Toast/Toast";
+import { userState$ } from "../../redux/selectors/";
+import { useSelector } from "react-redux";
 const PostItem = ({ post }) => {
   let date = new Date(post.createdAt)
+  const currentUser = useSelector(userState$);
   const [message, setMessage] = useState(null);
-  const [err, setErr] = useState(null);
-  const [isActive,setIsActive] = useState(false);
+  const [isBookmark, setIsBookmark] = useState(false);
+  const [isVote, setIsVote] = useState(false);
   const handleSavePost = useCallback( async(e,id) => {
     e.preventDefault();
     const token = localStorage.getItem("token")
@@ -23,14 +26,41 @@ const PostItem = ({ post }) => {
         },
       }
       const response = await axios(option)
-      setIsActive(!isActive)
+      setIsBookmark(true)
       setMessage(response.data.data)
     }
     catch(err){
       setMessage(null)
+      setIsBookmark(false)
       setMessage(err.response.data.data)
     }
-  },[isActive])
+  },[])
+  const handleVote = useCallback(
+    async (e,id) => {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      const option = {
+        method: "post",
+        url: `/api/v1/posts/vote`,
+        data: {
+          "postId" : id,
+          "action" : "1"
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }; 
+      const res = await axios(option);
+      setIsVote(!isVote)
+      // setVoteCountUpdate(res.data.points)
+    },
+    [ isVote]
+  );
+  useEffect(() => {
+    if(currentUser.currentUser?.postsSaved?.includes(post?._id)){
+      setIsBookmark(true)
+    }
+  },[currentUser,post])
   return (
     <div className="row mb">
       {
@@ -59,7 +89,13 @@ const PostItem = ({ post }) => {
               <span className="time-read">4 phút đọc</span>
             </div>    
             <Link to={`/`}  onClick={(e) => {handleSavePost(e,post._id)}} className={`post_saved`}  title="Click để lưu bài viết"> 
-              <i class='bx bxs-bookmark-alt'></i>
+            {
+              isBookmark ? (
+                <i class='bx bxs-bookmark-alt'></i>
+              ) : (
+                <i class='bx bx-bookmark-alt' ></i>
+              )
+            }
             </Link>
           </div>
           <div className="filter__content-main">
@@ -89,9 +125,9 @@ const PostItem = ({ post }) => {
               </div>
             </div>
             <div className="filter__content-interactive">
-              <div className="filter__content-interactive-container">
+              <div className="filter__content-interactive-container" title="Upvote cho bài viết này">
                 <i class="post-icon bx bx-up-arrow"></i>
-                <span className="post-icon">{post.voteCount ? post.voteCount.length :""}</span>
+                <span className="post-icon">{post.vote.length - post.unVote.length}</span>
               </div>
               <div className="filter__content-interactive-container">
                 <svg

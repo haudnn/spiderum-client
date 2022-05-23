@@ -10,6 +10,7 @@ import Comment from "../../components/Comment/Comment";
 import { FacebookIcon, FacebookShareButton } from 'react-share';
 const Post = () => {
   const navigate = useNavigate();
+  const socket = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
   const notiId = searchParams.get('notiId')
   const post = useSelector(postState$);
@@ -32,6 +33,19 @@ const Post = () => {
   const [dataComment, setDataComment] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState(null);
+  const [isVote, setIsVote] = useState(false);
+  const [isUnVote, setIsUnVote] = useState(false);
+  const path = location.pathname.split("/")[2];
+  const getPost = useCallback(async () => {
+    const res = await axios.get(`/api/v1/posts/${path}`);
+    setDataPost(res.data.post);
+    setAuthPost(res.data.post.author);
+    setCategoryPost(res.data.post.category);
+    setVoteCount(res.data.points)
+  }, [path]);
+  useEffect(() => {
+    getPost();
+  }, [getPost]);
   useEffect(() => {
     if (post.post) {
       if (post.post.data) {
@@ -39,7 +53,7 @@ const Post = () => {
       }
     }
   }, [post]);
-  const path = location.pathname.split("/")[2];
+
   const handleVote = useCallback(
     async (e) => {
       e.preventDefault();
@@ -49,36 +63,42 @@ const Post = () => {
         url: `/api/v1/posts/vote`,
         data: {
           "postId" : dataPost._id,
+          "action" : "1"
         },
         headers: {
           authorization: `Bearer ${token}`,
         },
       }; 
       const res = await axios(option);
-      setVoteCountUpdate(res.data.data.voteCount)
+      setIsVote(!isVote)
+      setIsUnVote(false);
+      setVoteCountUpdate(res.data.points)
     },
-    [dataPost._id]
+    [dataPost._id, isVote]
   );
-  useEffect(() => {
-    if(voteCountUpdate){
-      setVoteCount(voteCountUpdate.length)
-    }
-  },[voteCountUpdate])
+  const handleUnVote = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+      const option = {
+        method: "post",
+        url: `/api/v1/posts/vote`,
+        data: {
+          "postId" : dataPost._id,
+          "action" : "2"
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }; 
+      const res = await axios(option);
+      setIsUnVote(!isUnVote)
+      setIsVote(false)
+      setVoteCountUpdate(res.data.points)
+    },
+    [dataPost._id, isUnVote]
+  );
   const shareUrl = `http://192.168.1.145:3000/post/${dataPost?.slug}`
-  const getPost = useCallback(async () => {
-    const res = await axios.get(`/api/v1/posts/${path}`);
-    setDataPost(res.data.post);
-    setAuthPost(res.data.post.author);
-    setCategoryPost(res.data.post.category);
-  }, [path]);
-  useEffect(() => {
-    if(dataPost.voteCount) {
-      setVoteCount(dataPost.voteCount.length)
-    }
-  },[dataPost.voteCount])
-  useEffect(() => {
-    getPost();
-  }, [getPost]);
   useEffect(() => {
     if (dataPost.content) {
       dataPost.content.map((e) => setContent(e));
@@ -312,6 +332,21 @@ const Post = () => {
       document.title = dataPost.title
      }
   }, [dataPost]);
+  useEffect(() => {
+    if(voteCountUpdate || voteCountUpdate === 0){
+      setVoteCount(voteCountUpdate)
+      
+    }
+  },[voteCountUpdate,getPost])
+  useEffect(() => {
+    if(dataPost.unVote?.includes(currentUser?.currentUser._id)){
+      setIsUnVote(true)
+    }
+    else if (dataPost.vote?.includes(currentUser?.currentUser._id)){
+      setIsVote(true)
+    }
+  },[currentUser,dataPost])
+
   return (
     <div className="mt-80">
       <div className="post__details-container">
@@ -384,18 +419,37 @@ const Post = () => {
           <div className="pull-left">
             <div className="vote">
               <div className="upvote" onClick={handleVote}>
-                <div className={`vote-icon`} >
-                  <i class='bx bxs-up-arrow'></i>
+                <div>
+                  {/* {!isVote ? dataPost.vote?.includes(currentUser?.currentUser._id) ?  (
+                     <i class='vote-icon bx bxs-up-arrow like' ></i> 
+                  ) : ( <i class='bx bx-up-arrow'></i>)
+                    : isVote ? (
+                      <i class='vote-icon bx bxs-up-arrow like' ></i> 
+                    ) : ( <i class='bx bx-up-arrow'></i>)
+                  } */}
+                  {isVote? (
+                    <i class='vote-icon bx bxs-up-arrow like' ></i> 
+                  ): (
+                    <i class='bx bx-up-arrow'></i>
+                  )}               
+                </div>
+              </div>              
+              <span className="value">{voteCount}</span>
+              <div className="upvote" onClick={handleUnVote}>
+                <div>
+                {isUnVote ? (
+                    <i class='vote-icon bx bxs-up-arrow bx-rotate-180 dislike'></i> 
+                  ): (
+                    <i class='bx bx-up-arrow bx-rotate-180' ></i>
+                  )}       
                 </div>
               </div>
-              <span className="value">{voteCount}</span>
             </div>
             <div className="view-count">{dataPost.views} lượt xem</div>
           </div>
           <div className="pull-right">
             <div className="right-tools">
               <Link to="/" className="tool">
-                {/* <i class="bx bxl-facebook-circle"></i> */}
                 <FacebookShareButton url={shareUrl}>
                     <FacebookIcon size={40} round={true}></FacebookIcon>
                   </FacebookShareButton>

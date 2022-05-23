@@ -90,7 +90,7 @@ const Suggest = () => {
                       <div className="suggest__content-details-post-icon">
                         <div>
                           <i class="post-icon bx bx-up-arrow"></i>
-                          <span className="post-icon">{post.voteCount.length ? post.voteCount.length :"0"}</span>
+                          {/* <span className="post-icon">{post.voteCount.length ? post.voteCount.length :"0"}</span> */}
                         </div>
                         <Link to="/">
                           <svg
@@ -205,7 +205,7 @@ const Suggest = () => {
                                   <div className="suggest__content-details-post-icon">
                                     <div>
                                       <i class="post-icon bx bx-up-arrow"></i>
-                                      <span className="post-icon"> {post.voteCount.length ? post.voteCount.length :"0"}</span>
+                                      {/* <span className="post-icon"> {post.voteCount.length ? post.voteCount.length :"0"}</span> */}
                                     </div>
                                     <Link to="/">
                                       <svg
