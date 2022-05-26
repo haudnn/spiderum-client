@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { userState$, categoriesState$ } from "../../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -8,6 +8,8 @@ import "./header.scss";
 import Notifications from "../../components/Notifications/Notifications";
 const Header = () => {
   const listRef = useRef();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const notiId = searchParams.get('notiId')
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -224,6 +226,11 @@ const Header = () => {
       );
     }
   }, [notifications, countNotifications]);
+  useEffect(() => { 
+    if(notiId){
+      getAllNotifications()
+    }
+  },[notiId,getAllNotifications])
   const getNotificationsMessage = useCallback(async () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -236,13 +243,13 @@ const Header = () => {
           },
         };
         const res = await axios(option);
-        setCountNotiMes(res.data.data.count)
+        setCountNotiMes(res.data.data.count);
       } catch (err) {}
     }
   }, []);
   useEffect(() => {
-    getNotificationsMessage()
-  },[getNotificationsMessage])
+    getNotificationsMessage();
+  }, [getNotificationsMessage]);
   return location.pathname !== "/category" ? (
     location.pathname !== "/login" &&
     location.pathname !== "/register" &&
@@ -298,12 +305,14 @@ const Header = () => {
                       <li>
                         <Link to="/messages">
                           <button className="icon-notify">
-                          { countNotiMes === 0 ? (<i class="header__icon header__icon-top bx bxl-messenger"></i>) : (
-                            <>
-                               <i class="header__icon header__icon-top bx bxl-messenger"></i>
-                              <span className="badge">{countNotiMes }</span>
-                            </>
-                          )}                         
+                            {countNotiMes === 0 ? (
+                              <i class="header__icon header__icon-top bx bxl-messenger"></i>
+                            ) : (
+                              <>
+                                <i class="header__icon header__icon-top bx bxl-messenger"></i>
+                                <span className="badge">{countNotiMes}</span>
+                              </>
+                            )}
                           </button>
                         </Link>
                       </li>
@@ -321,24 +330,26 @@ const Header = () => {
                         </button>
                         {showNotify && (
                           <div className="header__notify">
-                            <header className="header__notify-header">
-                              <h3>Thông báo</h3>
-                            </header>
-                            <div className="header__notify-wrapper">
-                              <ul className="header__notify-list">
-                                {notifications.length !== 0
-                                  ? notifications.map((notification) => (
-                                      <Notifications
-                                        notification={notification}
-                                        key={notification._id}
-                                      />
-                                    ))
-                                  : "Không có gì xem ở đây cả"}
-                              </ul>
+                            <div className="header__notify-container">
+                              <header className="header__notify-header">
+                                <h3>Thông báo</h3>
+                              </header>
+                              <div className="header__notify-wrapper">
+                                <ul className="header__notify-list">
+                                  {notifications.length !== 0
+                                    ? notifications.map((notification) => (
+                                        <Notifications
+                                          notification={notification}
+                                          key={notification._id}
+                                        />
+                                      ))
+                                    : "Không có gì xem ở đây cả"}
+                                </ul>
+                              </div>
+                              <footer className="header__notify-footer">
+                                <p>Hiển thị thêm</p>
+                              </footer>
                             </div>
-                            <footer className="header__notify-footer">
-                              <p>Hiển thị thêm</p>
-                            </footer>
                           </div>
                         )}
                       </li>

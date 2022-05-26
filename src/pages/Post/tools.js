@@ -26,8 +26,7 @@ export const Config = {
           initData: null,
           data: {},
           withBorder:false,
-          withBackground:false
-
+          withBackground:false,
         },
         raw: Raw,
         header: Header,

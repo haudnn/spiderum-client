@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/actions";
 import "./categoryitem.scss";
 import Filter from "../../components/Filter/Filter";
+import DatePost from "../../components/DatePost/DatePost";
 const CategoryItem = () => {
   const currentUser = useSelector(userState$);
   const dispatch = useDispatch();
@@ -183,7 +184,7 @@ const CategoryItem = () => {
                                     {e.author.displayName ? e.author.displayName : e.author.userName}
                                   </p>
                                 </Link>
-                                <span className="time-read"></span>
+                               <DatePost date={e.createdAt}></DatePost>
                               </div>
                             </div>
                             <div className="flex-gap-20">
@@ -191,7 +192,7 @@ const CategoryItem = () => {
                                 <i class="post-icon bx bx-up-arrow"></i>
                                 <span className="post-icon">{e.voteCount.length}</span>
                               </div>
-                              <Link to="/">
+                              <Link to="/" className="flex-align-gap-10">
                                 <svg
                                   fill="#969696"
                                   _ngcontent-serverApp-c41=""

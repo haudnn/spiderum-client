@@ -460,3 +460,9 @@
 .btn-delete{
     background-color:transparent;
 }
+.post__details-title{
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    word-break: break-word;
+}

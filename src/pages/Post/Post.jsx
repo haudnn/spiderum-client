@@ -335,7 +335,6 @@ const Post = () => {
   useEffect(() => {
     if(voteCountUpdate || voteCountUpdate === 0){
       setVoteCount(voteCountUpdate)
-      
     }
   },[voteCountUpdate,getPost])
   useEffect(() => {
@@ -346,7 +345,6 @@ const Post = () => {
       setIsVote(true)
     }
   },[currentUser,dataPost])
-
   return (
     <div className="mt-80">
       <div className="post__details-container">
@@ -420,13 +418,6 @@ const Post = () => {
             <div className="vote">
               <div className="upvote" onClick={handleVote}>
                 <div>
-                  {/* {!isVote ? dataPost.vote?.includes(currentUser?.currentUser._id) ?  (
-                     <i class='vote-icon bx bxs-up-arrow like' ></i> 
-                  ) : ( <i class='bx bx-up-arrow'></i>)
-                    : isVote ? (
-                      <i class='vote-icon bx bxs-up-arrow like' ></i> 
-                    ) : ( <i class='bx bx-up-arrow'></i>)
-                  } */}
                   {isVote? (
                     <i class='vote-icon bx bxs-up-arrow like' ></i> 
                   ): (
@@ -552,7 +543,7 @@ const Post = () => {
                 <div className="comments__node">
                   {comments.length > 0  ? (
                     comments.map((comment) => (
-                      <Comment comment={comment} key={comment._id} />
+                      <Comment postId={dataPost?._id} comment={comment} key={comment._id} />
                     ))
                   ) : ""}
                 </div>

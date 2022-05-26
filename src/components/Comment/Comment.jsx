@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./comment.scss";
 import axios from "axios";
 import Reply from "../Reply/Reply";
-const Comment = ({ comment }) => {
+const Comment = ({ comment, postId }) => {
   const [voteCount, setVoteCount] = useState(null);
   const [newReply, setNewReply] = useState(null);
   const [reply, setReply] = useState({});
@@ -70,7 +70,10 @@ const Comment = ({ comment }) => {
         const option = {
           method: "post",
           url: `/api/v1/reply/${comment._id}`,
-          data: reply,
+          data: {
+            reply,
+            postId
+          },
           headers: {
             authorization: `Bearer ${token}`,
           },

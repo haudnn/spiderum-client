@@ -88,3 +88,25 @@
             }
         }
     }
+.post-icon-suggest{
+    font-size:18px;
+    color:#969696;
+}
+.post-icon-suggest-text{
+    font-size:13px;
+    color:#969696;
+}
+.suggest-icon-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 5px;
+}
+.suggest__content-details-main{
+    & a {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        word-break: break-word;
+    }
+}

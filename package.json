@@ -31,7 +31,7 @@
     "codex.editor.simple-image": "^1.2.1",
     "connected-react-router": "^6.9.2",
     "firebase": "^9.7.0",
-    "moment": "^2.29.2",
+    "moment": "^2.29.3",
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
@@ -52,7 +52,6 @@
     "sass": "^1.49.9",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.5.0",
-    "vietnamese-slug": "^1.1.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

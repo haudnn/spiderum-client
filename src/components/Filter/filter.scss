@@ -237,3 +237,11 @@
         }
     }
 }
+.filter__content-main{
+    & a {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        word-break: break-word;
+    }
+}

@@ -76,6 +76,8 @@ $font-no: 'Noto Sans', sans-serif;
     font-size: 14px;
     color: $text-color-desc;
     font-family:$font-mon ;
+    overflow: hidden;
+    word-break: break-word;
 }
 .mt-10 { 
     margin-top: 10px;
@@ -392,3 +394,15 @@ select {
 		transform: translateX(140%);
 	}
 }
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(203,213,224,1);
+    height: 30px;
+  }
+  ::-webkit-scrollbar-track{
+    background-color: #f1f1f1;
+  }

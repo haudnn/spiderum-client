@@ -5,12 +5,16 @@ import axios from "axios";
 import Toast from "../Toast/Toast";
 import { userState$ } from "../../redux/selectors/";
 import { useSelector } from "react-redux";
+import DatePost from "../DatePost/DatePost";
 const PostItem = ({ post }) => {
-  let date = new Date(post.createdAt)
+  let date = new Date()
   const currentUser = useSelector(userState$);
+  const [datePost, setDatePost] = useState(null);
   const [message, setMessage] = useState(null);
   const [isBookmark, setIsBookmark] = useState(false);
   const [isVote, setIsVote] = useState(false);
+  const [voteCount, setVoteCount] = useState(null);
+  const [voteCountUpdate, setVoteCountUpdate] = useState(null);
   const handleSavePost = useCallback( async(e,id) => {
     e.preventDefault();
     const token = localStorage.getItem("token")
@@ -52,7 +56,7 @@ const PostItem = ({ post }) => {
       }; 
       const res = await axios(option);
       setIsVote(!isVote)
-      // setVoteCountUpdate(res.data.points)
+      setVoteCountUpdate(res.data.points)
     },
     [ isVote]
   );
@@ -61,6 +65,21 @@ const PostItem = ({ post }) => {
       setIsBookmark(true)
     }
   },[currentUser,post])
+  useEffect(() => {
+    if(post.vote.includes(currentUser.currentUser?._id)){
+      setIsVote(true)
+    }
+  },[currentUser,post])
+  useEffect(() => {
+    if(post) { 
+      setVoteCount(post.vote.length - post.unVote.length)
+    }
+  },[post])
+  useEffect(() => {
+    if(voteCountUpdate || voteCountUpdate === 0){
+      setVoteCount(voteCountUpdate)
+    }
+  },[voteCountUpdate])
   return (
     <div className="row mb">
       {
@@ -121,13 +140,17 @@ const PostItem = ({ post }) => {
                 <Link to={`/user/${post.author.userName}`}>
                   <p className="post-username">{post.author.displayName ? post.author.displayName : post.author.userName}</p>
                 </Link>
-                <span className="time-read">{`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`}</span>
+                <DatePost date={post.createdAt}></DatePost>
               </div>
             </div>
             <div className="filter__content-interactive">
-              <div className="filter__content-interactive-container" title="Upvote cho bài viết này">
-                <i class="post-icon bx bx-up-arrow"></i>
-                <span className="post-icon">{post.vote.length - post.unVote.length}</span>
+              <div className="filter__content-interactive-container" title="Upvote cho bài viết này" onClick={(e) => handleVote(e,post._id)}>
+                  {isVote? (
+                    <i class='vote-icon bx bxs-up-arrow like' ></i> 
+                  ): (
+                    <i class='bx bx-up-arrow'></i>
+                  )}      
+                <span className="post-icon">{voteCount}</span>
               </div>
               <div className="filter__content-interactive-container">
                 <svg
@@ -145,6 +168,10 @@ const PostItem = ({ post }) => {
                   ></path>
                 </svg>
                 <span className="post-icon">{post.views}</span>
+              </div>
+              <div className="filter__content-interactive-container">
+              <svg fill= "#969696" color= "#969696"  width="18" height="19" viewBox="0 0 18 19" xmlns="http://www.w3.org/2000/svg"><path _ngcontent-serverApp-c41="" d="M15.75 0.25H2.25C0.984375 0.25 0 1.26953 0 2.5V12.625C0 13.8906 0.984375 14.875 2.25 14.875H5.625V17.8281C5.625 18.1094 5.80078 18.25 6.04688 18.25C6.11719 18.25 6.1875 18.25 6.29297 18.1797L10.6875 14.875H15.75C16.9805 14.875 18 13.8906 18 12.625V2.5C18 1.26953 16.9805 0.25 15.75 0.25ZM16.3125 12.625C16.3125 12.9414 16.0312 13.1875 15.75 13.1875H10.125L9.66797 13.5391L7.3125 15.2969V13.1875H2.25C1.93359 13.1875 1.6875 12.9414 1.6875 12.625V2.5C1.6875 2.21875 1.93359 1.9375 2.25 1.9375H15.75C16.0312 1.9375 16.3125 2.21875 16.3125 2.5V12.625Z" class="cls-1"></path></svg>
+                <span className="post-icon">{post.comment_count}</span>
               </div>
             </div>
           </div>

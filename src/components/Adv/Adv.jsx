@@ -1,8 +1,8 @@
-import React,{useEffect} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux'
-import * as actions from '../../redux/actions'
-import { allPostsState$   } from '../../redux/selectors/'
+import { useSelector } from 'react-redux'
+import { allPostsState$ } from '../../redux/selectors/'
+import DatePost from "../DatePost/DatePost"
 import './adv.scss'
 const Adv = () => {
   const posts = useSelector(allPostsState$ )
@@ -42,7 +42,7 @@ const Adv = () => {
                     <Link  to={`/user/${post.author.userName} `}>
                       <span className="username">{post.author.displayName ? post.author.displayName : post.author.userName} </span>
                     </Link>
-                    <span className="time-read"> - 18 tháng 8 2019</span>
+                    <DatePost date={post.createdAt}></DatePost>
                   </div>
                 </div>
               ))

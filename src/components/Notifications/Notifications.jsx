@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Notifications = ({ notification}) => {
   let date = new Date(notification.createdAt);
-  console.log(notification)
   return( 
     notification.post ? (
       <li className={`header__notify-item ${notification.isRead ? "" : "active"}`}>
       <Link to={`/post/${notification.post.slug}?notiId=${notification._id}`} className={`header__notify-link`}> 
         <div className="header__notify-menu">
+          <div className="header__notify-image">
           <Link to={`/user/${notification.parentId.userName}`} >
             <img
               src={
@@ -19,6 +19,7 @@ const Notifications = ({ notification}) => {
               className="header__notify-img"
             />
           </Link>
+          </div>
           <div className="header__notify-info">
             <div className="header__notify-info-container">
               <span className="header__notify-strong">
@@ -34,7 +35,9 @@ const Notifications = ({ notification}) => {
               </q>
             </div>
           </div>
-          <i class=" header__notify-icon bx bx-dots-horizontal-rounded"></i>
+          <div className="header__notify-icon">
+            <i class=" bx bx-dots-horizontal-rounded"></i>
+          </div>
         </div>
         <div className="header__notify-time">
           <i class="bx bxs-conversation"></i>
