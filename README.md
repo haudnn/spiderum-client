@@ -2,7 +2,6 @@
 
 <p>Social network Blog is cloned from Spiderum</p>
 
-
 ## **Main technologies 📝**
 
 - Front-End
@@ -61,6 +60,11 @@
 ![image](https://user-images.githubusercontent.com/90059594/169771252-abcd7959-1421-407d-857e-d6f5234bfc1d.png)
 
 ![image](https://user-images.githubusercontent.com/90059594/169771255-e131e051-5bae-4184-82b6-9812a30f17ab.png)
+
+
+## **Video Demo 📝**
+
+https://www.youtube.com/watch?v=ZlklfMF1g0g&t=6s&ab_channel=14mH4u
 
 ## **Install 🔨**
 
